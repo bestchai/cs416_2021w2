@@ -55,7 +55,7 @@ In this assignment you will get started with programming in the Go language. To 
 <p>
 This assignment will also introduce you to
 our <a href="https://github.com/DistributedClocks/tracing">tracing
-library</a>. You’ll use this library throughout the course to test and
+library</a>. You'll use this library throughout the course to test and
 debug your Go systems, And, we will use this library to help us mark
 your submitted solutions.
 </p>
@@ -69,7 +69,7 @@ Nim is a two-player game. A game of nim starts with a board that
 contains some number of <b>rows</b>, and each row contains some number of
 <b>coins</b>. The two players take turns removing any non-zero number
 of coins, with the constraint that all the coins that are removed in a
-turn must come from a single row. A player’s goal in nim is to make
+turn must come from a single row. A player's goal in nim is to make
 the last move, taking the final coin.
 </p>
 
@@ -112,7 +112,7 @@ seed on the command line. The client then follows the following steps:
 
 <li>The client decides on a move to play, computes the new resulting GameState and sends both back to the server in another [StateMoveMessage].</li>
 
-<li>The server verifies the client’s move is <i>legal on receive</i>
+<li>The server verifies the client's move is <i>legal on receive</i>
 and continues play, if applicable. If the received move is <i>not
 legal on receive</i>, the server will re-send its previous message.
 </li>
@@ -194,9 +194,9 @@ same seed.</li></ul>
 
   <ul><li>A move in the game with some valid number of coins to remove, and
   the row these are being removed from. This is considered legal on
-  receive with respect to a StateMoveMessage{GameState’, _, _} if
+  receive with respect to a StateMoveMessage{GameState', _, _} if
   [GameState] is the state reached after removing [MoveCount] coins
-  from row [MoveRow] in [GameState’].</li></ul>
+  from row [MoveRow] in [GameState'].</li></ul>
   
 </ul>
 
@@ -208,7 +208,7 @@ same seed.</li></ul>
 Packets sent via UDP are not guaranteed to arrive at their
 destination. This means there will be no reply received if either the
 client message or the server message is dropped by the network. <b>It
-is the client’s responsibility to re-attempt a message exchange, after
+is the client's responsibility to re-attempt a message exchange, after
 a timeout of 1s (after not receiving a response from the server 1s
 after sending a message to the server).</b> You can assume that the
 server will hang onto the last known state indefinitely, until the
@@ -286,7 +286,7 @@ within your own client. There are four types of actions that your
 <br/>(One way of interpreting the above two bullets is that they pin client progress to server progress.)
 </li></ul>
 
-<li>[ServerMoveReceive{GameState, MoveRow, MoveCount}] indicates that a server’s move has been received.</li>
+<li>[ServerMoveReceive{GameState, MoveRow, MoveCount}] indicates that a server's move has been received.</li>
 
 <ul>
   <li>This action must be recorded <b>just after</b> receiving a move from the server, including the opening “move”.</li>
@@ -386,7 +386,7 @@ because of message loss).
 <p> 
 You are to write a single go program called <b>client.go</b> that acts as a client in the protocol described above. Your program must be executable from the terminal using the following command:<br/>
 <i><b>$ go run client.go [seed]</b></i><br/>
-Where [seed] is the random seed to be sent to the server in the client’s first move to generate a game board.</p>
+Where [seed] is the random seed to be sent to the server in the client's first move to generate a game board.</p>
 
 <p>
 The ports to be used by the client to connect to the server at and to listen on are provided/configured in [config/client_config.json].
@@ -454,7 +454,7 @@ related to the tracing library.</p>
     
     <li>Your solution can only use standard library Go packages</li>
     
-    <li>Your solution code must be Gofmt’d using gofmt</li>
+    <li>Your solution code must be Gofmt'd using gofmt</li>
 
 </ul>
 </p>
