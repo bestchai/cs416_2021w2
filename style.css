@@ -1,0 +1,199 @@
+<!--
+a:link {color: #660099}     /* unvisited link; old: #660099 */
+a:visited {color: #660099}  /* visited link; old: #660099 */
+a:hover {color: red}     /* mouse over link; old: #088A08 */
+a:active {color: red}    /* selected link */
+
+a   { text-decoration:none;  }
+
+body { background-color: white; }
+
+td {
+    	width: 100%;
+	padding-bottom: 40px;
+}
+
+ul.smallfont {
+	font: 15px Arial;
+}
+
+#code {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #006400;
+    padding:0px;
+}
+
+
+#main {
+        margin-left: auto;
+	margin-right: auto;
+	font: 16px Arial;
+	font-stretch: 10%;
+	width: 65%;
+	text-align:left;
+	margin-top: 15px;
+	padding: 15px 15px 15px;
+	cellpadding: 15px;
+	border: 1px solid;
+        border-color: #006400;
+	rules: none;
+	frame: box;
+	background-color: white;
+}
+
+#justanicetable {
+        margin-left: 0;
+	margin-right: auto;
+	margin-top: 5px;
+	font: 16px Arial;
+	width: 30%;
+	text-align:left;
+	border: 1px solid;
+        border-color: #006400;
+	rules: none;
+	frame: box;
+	background-color: white;
+}
+
+td.normal {
+    	width: 100%;
+	padding-bottom: 0;
+}
+
+
+#schedule {
+        margin-left: auto;
+	margin-right: auto;
+	font: 17px Arial;
+	font-stretch: 10%;
+	width: 100%;
+	text-align:left;
+	margin-top: 15px;
+/*
+        padding: 15px 15px 15px;
+	cellpadding: 15px; 
+	border: 1px solid;
+        border-color: #006400;
+	rules: none;
+	frame: box; 
+*/
+	background-color: white; 
+        border: 0;
+        cellspacing:0;
+        border-spacing: 0;
+}
+
+td.tdfirst {
+    width: 10%;
+    padding: 15px;
+    text-align:center;
+    font: 15px Arial;
+}
+
+td.tdsecond {
+    width: 90%;
+    padding: 15px;
+    border-left: 2px solid #006400;
+}
+
+h4 {
+    padding-top: 15px;
+}
+
+
+td.tdthird {
+    font: 13px Arial;
+    width: 19%;
+    padding: 15px;
+    border-left: 2px solid #006400;
+}
+
+#schedule tr:nth-child(odd) {
+    background-color: #D8FFDC;
+}
+
+/* Apply padding to td elements that are direct children of the tr element. */
+tr.spaceUnder > td
+{
+  padding-bottom: 2em;
+}
+
+p.quote {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+
+div.hbar {
+        clear: both;
+	margin-top: -1.1em;
+	border-top: solid;
+	border-top-width:2px;
+	padding-top: 0em;
+}
+
+div.hbarshort {
+        float:left;
+	margin-top: -1.1em;
+	border-top: solid;
+	border-top-width:1px;
+	padding-top: 0em;
+        width: 45%;
+}
+
+ul.nobullets {
+    list-style-type: none;
+}
+
+#footer {
+	font: 12px Arial;
+	font-stretch: 10%;
+	color: gray;
+}
+
+#navbar {
+  margin: 0em;
+}
+
+#navbar ul {
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+/*  width: 100%; */
+  width: 100%; 
+  font: 13px Helvetica;
+  letter-spacing:1.8px;
+  text-transform:uppercase; 
+  font-stretch: 10%;
+}
+
+#navbar a:link {color: black}
+#navbar a:visited {color: black}
+#navbar a:hover {color: black}
+#navbar a:active {color: black}
+
+#navbar > ul > li {
+  margin: 0.2em 0.5em;
+  padding: .5em;
+  display: inline-block;
+  background-color: green;   /* fallback */
+  background-color: OliveDrab;
+  border-style: none;
+  border-radius: 5pt;
+  color: black;
+}
+#navbar > ul > li:hover {
+  background-color: orange;
+  color: black;   
+}
+#navbar > ul > li.active {
+  background-color: orange;
+}
+
+u {
+    text-decoration: underline;
+}
+
+-->

@@ -1,0 +1,908 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" /> 
+</head>
+<body>
+<title>Distributed Systems</title>
+
+<table id="main">
+
+<tr><td style="padding-bottom: 20px">
+<h2>Distributed Systems</h2>
+
+<p style="margin-bottom:-8px; color:gray"><small>CPSC 416, Winter 2022</small></p>
+<p style="margin-bottom:-8px;color:gray"><small>Tu/Th 5-630PM online in January, then in ESB 1013</p>
+<p><a href="https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=416">UBC page</a>, <a href="https://www.piazza.com/ubc.ca/winterterm22021/cpsc416">Piazza</a>, <a href="https://canvas.ubc.ca/courses/83427">Canvas</a></p>
+<p style="color:gray">
+<small>
+<a href="https://piazza.com/class/kxjnnflz1dn3p1?cid=10">Office hours</a></br>
+</small></p>
+
+</br>
+
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td>
+
+<div id="navbar">
+  <ul id="navbarlist">
+    <li><a href="#format">format</a></li>
+    <li><a href="#schedule">schedule</a></li>
+    <li><a href="#go">go</a></li>
+    <li><a href="#assignments">assignments</a></li>
+    <li><a href="#submit">submissions</a></li>
+    <li><a href="#exam">exam</a></li>
+    <li><a href="#grading">grading</a></li>
+    <li><a href="#advice">advice</a></li>
+    <li><a href="#honesty">integrity</a></li>
+  </ul>
+</div>
+
+
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td>
+<p>
+<a name="format"></a> 
+<h3>Course description</h3>
+</p>
+
+<div class="hbar"></div>
+
+<p><a href="http://en.wikipedia.org/wiki/Leslie_Lamport">Leslie
+Lamport</a>, a computer scientist who won the 2013 ACM Turing Award,
+gave the following definition of a distributed system:</p>
+
+  <p class="quote"><q><i>A distributed system is one in which the
+  failure of a computer you didn't even know existed can render your
+  own computer unusable.</i></q></p>
+
+<p>
+Yet, distribution provides numerous benefits. A system becomes more
+<b>fault tolerant</b> if there are fewer points of failure and it has
+no centralized components. By extending the system with more physical
+nodes the system gains performance and becomes more <b>scalable</b>,
+capable of handling more load. Distribution can also improve latency,
+by improving <b>geographic diversity</b>, by placing resources closer
+to clients who use the system.</p>
+
+<p>Achieving these benefits is not easy. As the quote above
+illustrates, distributed systems can fail in complex ways and these
+systems are more difficult to build, test, and understand than
+centralized systems.</p>
+
+<p>
+This course will introduce you to a broad range of topics in
+distributed systems. The tentative topics are listed in the schedule
+below. For the most part this will be a lecture-style course. However,
+distributed system concepts are notoriously challenging to internalize
+without first-hand experience. The emphasis of this course, therefore,
+will be on <b>building</b> distributed system prototypes, small and
+large.
+</p>
+
+<p>
+Course pre-requisites: CPSC 317 (networks) and CPSC 313 (computer
+hardware and operating systems).<br/><br/>  Course staff: Ivan
+Beschastnikh (Instructor), Yanze (TA), Mishaal (TA), Mayank (TA).
+</p>
+
+<h4>Textbooks</h4>
+<div class="hbarshort"></div>
+
+<p>
+There are three <i>optional</i> books for this course: 
+<ol>
+  <li><a href="http://www.amazon.com/dp/0134190440?tracking_id=disfordig-20">Go Programming Language</a></li>
+  <li><a href="http://www.amazon.com/Programming-Go-Creating-Applications-Developers/dp/0321774639">Programming in Go</a></li>
+  <li><a href="https://www.amazon.ca/Distributed-Systems-Principles-Paradigms-2nd/dp/0132392275">Distributed Systems: Principles and Paradigms (2nd Edition)</a></li>
+</ol>
+
+Although there are many tutorials introducing Go and the online Go
+documentation is well developed, some of you may find the first two
+books on the list helpful for a step-by-step introduction to Go.
+</p>
+
+<h4>Communication</h4>
+<div class="hbarshort"></div>
+
+<p>
+  At least part of this course (in January) will be held online,
+  therefore it is essential to have clear channels of communication.
+
+  <ul>
+    <li>Use
+      the <a href="https://www.piazza.com/ubc.ca/winterterm22021/cpsc416">course
+        Piazza</a> for <b>all</b> course-related communication. The Piazza
+      also supports private posts that you can use to communicate with the
+      instructor and the TAs.</li>
+    
+    <li>We will use Zoom for synchronous online sessions (in January)
+      during the scheduled course hours. These sessions will be
+      recorded and made available to you. You can find the zoom links
+      and zoom recordings on
+      the <a href="https://canvas.ubc.ca/courses/83427">course Canvas</a>.</li>
+  </ul>
+</p>
+
+
+<h4>Course-level learning goals</h4>
+<div class="hbarshort"></div>
+
+<p>
+The course will provide an opportunity for students to
+<ul>
+  <li>understand key principles in designing and implementing distributed systems</li>
+  <li>reason about problems that involve distributed components</li>
+  <li>become familiar with important techniques for solving problems that arise in distributed contexts</li>
+  <li>build distributed system prototypes using the Go programming language</li>
+</ul>
+</p>
+
+</td></tr>
+
+<!--------------------------------------------------- -->
+
+<tr><td>
+<p>
+<a name="go"></a> 
+<h3>Go resources</h3>
+</p>
+
+<div class="hbar"></div>
+
+<p>
+In this course we will exclusively use
+the <a href="http://golang.org/">Go programming language</a> for all
+course work. Learning a new programming language is an important
+skill. You will practice it in this course. For the most part I will
+expect that you learn this language on your own. <b>We will be using
+Go version 1.16.7</b> (available at <code>/cs/local/bin/go</code> on
+ugrad servers). If you use a personal machine, make sure to install
+this exact version. Though, please note that all homework solutions
+will be tested on the ugrad server machines.
+</p>
+
+<p>
+Go is a systems language originally introduced by Google. It is
+especially well suited to building distributed systems. Like with any
+language, the fastest way to become proficient at Go is to put in the
+time writing programs in Go. Here are some resources to get you
+started:
+
+<ul>
+  <li><a href="https://tour.golang.org/welcome/1">Go tutorial (start here)</a></li>
+  <li><a href="https://golang.org/doc/code.html">How to Write Go Code</a></li>
+  <li><a href="https://golang.org/doc/effective_go.html">Effective Go</a></li>
+  <li><a href="http://www.golangbootcamp.com/book">Go Bootcamp (online book)</a></li>
+  <li><a href="https://gobyexample.com/">Go by Example</a></li>
+  <li><a href="https://github.com/golang/go/wiki/Learn">More Go resources</a></li>
+</ul>
+
+Amanda and Stewart led an in-class Go tutorial in the Winter 2017
+version of the course. Here is the recorded
+version: <a href="https://www.youtube.com/watch?v=L04p8SSmW-c&t=1s">part
+1</a>,
+and <a href="https://www.youtube.com/watch?v=xAU1_chlGBA&t=1786s">part
+2</a>. 
+
+</p>
+
+<p>
+After you install the correct version of Go, you can now install an
+IDE of your choice. One option is <b>JetBrain's GoLand</b>, which
+provides free licenses for their software to anyone currently enrolled
+in school. You have to
+<a href="https://www.jetbrains.com/student/">register here</a> with
+your UBC email, and you will be given a license for their
+software. You can renew this license each year that you are a
+student. You can then download GoLand and activate it by using the
+license. When you are about to create a new project, you will need to
+select the correct SDK version for your project, which you can do by
+selecting the path of your go installation. Several advantages of GoLand:
+<ul>
+<li>smart completion</li>
+<li>hover over a function and see it's documentation</li>
+<li>built-in debugger with a nice UI</li>
+<li>quick navigation between files and symbols</li>
+<li>easy refactoring</li>
+</ul>
+</p>
+
+</tr></td>
+
+<!--------------------------------------------------- -->
+
+<tr><td>
+<p>
+<a name="schedule"></a> 
+<h3>Schedule (a work in progress; will change)</h3>
+</p>
+
+<div class="hbar"></div>
+
+<table id="schedule">
+
+  <tr>
+    <td class="tdfirst">Jan 11<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Course overview, assignment 1 review</i> [<a href="lectures/lecture-jan11.pdf">slides</a>]<br/>
+      
+      <p>
+        Read through <a href="#go">Go resources</a> prior to class,
+        and practice as much Go as you can.
+      </p>
+
+      <ul>
+      Readings:
+      <li>
+        Google. <a href="http://www.hpcs.cs.tsukuba.ac.jp/~tatebe/lecture/h23/dsys/dsd-tutorial.html">Introduction
+        to Distributed System Design</a>
+      </li>
+      </ul>
+
+      
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Jan 13<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Networks review: layering, e2e, fate sharing, internet design</i><br/>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Jan 18<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Finish net review, start on RPC</i> <br/>
+
+      <ul>
+      Readings:
+      <li>
+        <a href="http://dl.acm.org/citation.cfm?id=2080.357392">Implementing
+          Remote Procedure Calls</a> (from UBC campus) by Birrell and
+        Nelson.</li>
+      </ul>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Jan 20<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Distributed file systems: NFS</i> <br/>
+
+      <ul>
+      Readings:
+      <li>
+        <a href="http://pages.cs.wisc.edu/~remzi/OSTEP/dist-nfs.pdf">Sun's
+        Network File System (NFS)</a> by Remzi and Andrea
+        Arpaci-Dusseau.</li>
+      </ul>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Jan 25<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Caching in AFS, session semantics</i><br/>
+
+      <ul>
+      Readings:
+      <li><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/dist-afs.pdf">The
+        Andrew File System (AFS)</a> by Remzi and Andrea
+        Arpaci-Dusseau.</li>
+      <li><a href="http://www.cs.cmu.edu/~coda/docdir/scalable90.pdf">Scalable,
+          Secure, and Highly Available Distributed File Access</a>
+        (pgs. 1-7 on AFS)
+        by <a href="https://en.wikipedia.org/wiki/M._Satyanarayanan">Satyanarayanan</a></li>
+      </ul>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Jan 27<br/>Thu</td>
+    <td class="tdsecond">
+      <i>SPDY/HTTP 2.0, CDNs, Consistent caching</i>
+      <br/>
+
+      <ul>
+      Readings:
+        <li>
+          <a href="https://www.akamai.com/es/es/multimedia/documents/technical-publication/consistent-hashing-and-random-trees-distributed-caching-protocols-for-relieving-hot-spots-on-the-world-wide-web-technical-publication.pdf">Consistent Hashing and Random Trees: Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web</a> by Karger et al.</li>
+      </ul>
+
+      
+    </td>
+  </tr>
+
+
+  <tr>
+    <td class="tdfirst">Feb 1<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Peer-to-Peer (P2P) part 1: file sharing</i><br/>
+
+      <ul>
+        Readings:
+        <li>
+          <a href="http://www.divms.uiowa.edu/~ghosh/sybil.pdf">The Sybil Attack</a>
+        </li>        
+        <li>
+          <a href="http://www.cs.umd.edu/~dml/papers/bittorrent_sigcomm08.pdf">BitTorrent is an Auction: Analyzing and Improving BitTorrent's Incentives</a>
+        </li>
+
+        <li>
+          <a href="https://dl.acm.org/citation.cfm?id=1373992">Characterizing unstructured overlay topologies in modern P2P file-sharing systems</a>
+        </li>
+      </ul>
+      
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Feb 3<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Peer-to-Peer (P2P) part 2: BitCoin</i>
+      
+      <br/>
+      <ul>
+        Readings:
+      <li>
+        Khan Academy.
+        <a href="https://www.khanacademy.org/economics-finance-domain/core-finance/money-and-banking/bitcoin/">BitCoin
+           videos at khanacademy.org</a>
+       </li>
+
+      <li>
+        Nielsen. <a href="http://www.michaelnielsen.org/ddi/how-the-bitcoin-protocol-actually-works/">How the Bitcoin protocol actually works</a> (2-column <a href="./how-bitcoin-actually-works.pdf">pdf version</a>)
+        </li>
+      
+      <li>
+        Nakamoto. <a href="http://css.csail.mit.edu/6.824/2014/papers/bitcoin.pdf">Bitcoin:
+          A Peer-to-Peer Electronic Cash System</a>
+      </li>
+
+      <li>Yaga et al. <a href="https://csrc.nist.gov/CSRC/media/Publications/nistir/8202/draft/documents/nistir8202-draft.pdf">Blockchain Technology Overview, Draft NISTIR 8202</a></li>
+
+      </ul>
+
+    </td>
+  </tr>
+
+
+  <tr>
+    <td class="tdfirst">Feb 8<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Time synchronization and logical time [Lamport/vector clocks]</i>
+      <br/>
+      
+      
+      <ul>
+      Readings:
+        <li>
+          <a href="http://research.microsoft.com/en-us/um/people/lamport/pubs/time-clocks.pdf">Time,
+            Clocks, and the Ordering of Events in a Distributed System</a> by
+          <a href="https://en.wikipedia.org/wiki/Leslie_Lamport">Lamport</a></li>
+        
+         <li><a href="http://soft.vub.ac.be/~tvcutsem/distsys/clocks.pdf">Clock
+            Synchronization</a> (pgs. 1-5) by Krzyzanowski</li>
+        </ul>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Feb 10<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Distributed mutual exclusion</i> <br/>
+      
+      <ul>
+        Readings:
+
+        <li>Skim <a href="https://pdfs.semanticscholar.org/4489/03fa04b096e85ef272acca9c768b9a8a26f2.pdf">Chapter
+          9</a> from Kshemkalyani and Singhal 'Distributed Computing:
+          Principles, Algorithms, and Systems'</li>
+      
+      </ul>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Feb 15<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Failures and RAID</i><br/>
+
+      <ul>
+      Readings:
+        <li>
+          <a href="http://ocw.mit.edu/resources/res-6-004-principles-of-computer-system-design-an-introduction-spring-2009/online-textbook/faults_open_5_0.pdf">Chapter 8 in Principles of Computer System Design</a> (pgs. 1-37) by Saltzer and Kaashoek</li>
+
+        <li>
+        <a href="http://pages.cs.wisc.edu/~remzi/OSTEP/file-raid.pdf">Redundant
+          Arrays of Inexpensive Disks (RAIDs)</a> by Remzi and Andrea
+        Arpaci-Dusseau.</li>
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Feb 17<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Primary backup replication</i><br/>
+
+      <ul>
+      Readings:
+      <li>
+        <a href="http://www.sc.ehu.es/acwlaalm/sdi/replication-schemas.pdf">Primary-backup replication notes</a></li>
+
+
+      <li><a href="https://www.cs.cornell.edu/home/rvr/papers/OSDI04.pdf">Chain
+          replication for supporting high throughput and availability </a></li>
+
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Feb 22<br/>Tue</td>
+    <td class="tdsecond">
+      <font style="color:gray">No class (UBC reading break); no office hours</font><br/>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Feb 24<br/>Thu</td>
+    <td class="tdsecond">
+      <font style="color:gray">No class (UBC reading break); no office hours</font><br/>      
+    </td>
+  </tr>
+
+
+  <tr>
+    <td class="tdfirst">Mar 1<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Transactions, part 1: ACID semantics and 2-phase locking</i> <br/>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Mar 3<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Transactions, part 2: logging</i> <br/>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td class="tdfirst">Mar 8<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Two phase commit (2PC)</i> <br/>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Mar 10<br/>Thu</td>
+    <td class="tdsecond">
+      <i>2PC in other topologies and Three phase commit (3PC)</i><br/>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Mar 15<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Quorum replication; Paxos protocol 1/2</i><br/>
+
+      <ul>
+      Readings:
+        <li>
+          <a href="http://research.microsoft.com/en-us/um/people/lamport/pubs/paxos-simple.pdf">Paxos Made Simple</a> by Lamport.</li>
+        <li>
+          <a href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf">Impossibility
+          of distributed consensus with one faulty process</a> by
+          Fischer, Lynch, and Paterson.</li>
+        </li>
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Mar 17<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Quorum replication; Paxos protocol 2/2</i><br/>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Mar 22<br/>Tue</td>
+    <td class="tdsecond">
+      <i>CAP theorem</i> <br/>
+
+      <ul>
+      Readings:
+      <li><a href="https://codahale.com/you-cant-sacrifice-partition-tolerance/">You Can't Sacrifice Partition Tolerance</a></li>
+      <li><a href="https://www.allthingsdistributed.com/2008/12/eventually_consistent.html">Eventually Consistent - Revisited</a></li>
+      <li><a href="http://dbmsmusings.blogspot.ca/2010/04/problems-with-cap-and-yahoos-little.html">Problems with CAP, and Yahoo's little known NoSQL system</a></li>
+      <li><a href="https://www.voltdb.com/blog/2010/10/21/clarifications-cap-theorem-data-related-errors/">Clarifications On The CAP Theorem And Data-Related Errors</a></li>
+      <li><a href="https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed">CAP Twelve Years Later: How the "Rules" Have Changed</a></li>
+      </ul>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Mar 24<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Guest lecture TBD
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Mar 29<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Guest lecture TBD
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Mar 31<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Guest lecture TBD
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Apr 5<br/>Tue</td>
+    <td class="tdsecond">
+      <i>Distributed computing: MapReduce and Spark</i> <br/>
+
+      <ul>
+        <li><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf">Original MapReduce paper</a>, OSDI 2014</li>
+        <li><a href="https://www.usenix.org/system/files/conference/nsdi12/nsdi12-final138.pdf">Original Spark paper</a>, NSDI 2012</li>
+        <li><a href="https://lintool.github.io/bigdata-2018w/index.html">Data-Intensive Distributed Computing course</a> at UWaterloo</li>
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tdfirst">Apr 7<br/>Thu</td>
+    <td class="tdsecond">
+      <i>Security in a distributed setting</i>  <br/>
+
+      <ul>
+        <li><a href="https://courses.cs.washington.edu/courses/cse484/18au/">Computer security course at UWashington</a></li>
+      </ul>
+
+    </td>
+  </tr>
+
+
+</table>
+
+</td></tr>
+
+
+
+<!--------------------------------------------------- -->
+
+<tr><td>
+<p>
+<a name="assignments"></a> 
+<h3>Assignments</h3>
+</p>
+
+<div class="hbar"></div>
+
+<p>
+All assignments must be completed in Go. More details TBD.
+</p>
+
+<p>
+Solution must be submitted using UBC github (see below) by 6:00PM of
+the day of the deadline. Special instructions for compiling/running
+the code should be included as part of your README.txt file.
+</p>
+
+<!-- <p> -->
+<!-- <ul> -->
+<!--   <li> -->
+<!--     <a href="./assign1/index.html">Assignment 1 : TBD</a>  -->
+<!--   </li> -->
+<!-- </ul> -->
+<!-- </p> -->
+
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td>
+<p>
+<a name="submit"></a> 
+<h3>UBC GitHub submission instructions</h3>
+</p>
+
+<div class="hbar"></div>
+
+<p>
+We will use an enterprise version of GitHub at UBC for all
+assignment/project code and writeup submissions.
+</p>
+
+<p>
+Log
+into <a href="https://github.students.cs.ubc.ca/">github.students.cs</a>. Notice
+that you are part of
+the <a href="https://github.students.cs.ubc.ca/CPSC416-2021W-T2">CPSC416-2021W-T2
+org</a>. This is the org under which you will see repositories (that
+we will create for you) for all of the assignments in the course.
+</p>
+
+<p>Work inside your assignment repo as you would usually. Don't forget
+to push your commits. We will mark the commit that <b>immediately</b>
+precedes the deadline time.</p>
+
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+
+<tr><td>
+<p>
+<a name="exam"></a> 
+<h3>Exam</h3>
+</p>
+
+<div class="hbar"></div>
+
+<p>
+To practice for the exam we will go over 1-3 questions at the start of
+each class.
+
+You can also download the complete set of
+<a href="./lectures/practice-questions.pdf"><b>practice
+questions</b></a> we have covered thus far (updated continuously).
+</p>
+
+<p>
+Final exam date and time TBD.
+</p>
+
+
+</td></tr>
+
+
+<!-- -------------------------------------------------------------->
+
+
+<tr><td>
+<p>
+<a name="grading"></a> 
+<h3>Grading</h3>
+</p>
+
+<div class="hbar"></div>
+
+<p>
+  Final course mark will be based off of:
+  <table id="justanicetable">
+    <tr>
+      <td class="normal">Assignment 1 (individual)</td>
+      <td class="normal">5%</td>
+    </tr>
+    <tr>
+      <td class="normal">Assignment 2 (individual)</td>
+      <td class="normal">10%</td>
+    </tr>
+    <tr>
+      <td class="normal">Assignment 3 (tbd)</td>
+      <td class="normal">15%</td>
+    </tr>
+    <tr>
+      <td class="normal">Project 1: system review (tbd)</td>
+      <td class="normal">15%</td>
+    </tr>
+    <tr>
+      <td class="normal">Project 2: system building (tbd)</td>
+      <td class="normal">30%</td>
+    </tr>
+
+    <tr>
+      <td class="normal">Final exam</td>
+      <td class="normal">20%</td>
+    </tr>
+    <tr>
+      <td class="normal">Participation (piazza/zoom/in-class)</td>
+      <td class="normal">5%</td>
+    </tr>
+  </table>
+
+</p>
+
+
+<h4>Late policy</h4>
+<div class="hbarshort"></div>
+
+<p>
+You will receive a 0 for late work unless you have an approved extension.
+</p>
+
+<p>
+For individual assignments, the deadline for <b>one</b> assignment can
+be extended by 24 hours with no penalty to the mark. Extension
+requests must be made explicitly with a private post to
+Piazza. Extension requests must be made no later than 24 hours past
+the deadline. <b>Assignment solutions with an extension will not be
+accepted 24 hours past the original deadline. </b>
+</p>
+
+<p>
+For group assignments/projects you can request an extension of 24
+hours as long as someone in your group has an unused extension. You
+cannot receive an extension of more than 24 hours for a group
+deliverable.
+</p>
+
+<p>
+If you have an emergency (e.g., health) that prevents you from meeting
+a deadline. You must notify the instructor <b>before</b> the deadline.
+</p>
+
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td>
+<p>
+<a name="advice"></a> 
+<h3>How to do well in this course</h3>
+</p>
+
+<div class="hbar"></div>
+
+<p>
+<b>Learn Go early and practice it regularly.</b> Learning a new
+language while being time constrained is stressful and not fun. Since
+the assignments rapidly increase in their difficulty, it will be to
+your advantage to learn Go as quickly as possible and to learn it
+well. The posted <a href="#go">Go resources</a> are a great starting
+point, but reading is no substitute for practice, bug, debug,
+practice, practice, bug, coffee, debug, practice, ...
+</p>
+
+<p>
+<b>Do not skimp on software engineering.</b> Distributed systems are
+hard. They are hard to understand, to build, to debug, to run, to
+trace, to document, etc. Do not make your life any more difficult. Use
+best practices from software engineering to help you in this
+course. Write unit and integration tests, use version control,
+document your code with comments, write small prototypes, refactor
+your code, make your code readable and easy to run and debug. If you
+fail to follow best practices, they will come back to bite you later
+on. Unfortunately, this course will not explicitly teach you these
+best practices, but you probably took a course that introduced you to
+these concepts. If you have any questions, just ask us on Piazza.
+</p>
+
+<!-- <p>
+<b>Choose your teammates, wisely.</b> Some assignments will depend
+critically on your ability to work effectively with one other
+student. You are responsible for resolving personal and technical
+differences among teammates on your own. Let us know as early as
+possible if you have team concerns, before they turn into crises.
+</p> -->
+
+<p>
+<b>Reach out for success.</b> This is intended to be a challenging
+fourth year course, but that does not mean that you have to work
+through it on your own!  The course piazza should be your first stop
+for all technical questions. The course has specific office hours (see
+top of page), but I and the TAs are flexible. Send any of us an email
+to schedule a time to discuss the course, the assignments,
+etc. University students often encounter setbacks from time to time
+that can impact academic performance. Discuss your situation with us
+or an academic advisor as early as possible. For help in addressing
+mental or physical health concerns, including seeing a UBC counselor
+or doctor, visit
+<a href="https://www.cs.ubc.ca/students/undergrad/resources/equity-inclusion-wellness">this link</a>.
+</p>
+
+
+</td></tr>
+
+<tr><td>
+<p>
+<a name="honesty"></a> 
+<h3>Academic integrity, collaboration guidelines, resources</h3>
+</p>
+
+<div class="hbar"></div>
+
+<p>
+UBC has a detailed policy
+regarding
+<a href="https://www.cs.ubc.ca/students/undergrad/resources/academic-integrity">academic
+integrity</a>. You must familiarize yourself with this policy.
+</p>
+
+<p>
+  UBC provides resources to support student learning and to maintain
+  healthy lifestyles but recognizes that sometimes crises arise and so
+  there are additional resources to access including those for
+  survivors of sexual violence. UBC values respect for the person and
+  ideas of all members of the academic community. Harassment and
+  discrimination are not tolerated nor is suppression of academic
+  freedom. UBC provides appropriate accommodation for students with
+  disabilities and for religious and cultural observances. UBC values
+  academic honesty and students are expected to acknowledge the ideas
+  generated by others and to uphold the highest academic standards in
+  all of their actions. Details of the policies and how to access
+  support are
+  available <a href="https://senate.ubc.ca/policies-resources-support-student-success">here</a>.
+</p>
+
+
+</td></tr>
+
+<!-- ----------------------------------------------------- -->
+
+<tr><td>
+<p>
+<a name="honesty"></a> 
+<h4>Acknowledgements</h4>
+</p>
+<div class="hbarshort"></div>
+
+<p>
+Many of the materials used in this course are derived from CMU's
+<a href="http://www.cs.cmu.edu/~dga/15-440/S14/">15-440: Distributed
+Systems</a> course from Spring 2014, and are used with permission from
+the content authors.
+</p>
+
+</td></tr>
+
+<tr><td style="padding:0px">
+<br/><br/><br/>
+<div id="footer">
+Last updated: January 11, 2022
+</div>
+<!--
+Local Variables:
+time-stamp-start: "^Last updated: "
+time-stamp-end: "\\.?$"
+time-stamp-format: "%:b %:d, %:y"
+time-stamp-line-limit: -50
+End:
+-->
+</td></tr>
+
+</table>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-793279-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+</body>
+</html>
+
