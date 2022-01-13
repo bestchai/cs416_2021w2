@@ -1,0 +1,635 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="./style.css" /> 
+</head>
+<body>
+<title>Assignment 1</title>
+
+<table id="main">
+
+<tr><td style="padding-bottom: 20px">
+<h2><a href="../index.html">416</a> Distributed Systems: Assignment 1 [Nim]</h2>
+<h3>Due: January XX at 6pm PST</h3>
+<p style="color:gray"><small>Winter 2022</small></p>
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td>
+
+<p>
+In this assignment you will get started with programming in the Go language. To solve this assignment you will need to install Go, figure out how to compile, run, and debug a Go program. You will practice Go in the context of the two-person normal play version of the game of Nim. Specifically, you will implement the client codebase and we will provide you with a running server that you can test against. 
+</p>
+
+<h4>Overview</h4>
+<div class="hbarshort"></div>
+
+<p>
+  Go (or <code>golang</code>, as it helps to search for it) is an
+  imperative programming language generally aimed at the development
+  of distributed systems. In some ways, it is related to systems
+  languages like C and Rust, in that programs are built using structs
+  and functions (and like Rust, while it supports "methods", they are
+  basically just special functions). In other ways it is more similar
+  to managed languages like C# and Java, in that, while it does not
+  have a VM, it has a lot of "managed" features: it has a garbage
+  collector, full runtime type information, and the design strives to
+  have essentially no undefined behaviour.
+</p>
+
+<p>
+  This assignment's objective in particular is to help you get to grips with Go's basic features. You will learn:
+</p>
+<ul>
+  <li>How to use basic data structures like <a href="https://blog.golang.org/slices-intro">slices</a></li>
+  <li>How to work with simple <a href="https://gobyexample.com/structs">struct</a> definitions and methods</li>
+  <li>How to work with Go's built-in <a href="https://golang.org/pkg/testing/">testing infrastructure</a> (recommended)</li>
+  <li>The basics of network programming in Go with UDP</li>
+</ul>
+
+<p>
+This assignment will also introduce you to
+our <a href="https://github.com/DistributedClocks/tracing">tracing
+library</a>. You’ll use this library throughout the course to test and
+debug your Go systems, And, we will use this library to help us mark
+your submitted solutions.
+</p>
+
+
+<h4>Nim overview</h4>
+<div class="hbarshort"></div>
+
+<p>
+Nim is a two-player game. A game of nim starts with a board that
+contains some number of <b>rows</b>, and each row contains some number of
+<b>coins</b>. The two players take turns removing any non-zero number
+of coins, with the constraint that all the coins that are removed in a
+turn must come from a single row. A player’s goal in nim is to make
+the last move, taking the final coin.
+</p>
+
+
+<h4>High-level system description</h4>
+<div class="hbarshort"></div>
+
+<p>
+There are two kinds of nodes in the system: a server (that we will
+implement), and a client (that you will implement), which will play a
+game of Nim against each other. You will test and debug your solution
+against a running server instance, but you will not have access to the
+server code.
+</p>
+
+<p>The server listens to connections from clients and expects UDP
+packets containing a serialized <b>[StateMoveMessage]</b>. This is a Go
+struct and the only message format used in this assignment. There are
+multiple special values that represent different things, but you only
+have to worry about one format they are packaged in. This is described
+further below.
+</p>
+
+<p>
+The client receives a [client_config.json] input file on the command
+line. This file specifies the UDP IP:port of the server (other player)
+that it is to connect to. The client also receives a randomization
+seed on the command line. The client then follows the following steps:
+</p>
+
+
+<p>
+<ol>
+
+<li>The client sends an initial [StateMoveMessage] via UDP to the server with the random seed it received on the command line.
+</li>
+
+<li>The client receives a [StateMoveMessage] reply from the server that contains a slice of bytes GameState, representing the opening state of the board.
+</li>
+
+<li>The client decides on a move to play, computes the new resulting GameState and sends both back to the server in another [StateMoveMessage].</li>
+
+<li>The server verifies the client’s move is <i>legal on receive</i>
+and continues play, if applicable. If the received move is <i>not
+legal on receive</i>, the server will re-send its previous message.
+</li>
+
+<li>The client and server repeat from step 3 until there are no more coins in any row in the last GameState transmitted.</li>
+
+</ol>
+</p>
+
+
+<p>
+The diagram below is a time-space diagram that illustrates the
+client-server interactions described above. Messages are arrows
+between the two timelines, from client to server, or from server to
+client. Message content is listed between the brackets on each message
+arrow:
+</p>
+
+
+<p align="center">
+  <img src="./client-server-msgs.png" alt="Client server msgs" style="width: 60%;">
+</p>
+
+
+
+<h4>Message Format</h4>
+<div class="hbarshort"></div>
+
+<p>
+The declaration of [StateMoveMessage] is:
+<pre>
+type StateMoveMessage struct{
+	GameState []uint8
+	MoveRow int8
+	MoveCount int8
+}
+</pre>
+</p>
+
+<p>
+  In each message:
+<ul>
+<li>[GameState] represents the state of the game board as a slice of
+unsigned bytes. This state is the state of the board <u>after the move
+has been made (this move is also specified in the message)</u>. Each
+element of this slice represents one row of coins. For example, below
+a GameState of [6,6,4] represents a game board with three rows. The
+first two rows contain 6 coins and the third row contains 4 coins.
+</li>
+
+<li> [MoveRow] either represents the row from which coins are to be
+removed in a normal move, or indicates an opening message (-1).</li>
+  
+<li>[MoveCount] either represents the number of coins to be removed in
+a normal move, or indicates a provided random seed.</li>
+</ul>
+</p>
+
+
+Well-formed instances of a StateMoveMessage have three forms. These
+are defined below, as are their semantics for being considered <b>legal
+on receive</b>:
+<ul>
+
+  <li><tt>{nil, -1, [seed]}</tt></li>
+  <ul><li>The opening message the client sends to the
+  server to start a new game. [seed] is the random seed the server
+  uses to generate the initial board. This is always considered legal
+  on receive. If a game was already in progress, that game is
+  considered abandoned.</li></ul>
+
+  <li><tt>{GameState, -1, [seed]}</tt></li>
+    <ul><li>The opening message the server sends
+to the client, on creating a new game board. This is considered legal
+on receive with respect to an opening message from the client with the
+same seed.</li></ul>
+
+  <li><tt>{GameState, MoveRow >= 0, MoveCount > 0}</tt></li>
+
+  <ul><li>A move in the game with some valid number of coins to remove, and
+  the row these are being removed from. This is considered legal on
+  receive with respect to a StateMoveMessage{GameState’, _, _} if
+  [GameState] is the state reached after removing [MoveCount] coins
+  from row [MoveRow] in [GameState’].</li></ul>
+  
+</ul>
+
+
+<h4>Message Loss</h4>
+<div class="hbarshort"></div>
+
+<p>
+Packets sent via UDP are not guaranteed to arrive at their
+destination. This means there will be no reply received if either the
+client message or the server message is dropped by the network. <b>It
+is the client’s responsibility to re-attempt a message exchange, after
+a timeout of 1s (after not receiving a response from the server 1s
+after sending a message to the server).</b> You can assume that the
+server will hang onto the last known state indefinitely, until the
+client is able to make progress (get a message through to the server).
+</p>
+
+<p>
+Note that when using UDP, a message may also arrive out of order,
+and/or be duplicated by the network. Your solution must be able to
+deal with both of these cases.
+</p>
+
+<p> If the server makes the last move, the client can terminate on
+receiving this move. If the client makes the last move, the client can
+terminate as soon as it transmits the move message, regardless of
+delivery at the server.
+</p>
+
+
+<h4>Tracing Library</h4>
+<div class="hbarshort"></div>
+
+<p>This assignment introduces the tracing library, which will be used
+to test whether your code is behaving correctly. The library
+has <a href="https://pkg.go.dev/github.com/DistributedClocks/tracing">online
+documentation</a> that you should familiarize yourself with.</p>
+
+<p>Tracing is like logging. We say that a process records/reports/traces
+actions or events. What this means is that the process calls a tracing
+library method to record a particular struct type. A key difference
+with logging is that tracing can be used to reconcile ordering of
+events across networked nodes. To trace your program, the program
+needs to connect to a tracing server. In this assignment your client
+will have its own tracing server – your client code will need to start
+this tracing server, connect to it, run the client logic while
+recording actions at specific points in the execution, and later
+terminate the tracing server before exiting. A client-server example
+that illustrates how to use the tracing library can be found
+<a href="https://github.com/DistributedClocks/tracing/blob/0c7ae37adaaa/example/client-server/main.go">here</a>. (Note,
+however, that in this example, the client and server use the same
+tracing server and also use tracing tokens. In this assignment your
+client will have its own tracing server and you will not need to deal
+with tracing tokens.)
+</p>
+
+
+
+<h4>Tracing Semantics</h4>
+<div class="hbarshort"></div>
+
+<p>Your solution must precisely follow the tracing semantics described
+below. Your grade depends on the type of tracing log that your
+solution generates. For example, if traced actions are in the wrong
+order, or are missing, then you will lose points.</p>
+
+<p>You will use the tracing library to report actions using calls to
+<b>trace.RecordAction</b>, using a singular <b>trace</b> object obtained via
+<b>tracer.CreateTrace</b>. You only need to implement tracing for actions
+within your own client. There are four types of actions that your
+  client code must trace:
+
+<ul>  
+<li>[GameStart{Seed}] marks the start of a new game. </li>
+
+<ul>
+  <li>This action should appear exactly once, before any other actions are recorded.</li>
+  <li>Seed must be the randomization seed provided on the command line.</li></ul>
+
+<li>[ClientMove{GameState, MoveRow, MoveCount}] indicates that a client has made a move.</li>
+
+<ul>
+<li>This action must be recorded <b>just before</b> sending the corresponding client move to the server, including the opening “move”.</li>
+<li>The exception below aside, this action must happen after a [ServerMoveReceive].  The [ClientMove] action must be legal on receive relative to its immediately preceding [ServerMoveReceive].</li>
+<li>The above condition does not apply to an initial [ClientMove], which must match the pattern [ClientMove{nil, -1, _}] for this exception to apply.
+<br/>(One way of interpreting the above two bullets is that they pin client progress to server progress.)
+</li></ul>
+
+<li>[ServerMoveReceive{GameState, MoveRow, MoveCount}] indicates that a server’s move has been received.</li>
+
+<ul>
+  <li>This action must be recorded <b>just after</b> receiving a move from the server, including the opening “move”.</li>
+  <li>If this action is recorded, there must exist at least one [ClientMove] that happens-before it.</li></ul>
+
+<li>[GameComplete{Winner}] marks the end of a game.</li>
+
+<ul>
+  <li>This action must be recorded exactly once, after either a legal [ServerMoveReceive] or [ClientMove] (depending on the winner) with all entries in its [GameState] equal to 0.</li>
+
+<li>This action must always be the last recorded action in a trace.</li></ul>
+</ul>
+  
+</p>
+
+
+
+<h4>Example Execution</h4>
+<div class="hbarshort"></div>
+
+<p>
+Below is an example sequence of messages from a correct execution of
+this system with one client and one server (these messages also
+illustrated in a diagram below):
+<pre>
+From client: StateMoveMessage {
+       	GameState: nil
+	MoveRow: -1
+	MoveCount: 32
+}
+From server: StateMoveMessage {
+	GameState: [6,6,4]
+	MoveRow: -1
+	MoveCount: 32
+}
+From client: StateMoveMessage {
+        GameState: [6,1,4]
+        MoveRow: 1
+        MoveCount: 5 
+}
+From server: StateMoveMessage {
+        GameState: [6,6,4]
+	MoveRow: -1
+	MoveCount: 32
+} (duplicated)
+From server: StateMoveMessage {
+	GameState: [0,1,4]
+	MoveRow: 0
+	MoveCount: 6
+}
+From client: StateMoveMessage {
+	GameState: [0,1,1]
+	MoveRow: 2
+	MoveCount: 3
+} (lost)
+From client: StateMoveMessage {
+	GameState: [0,1,1]
+	MoveRow: 2
+	MoveCount: 3
+}
+From server: StateMoveMessage {
+	GameState: [0,0,1]
+	MoveRow: 1
+	MoveCount: 1
+}
+From client: StateMoveMessage {
+	GameState: [0,0,0]
+	MoveRow: 2
+	MoveCount: 1
+} (lost)
+</pre>
+</p>
+
+<p>
+The diagram below illustrates the above execution as a time space
+diagram. In addition, this diagram lists the traced actions as boxes
+on the client timeline. Note that the traced actions are located at
+very precise points in the client timeline relative to when the client
+received or sent each message.
+</p>
+
+<p align="center">
+  <img src="./client-server-tracing.png" alt="Client server tracing example" style="width: 70%;">
+</p>
+
+<p>
+An important feature of the above execution (and tracing semantics in
+this assignment) is that actions are recorded in response to all
+received/generated messages (i.e., even those that are received as
+duplicated by the client or those that are re-sent by the client
+because of message loss).
+</p>
+
+<h4>Solution Spec</h4>
+<div class="hbarshort"></div>
+
+<p> 
+You are to write a single go program called <b>client.go</b> that acts as a client in the protocol described above. Your program must be executable from the terminal using the following command:<br/>
+<i><b>$ go run client.go [seed]</b></i><br/>
+Where [seed] is the random seed to be sent to the server in the client’s first move to generate a game board.</p>
+
+<p>
+The ports to be used by the client to connect to the server at and to listen on are provided/configured in [config/client_config.json].
+<ul>
+<li>[ClientAddress]: local address that the client uses to connect to both the server and the fserver (i.e., the external IP of the machine the client is running on)</li>
+<li>[NimServerAddress]: the UDP address on which the server receives new client connections</li>
+<li>[TracingServerAddress]: the UDP address at which you are to run the tracing server</li>
+</ul>
+</p>
+
+<p>Your solution cannot use any external libraries other than those
+related to the tracing library.</p>
+
+
+<h4>Assumptions you can make</h4>
+<div class="hbarshort"></div>
+
+<p>
+  <ul>
+    <li>All messages fit into 1024 bytes</li>
+    <li>The board for a game does not exceed 16 rows</li>
+    <li>The number of coins in each row does not exceed 10</li>
+    <li>The server does not fail and responds in a timely manner</li>
+    <li>The server follows correct game logic (does not logically misbehave)</li>
+  </ul>
+</p>
+
+<h4>Assumptions you cannot make</h4>
+<div class="hbarshort"></div>
+<p>
+
+  <ul>
+    <li>UDP is reliable</li>
+  </ul>
+
+</p>
+
+
+<h4>Protocol corner cases</h4>
+<div class="hbarshort"></div>
+<p>
+
+  <ul>
+
+    <li>During a game, the server expects each incoming move to be valid for the directly preceding game state. If it is not, the server resends the previous move it made.</li>
+
+    <li>Your code should use a 1 second timeout for message loss (before attempting to retransmit a message)</li>
+
+  </ul>
+
+</p>
+
+
+
+<h4>Implementation requirements</h4>
+<div class="hbarshort"></div>
+<p>
+  <ul>
+
+    <li>The client code must be runnable on CS ugrad machines and be
+    compatible with Go version <b>1.16.7</b> (which is installed on
+    ugrad machines)</li>
+    
+    <li>You must use UDP and the message types given out in the initial code</li>
+    
+    <li>Your solution can only use standard library Go packages</li>
+    
+    <li>Your solution code must be Gofmt’d using gofmt</li>
+
+</ul>
+</p>
+
+<h4>Starter code and testing servers</h4>
+<div class="hbarshort"></div>
+
+<p>
+  We make four files available for you as starter code for this assignment.
+
+  <ol>
+    <li><a href="client.go">client.go</a> : starter code for your
+      client.go. This file assumes a tracing configuration file that
+      is available in <tt>./config/client_config.json</tt>.</li>
+    
+    <li><a href="config/client_config.json">client_config.json</a> :
+      config file that you can use for this assignment. (Note that you
+      may need to change port numbers in case other students are
+      running the tracing server/client on the same ugrad
+      server.)</li>
+
+    <li>go.mod : contains dependency tracking metadata, including a
+      dependency on https://github.com/DistributedClocks/tracing, the
+      tracing library.</li>
+
+    <li>go.sum : contains auto-generated metadata (checksums for
+      module dependencies). You should not need to touch or understand
+      this file.</li>
+
+  </ol>
+</p>
+
+<p>The list of nim servers you can test against will be posted to
+piazza.</p>
+
+
+
+<h4>Handin instructions</h4>
+<div class="hbarshort"></div>
+
+<p>
+Keep the provided file layout at the top-level in your solution
+repository. You may include additional files, but we do not expect
+this will be necessary. Do not reference any additional libraries in
+your solution.
+</p>
+
+<p>
+<font color="FF0000"><b>Your code must not change the UDP message
+format and tracing spec. Your code must work on ugrad servers (e.g.,
+remote.students.cs.ubc.ca). <br/> <br/> If any of these are violated,
+your mark for this assignment is 0. This is true regardless of how
+many characters had to be changed to make your solution compile, and
+regardless of how well your solution works with a different API or on
+    a different machine.</b></font>
+</p>
+
+<p>For a list of server machines you can use, please
+see <a href="https://my.cs.ubc.ca/docs/connecting-department-unix-servers">this
+page</a>. Note that the right version of Go (version 1.16.7) is
+installed in <code>/cs/local/bin/go</code>.</p>
+
+<p>
+<b>More instructions about submitting using a git repository via
+   https://github.students.cs.ubc.ca/ will be posted here and on
+   Piazza.</b>
+</p>
+
+
+<h4>Grading Criteria</h4>
+<div class="hbarshort"></div>
+
+
+<p>
+  <ul>
+
+    <li>70% Standard test cases, traces pass trace conditions on happy-path scenarios</li>
+    <ul>
+      <li>5% GameStart is reported correctly</li>
+      <li>15% Initializes game state correctly with the seed passed via command-line</li>
+      <ul>
+        <li>The opening ClientMove and matching opening ServerMoveReceive are recorded</li>
+      </ul>
+      <li>20% Is able to make one valid move</li>
+      <ul>
+        <li>At least one non-opening ClientMove reported is legal on
+        receive with respect to the preceding recorded
+        ServerMoveReceive</li>
+      </ul>
+      <li>25% Plays to completion</li>
+      <ul>
+        <li>An alternating series of ClientMove and ServerMoveReceive
+        actions recorded are legal on receive, each with respect to
+        the preceding action in the series, the final move in which
+          has all entries in its [GameState] equal to 0</li>
+      </ul>
+      
+      <li>5% GameComplete is recorded correctly</li>
+    </ul>
+    
+    <li>30% : Scenario testing, traces pass trace conditions under special scenarios</li>
+    <ul>
+      <li>10% Is able to handle receiving repeated messages and continue normal play</li>
+      <li>10% Is able to handle receiving delayed messages and continue normal play</li>
+      <li>10% Is able to deal correctly with lost messages</li>
+    </ul>
+    
+    <li>Bonus 5%: Note that you do not have to win to complete this
+    assignment, but it is possible to make an optimal strategy and
+    always win against our server from the starting configuration. If
+    your solution always wins against our server, then you will be
+    rewarded an extra 5%.</li>
+
+</ul>
+</p>
+
+<h4>Advice</h4>
+<div class="hbarshort"></div>
+<p>
+<ul>
+
+  <li>
+    Start simple, and do not worry about UDP edge cases until the
+    happy path works.
+  </li>
+
+  <li>Be extra careful with where and when you trace actions. These
+    must be correct for you to receive the above marks.</li>
+
+  <li>Do not attempt to win the game as a starting point. Leave the
+    bonus to the end.</li>
+
+  <li>Compile and run your code on the ugrad servers.</li>
+
+</ul>
+</p>
+
+
+<p>
+Make sure to follow the
+course <a href="../index.html#honesty">collaboration policy</a> and refer
+to the <a href="../index.html#submit">submission</a> instructions
+that detail how to submit your solution.
+</p>
+
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td style="padding:0px">
+<br/><br/><br/>
+<div id="footer">
+Last updated: January 13, 2022
+</div>
+<!--
+Local Variables:
+time-stamp-start: "^Last updated: "
+time-stamp-end: "\\.?$"
+time-stamp-format: "%:b %:d, %:y"
+time-stamp-line-limit: -50
+End:
+-->
+</td></tr>
+
+</table>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-793279-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+</body>
+</html>

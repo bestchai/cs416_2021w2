@@ -1,0 +1,7 @@
+{
+  "ClientAddress": "127.0.0.1:4321",
+  "NimServerAddress": "127.0.0.1:1234",
+  "TracingServerAddress": "127.0.0.1:7437",
+  "Secret": "",
+  "TracingIdentity": "client"
+}
