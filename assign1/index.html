@@ -280,7 +280,7 @@ within your own client. There are four types of actions that your
 <li>[ClientMove{GameState, MoveRow, MoveCount}] indicates that a client has made a move.</li>
 
 <ul>
-<li>This action must be recorded <b>just before</b> sending the corresponding client move to the server, including the opening “move”.</li>
+<li>This action must be recorded <b>just before</b> sending the corresponding client move to the server, including the opening "move".</li>
 <li>The exception below aside, this action must happen after a [ServerMoveReceive].  The [ClientMove] action must be legal on receive relative to its immediately preceding [ServerMoveReceive].</li>
 <li>The above condition does not apply to an initial [ClientMove], which must match the pattern [ClientMove{nil, -1, _}] for this exception to apply.
 <br/>(One way of interpreting the above two bullets is that they pin client progress to server progress.)
@@ -289,7 +289,7 @@ within your own client. There are four types of actions that your
 <li>[ServerMoveReceive{GameState, MoveRow, MoveCount}] indicates that a server's move has been received.</li>
 
 <ul>
-  <li>This action must be recorded <b>just after</b> receiving a move from the server, including the opening “move”.</li>
+  <li>This action must be recorded <b>just after</b> receiving a move from the server, including the opening "move".</li>
   <li>If this action is recorded, there must exist at least one [ClientMove] that happens-before it.</li></ul>
 
 <li>[GameComplete{Winner}] marks the end of a game.</li>
@@ -463,7 +463,7 @@ related to the tracing library.</p>
 <div class="hbarshort"></div>
 
 <p>
-  We make four files available for you as starter code for this assignment.
+  We make four files available for you as starter code for this assignment, as well as <a href="https://github.com/bestchai/cs416_2021w2/tree/main/assign1/spec">an automated checking tool</a> to analyze your distributed traces.
 
   <ol>
     <li><a href="client.go">client.go</a> : starter code for your
@@ -490,6 +490,10 @@ related to the tracing library.</p>
 <p>The list of nim servers you can test against will be posted to
 piazza.</p>
 
+<p>
+  The provided checking tool's output will be strongly correlated with what our autograder will consider correct (though our test scenarios themselves remain secret), so make sure to try it.
+  It is much easier to investigate and ask questions before the deadline than to be surprised after.
+</p>
 
 
 <h4>Handin instructions</h4>
