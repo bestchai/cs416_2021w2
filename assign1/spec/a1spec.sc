@@ -1,5 +1,5 @@
 import $repo.`https://jitpack.io`
-import $ivy.`com.github.DistributedClocks:tracechecker:fhackett-ng-SNAPSHOT`
+import $ivy.`com.github.DistributedClocks:tracechecker:master-SNAPSHOT`
 
 import com.github.distributedclocks.tracechecker._
 
