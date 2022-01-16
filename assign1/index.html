@@ -94,10 +94,11 @@ further below.
 </p>
 
 <p>
-The client receives a [client_config.json] input file on the command
-line. This file specifies the UDP IP:port of the server (other player)
-that it is to connect to. The client also receives a randomization
-seed on the command line. The client then follows the following steps:
+The client reads the [config/client_config.json] JSON file.
+This file specifies the UDP IP:port of the server (other player)
+that it is to connect to. The client receives a randomization
+seed on the command line (the only command line input).
+Then, the client follows the following steps:
 </p>
 
 
@@ -614,7 +615,7 @@ that detail how to submit your solution.
 <tr><td style="padding:0px">
 <br/><br/><br/>
 <div id="footer">
-Last updated: January 14, 2022
+Last updated: January 15, 2022
 </div>
 <!--
 Local Variables:
