@@ -77,6 +77,25 @@ class Spec(expectedSeed: String) extends Specification[Record] {
       .map(_.view.collect { case m: StateMoveMessage => m }.lastOption.toList)
       .requireOne
 
+  val duplicatedMsgs: Query[Set[ById[ServerMoveReceive]]] =
+    materialize {
+      call(theTraceInOrder)
+        .map(_.collect {
+          case m: ServerMoveReceive => m
+        })
+        .map(_.foldLeft((Set.empty[ById[ServerMoveReceive]], Set.empty[ById[ServerMoveReceive]])){ (tuple, item) =>
+          val (seen, dups) = tuple
+          val newdup =
+            if (seen(ById(item))) {
+              dups.incl(ById(item))
+            } else {
+              dups
+            }
+          (seen.incl(ById(item)), newdup)
+        })
+        .map(_._2)
+    }
+
   def requireLegalOnReceive(m: StateMoveMessage): Query[Unit] =
     m match {
       case ClientMove(None, -1, seed) if seed.toString == expectedSeed =>
@@ -93,35 +112,37 @@ class Spec(expectedSeed: String) extends Specification[Record] {
         // for non-initial client moves, we look back to the "last" ServerMove the client reported seeing to determine
         // if the client's request was reasonable. this avoids all the messy UDP semantics, as well as second-guessing
         // what the server might be seeing (which may include UDP-induced invalid moves!)
-        causalRelation.latestPredecessors(cm) { case sm@ServerMoveReceive(Some(_), _, _) => sm }
-          .label("latest predecessors")
-          .requireOne
-          .flatMap {
-            case sm@ServerMoveReceive(Some(gameStateBeforeStr), _, _) =>
-              val gameStateAfter = getGameStateBytes(gameStateAfterStr)
-              val gameStateBefore = getGameStateBytes(gameStateBeforeStr)
-              for {
-                _ <- label("gameStateBefore")(gameStateBefore)
-                _ <- label("gameStateAfter")(gameStateAfter)
-                _ <- if(moveCount == 0) {
-                  reject(s"$cm has a move count of 0, which Nim does not allow")
-                } else if(!gameStateBefore.indices.contains(moveRow)) {
-                  reject(s"$cm lists a moveRow that does not index into the board in $sm")
-                } else {
-                  val nextRowVal = gameStateBefore(moveRow) - moveCount
-                  if (nextRowVal < 0) {
-                    reject(s"$cm implies a game board with a negative value, relative to $sm")
+        duplicatedMsgs.flatMap { duplicatedMsgs =>
+          causalRelation.latestPredecessors(cm) { case sm@ServerMoveReceive(Some(_), _, _) if !duplicatedMsgs(ById(sm)) => sm }
+            .label("latest predecessors")
+            .requireOne
+            .flatMap {
+              case sm@ServerMoveReceive(Some(gameStateBeforeStr), _, _) =>
+                val gameStateAfter = getGameStateBytes(gameStateAfterStr)
+                val gameStateBefore = getGameStateBytes(gameStateBeforeStr)
+                for {
+                  _ <- label("gameStateBefore")(gameStateBefore)
+                  _ <- label("gameStateAfter")(gameStateAfter)
+                  _ <- if(moveCount == 0) {
+                    reject(s"$cm has a move count of 0, which Nim does not allow")
+                  } else if(!gameStateBefore.indices.contains(moveRow)) {
+                    reject(s"$cm lists a moveRow that does not index into the board in $sm")
                   } else {
-                    if(gameStateAfter.corresponds(gameStateBefore.view.updated(moveRow, nextRowVal))(_ == _)) {
-                      accept
+                    val nextRowVal = gameStateBefore(moveRow) - moveCount
+                    if (nextRowVal < 0) {
+                      reject(s"$cm implies a game board with a negative value, relative to $sm")
                     } else {
-                      reject(s"the game board in $cm is not consistent with the one in $sm, according to Nim rules")
+                      if(gameStateAfter.corresponds(gameStateBefore.view.updated(moveRow, nextRowVal))(_ == _)) {
+                        accept
+                      } else {
+                        reject(s"the game board in $cm is not consistent with the one in $sm, according to Nim rules")
+                      }
                     }
                   }
-                }
-              } yield ()
-          }
-          .asUnit
+                } yield ()
+            }
+            .asUnit
+        }
       case _ =>
         reject(s"the move did not fit any recognised pattern. maybe it's a checker bug or a corrupt trace?")
     }
