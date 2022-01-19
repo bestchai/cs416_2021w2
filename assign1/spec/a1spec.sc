@@ -83,15 +83,15 @@ class Spec(expectedSeed: String) extends Specification[Record] {
         .map(_.collect {
           case m: ServerMoveReceive => m
         })
-        .map(_.foldLeft((Set.empty[ById[ServerMoveReceive]], Set.empty[ById[ServerMoveReceive]])){ (tuple, item) =>
+        .map(_.foldLeft((Set.empty[ServerMoveReceive], Set.empty[ById[ServerMoveReceive]])){ (tuple, item) =>
           val (seen, dups) = tuple
           val newdup =
-            if (seen(ById(item))) {
+            if (seen(item)) {
               dups.incl(ById(item))
             } else {
               dups
             }
-          (seen.incl(ById(item)), newdup)
+          (seen.incl(item), newdup)
         })
         .map(_._2)
     }
