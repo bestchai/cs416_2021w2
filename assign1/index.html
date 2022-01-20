@@ -282,7 +282,7 @@ within your own client. There are four types of actions that your
 
 <ul>
 <li>This action must be recorded <b>just before</b> sending the corresponding client move to the server, including the opening "move".</li>
-<li>The exception below aside, this action must happen after a [ServerMoveReceive].  The [ClientMove] action must be legal on receive relative to its immediately preceding [ServerMoveReceive].</li>
+<li>The exception below aside, this action must happen after a [ServerMoveReceive]. The [ClientMove] action must be legal on receive relative to its unique preceding [ServerMoveReceive], considering the first of any duplicates, if the same [ServerMoveReceive] is logged more than once.</li>
 <li>The above condition does not apply to an initial [ClientMove], which must match the pattern [ClientMove{nil, -1, _}] for this exception to apply.
 <br/>(One way of interpreting the above two bullets is that they pin client progress to server progress.)
 </li></ul>
