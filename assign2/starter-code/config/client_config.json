@@ -1,0 +1,14 @@
+{
+  "ClientAddress": "127.0.0.1:4321",
+  "NimServerAddressList": [
+    "127.0.0.1:1234",
+    "127.0.0.1:1235",
+    "127.0.0.1:1236"
+  ],
+  "TracingServerAddress": "127.0.0.1:41699",
+  "Secret": "",
+  "TracingIdentity": "client",
+  "FCheckAckLocalAddr": "127.0.0.1:999",
+  "FCheckHbeatLocalAddr": "127.0.0.1:998",
+  "FCheckLostMsgsThresh": 3
+}
