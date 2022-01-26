@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="407.5 265 301.57617 326.58333" width="301.57617" height="326.58333">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 18 14" markerWidth="18" markerHeight="14" color="black">
+      <g>
+        <path d="M 16 0 L 0 0 M 0 -6 L 16 0 L 0 6" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="15" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="Arrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 18 14" markerWidth="18" markerHeight="14" color="#c11a24">
+      <g>
+        <path d="M 16 0 L 0 0 M 0 -6 L 16 0 L 0 6" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="11" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.19.2\n2022-01-20 23:55:42 +0000</metadata>
+  <g id="Canvas_1" fill="none" fill-opacity="1" stroke="none" stroke-dasharray="none" stroke-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="407.5" y="265" width="301.57617" height="326.58333"/>
+    <g id="Canvas_1_Layer_1">
+      <title>Layer 1</title>
+      <g id="Line_76">
+        <line x1="546" y1="286.91563" x2="546" y2="582.1333" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_77">
+        <line x1="674.5" y1="286.91563" x2="674.5" y2="392.41563" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_78">
+        <text transform="translate(514.81836 270)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">fcheck at X</tspan>
+        </text>
+      </g>
+      <g id="Graphic_79">
+        <text transform="translate(640.9238 270)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">fcheck at Y</tspan>
+        </text>
+      </g>
+      <g id="Line_80">
+        <line x1="546" y1="334.74896" x2="664.7683" y2="356.93137" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_81">
+        <rect x="584.25" y="334.74896" width="53" height="16" fill="white"/>
+        <text transform="translate(585.3965 335.74896)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">heartbeat</tspan>
+        </text>
+      </g>
+      <g id="Line_82">
+        <line x1="674.5" y1="368.90705" x2="555.7538" y2="389.54517" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_83">
+        <rect x="599.75" y="372.0737" width="21" height="16" fill="white"/>
+        <text transform="translate(600.9131 373.0737)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">ack</tspan>
+        </text>
+      </g>
+      <g id="Line_85">
+        <line x1="546" y1="402.41563" x2="664.7683" y2="424.59803" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_86">
+        <rect x="584.25" y="402.41563" width="53" height="16" fill="white"/>
+        <text transform="translate(585.3965 403.41563)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">heartbeat</tspan>
+        </text>
+      </g>
+      <g id="Line_87">
+        <line x1="546" y1="443.5823" x2="664.7683" y2="465.7647" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_88">
+        <rect x="584.25" y="443.5823" width="53" height="16" fill="white"/>
+        <text transform="translate(585.3965 444.5823)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">heartbeat</tspan>
+        </text>
+      </g>
+      <g id="Line_89">
+        <line x1="546" y1="486.32517" x2="664.7683" y2="508.5076" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_90">
+        <rect x="584.25" y="486.32517" width="53" height="16" fill="white"/>
+        <text transform="translate(585.3965 487.32517)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">heartbeat</tspan>
+        </text>
+      </g>
+      <g id="Graphic_91">
+        <rect x="513" y="531.06804" width="69" height="18" fill="white"/>
+        <text transform="translate(513.46436 531.06804)" fill="#004a89">
+          <tspan font-family="Helvetica" font-size="15" font-weight="700" fill="#004a89" x="0" y="15">Y timeout</tspan>
+        </text>
+      </g>
+      <g id="Line_92">
+        <line x1="546.33333" y1="559.74896" x2="417.9" y2="559.74896" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_93">
+        <path d="M 408.66667 297.24896 C 449.55147 297.24896 511.00203 295.13806 531.33333 297.24896 C 551.66463 299.35986 551.10907 307.69363 530.66667 309.91563 C 511.8253 311.9636 458.61976 310.614 418.56396 310.564" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_94">
+        <rect x="414.67383" y="289" width="119.15234" height="16" fill="white"/>
+        <text transform="translate(415.67383 290)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Start(…,Y-IP:Y-Port,3)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_98">
+        <rect x="437.5" y="551.5061" width="103" height="16" fill="white"/>
+        <text transform="translate(438.64746 552.5061)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">FailureDetected(Y)</tspan>
+        </text>
+      </g>
+      <g id="Line_99">
+        <line x1="675.1667" y1="399.97464" x2="675.1667" y2="582.1333" marker-end="url(#StickArrow_Marker_2)" stroke="#c11a24" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_100">
+        <line x1="473.75" y1="380.97873" x2="473.75" y2="416.77873" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_101">
+        <rect x="459.75" y="374.90705" width="29" height="16" fill="white"/>
+        <text transform="translate(461.1367 375.90705)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Time</tspan>
+        </text>
+      </g>
+      <g id="Graphic_102">
+        <rect x="500" y="430.41563" width="93" height="13" fill="white"/>
+        <text transform="translate(500.35425 430.41563)" fill="#004a89">
+          <tspan font-family="Helvetica" font-size="11" font-weight="700" fill="#004a89" x="0" y="10">heartbeat timeout</tspan>
+        </text>
+      </g>
+      <g id="Graphic_103">
+        <rect x="500" y="473.78707" width="93" height="13" fill="white"/>
+        <text transform="translate(500.35425 473.78707)" fill="#004a89">
+          <tspan font-family="Helvetica" font-size="11" font-weight="700" fill="#004a89" x="0" y="10">heartbeat timeout</tspan>
+        </text>
+      </g>
+      <g id="Graphic_104">
+        <rect x="501" y="510.32517" width="93" height="13" fill="white"/>
+        <text transform="translate(501.35425 510.32517)" fill="#004a89">
+          <tspan font-family="Helvetica" font-size="11" font-weight="700" fill="#004a89" x="0" y="10">heartbeat timeout</tspan>
+        </text>
+      </g>
+      <g id="Graphic_84">
+        <rect x="654.5" y="392.41563" width="41" height="18" fill="white"/>
+        <text transform="translate(654.9866 392.41563)" fill="#a03227">
+          <tspan font-family="Helvetica" font-size="15" font-weight="700" fill="#a03227" x="0" y="15">crash</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

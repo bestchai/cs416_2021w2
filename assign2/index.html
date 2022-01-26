@@ -1,0 +1,1139 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="./style.css" /> 
+</head>
+<body>
+<title>Assignment 2</title>
+
+<table id="main">
+
+<tr><td style="padding-bottom: 20px">
+<h2><a href="../index.html">416</a> Distributed Systems: Assignment 2 [Traced nim, fcheck lib, Robust nim]</h2>
+<h3>Due: February 8 at 6pm PST</h3>
+<p style="color:gray"><small>Winter 2022</small></p>
+<p style="color:gray">
+<small>
+  <script src="hash.js"></script>
+</small>
+</p>
+</td></tr>
+
+
+<!-- -------------------------------------------------------------->
+
+<tr><td>
+
+<p>
+  This is a multi-part assignment that builds on the the nim client
+  that you have developed in <a href="../assign1/index.html">A1</a>.
+  By the end of this assignment, your nim client will be able to cope
+  with server failures and you will be able to visualize an execution
+  of your system across multiple nodes. Note that this is the last
+  solo assignment (A3 and the projects will require team work). In
+  this assignment you will work on three parts:
+
+  <ol>
+    <li>Add <i>distributed</i> tracing support to your nim client by using tracing tokens</li>
+    <li>Create a UDP-based failure checking (fcheck) library to detect server failure</li>
+    <li>Extend your nim client to detect server failure with the fcheck library and fail-over to a different nim server</li>
+  </ol>
+
+  The above three parts require a working nim client. If you want, you
+  can use our version of the nim client for this assignment. But, you
+  can also use your own. As with A1, your code will be marked
+  automatically (we will write servers and script scenarios to
+  exercise your fcheck library and updated nim client). It is
+  therefore important to follow the spec below exactly, including the
+  distributed tracing API, the <tt>fcheck</tt> API and its semantics,
+  the UDP protocol/packet format, and other details.
+</p>
+
+
+<h3>Assignment overview</h3>
+<div class="hbarshort"></div>
+
+<img style="padding-left:20%" src="a2-arch.svg"/>
+<br/>
+</p>
+
+<p>
+  <b>Part 1: Distributed tracing support.</b> So far, you have been
+  tracing local actions from your nim client. The resulting trace is a
+  totally ordered trace of client-side actions. It is useful for
+  understanding nim client behavior, but it does not provide
+  visibility into the rest of the system. In this part of A2, you will
+  add distributed tracing support, which will allow the tracing
+  server to observe tracing events not just from your nim client, but
+  also from the nim servers that your client communicates with. You
+  will also be able to visualize the resulting trace using the ShiViz tool.
+  Introducing distributed tracing support will require a change to the
+  packet format and in how you use the tracing library.
+</p>
+
+<p>
+<b>Part 2: Failure checking library.</b>
+Distributed systems are frequently designed to deal with
+failures. There are many kinds of failures
+(hardware/software/network/etc). In this assignment you will focus on
+<i>node failures</i>. In this part of A2 you will design a library for
+failure detection (fcheck). This library will monitor a remote node
+and will be able to notify the local library client when the remote
+node has failed. Note that real distributed systems, including those
+you will build in this course, operate over networks that are
+asynchronous and unreliable. This makes true node failure detection
+impossible: you cannot distinguish the failure of a node from the
+failure of the network. Therefore, your fcheck will provide <i>best
+effort</i> failure detection. You will structure fcheck as a library
+that can be re-used across projects (you will use it in A3). Your
+library must integrate a simple round-trip time estimator and use a
+UDP heartbeat protocol.
+</p>
+
+<p>
+  <b>Part 3: Dealing with nim server failures.</b>  In A1 your client
+  code assumed that the server does not fail.  We will remove this
+  assumption in A2.  Once you have built the fcheck library, you will
+  use it in your nim client. Specifically, you will (1) use fcheck to
+  monitor the current nim server that your nim client is connected to,
+  (2) use fcheck to detect when this nim server has failed, and (3)
+  add fail-over behavior to your client to use a new nim server when
+  the current nim server has been detected as failed. After failing
+  over to a new server, your nim client should begin monitoring the
+  new server with fcheck, and fail-over again if necessary.
+</p>
+
+<p>
+The three parts above build on one another: the fcheck library must
+support distributed tracing and record certain actions, and the
+failover process must use the fcheck library. We recommend starting on
+a part i+1 only when you have completed part i. The new nim servers
+that we will allow you to test against will help you implement each of
+the parts. These nim servers all expect distributed tracing. You can
+use a non-failing nim server to test your work in part 1. To test your
+fcheck from part 2 you can use a non-failing nim server and a nim
+server that sometimes fails and restarts. Finally, to test part 3 you
+can use a collection of nim servers, each of which eventually fails
+and restarts.
+</p>
+
+
+<h3>1.1 Distributed tracing support</h3>
+<div class="hbar"></div>
+
+<p>
+  We begin with a description of distributed tracing because this will
+  be a powerful new tool in your debugging toolbox. You will also use
+  distributed tracing in A3 and in P2, so it's a good idea to
+  understand it well. You will retain the basic nim protocol, but you
+  will augment it with distributed tracing. What this means in
+  practice is that the UDP messages will include some additional
+  information. You will also need to add more tracing library
+  calls/logic to your code.
+</p>
+
+<p>
+  Distributed tracing, which is available in the same tracing library
+  you used in A1, introduces two new features: (1) the notion of
+  a <i>trace</i> with which recorded actions are associated, and (2)
+  <a href="https://en.wikipedia.org/wiki/Vector_clock">vector
+  clock</a> timestamps to track the happens-before relationship (if
+  any) between actions across nodes. These two features require a
+  slightly different way of thinking about tracing in your system.
+</p>
+
+<p>
+  You already know that a <i>trace</i> is a set of recorded actions
+  that are associated with a unique <i>trace ID</i>. With traces,
+  actions must be recorded as part of traces. So, you must first get
+  access to a trace and then you can record an action
+  (i.e., <code>Trace.RecordAction(action)</code>). So far, you have
+  been using <code>tracer.CreateTrace</code> to get a trace instance,
+  but how do you get two different nodes to record an action to the
+  same trace? The answer is tokens.<br/><br/>
+
+  To allow another node to record an action into a trace, a trace must
+  be serialized into a <i>token</i>
+  (using <tt>trace.GenerateToken()</tt>), which can be sent to another
+  node, at which point the receiving node can reconstruct the trace
+  instance from the token (using <tt>trace = tracer.ReceiveToken()</tt>).
+  You will typically serialize a trace
+  multiple times since
+  <i>every token must be unique</i> and a trace created by your nim client will
+  span several nodes. More concretely, to generate the token from the
+  current trace your code would call
+  <code>Trace.GenerateToken()</code>, which will return a token. Your
+  code can then include this token in a UDP packet (one reason why the
+  packet format has to change). On receiving a token, the node can
+  reconstruct the trace by
+  calling <code>Tracer.ReceiveToken(token)</code> on the received
+  token. <br/><br/>
+
+  So, in summary, to implement tracing across nodes your code must (1)
+  serialize a trace into a token for another node (nim server) to use,
+  (2) receive an existing trace from another node (nim server) in the
+  form of a token, and (3) deserialize the received token into a trace
+  instance that you can use.
+</p>
+
+<p>
+  For a detailed description of the distributed tracing API, please
+  see the go doc documentation for the
+  <a href="https://pkg.go.dev/github.com/DistributedClocks/tracing">tracing
+  library</a>.
+</p>
+
+<h4>1.2 Message Format</h4>
+<div class="hbarshort"></div>
+
+<p>
+In A2 the [StateMoveMessage] is updated to look as follows:
+<pre>
+type StateMoveMessage struct{
+	GameState []uint8
+	MoveRow int8
+        MoveCount int8
+        TracingServerAddr string
+        Token TracingToken
+}
+</pre>
+</p>
+
+<p>
+  In each message: [GameState], [MoveRow], and [MoveCount] have mostly
+  identical semantics as in A1. The key semantics change is that
+  during fail-over to a new nim server, the client should send its
+  last valid move with the appropriate GameState, MoveRow, and
+  MoveCount fields values to the new nim server. That is, during
+  fail-over mid-game the client <b>should not</b> send an opening
+  message to the new nim server. When starting a new game, however,
+  the client must send an opening move message, as before in A1.
+</p>
+
+<p>
+  There are two new tracing-related fields in the <tt>StateMoveMessage</tt> struct above:
+<ul>
+
+  <li><tt>TracingServerAddr</tt>: contains a string representation of the
+  ip:port of the tracing server to connect and trace actions related
+  to this message.</li>
+
+  <li><tt>Token</tt>: represents a trace ID that the recipient should
+  deserialize (using <tt>tracer.ReceiveToken</tt>) (after connecting
+  to the tracing server) and with which the recipient should then
+  associate tracing actions.</li>
+
+</ul>
+</p>
+
+<p>
+In this assignment the nim server will use the tracing server
+specified by the client in each StateMoveMessage. It is important that
+the <tt>TracingServerAddr</tt> and <tt>Token</tt> fields are both set
+correctly in <b>every</b> message to the nim server. If these fields
+are incorrect -- e.g., if the nim server cannot connect to the
+specified tracing server or cannot deserialize the token, then the nim
+server will either (1) respond with its previous move, or (2) not
+respond if this is the first message that the nim server has received
+from this client.
+</p>
+
+<p>
+Because the nim server uses the tracing server that the client tells
+it about, <tt>StateMoveMessage</tt> packets <b>from</b> the nim server
+will specify an identical tracing server in
+the <tt>TracingServerAddr</tt> field. However, the <tt>Token</tt>
+field will always be different. The client, must deserialize the
+received token right after receiving a StateMoveMessage from the nim
+server, and the client must use the resulting trace object (from the
+deserialized token) in its later tracing commands.
+</p>
+
+<p>
+Note that in this assignment you will augment the nim protocol from A1
+with distributed tracing. You will not, however, trace the messages
+sent by the fcheck library. Though you will record several new actions
+related to failure detection.
+</p>
+
+
+<h4>1.3 End-to-end example of distributed tracing + ShiViz</h4>
+<div class="hbarshort"></div>
+
+<p>
+  A key feature of distributed tracing is that now all actions include
+  not just physical timestamps but also vector clock timestamps. These
+  vector clocks timestamps allow us to reconstruct the happens-before
+  relation between recorded actions. This relation will look like a
+  DAG with vertices associated with different nodes in your
+  system. The tracing library's output supports a visualization tool, called
+  <a href="https://bestchai.bitbucket.io/shiviz/">ShiViz</a>, that you
+  can use to visualize the recorded DAG of events.
+</p>
+
+
+<p>
+Let's consider a simple example. This example consists of a client and
+a server. This example uses RPC, but it is identical in spirit to the
+UDP description above.
+The client invokes an RPC on the server and then the server
+returns the response to the client. You can find the
+implementation <a href="https://github.com/DistributedClocks/tracing/tree/main/example/client-server">here</a>. This
+implementation also illustrates how to use the distributed tracing API
+described above. To run this example, you can run <code>go run
+main.go</code> from the example/client-server directory.
+</p>
+
+<p>Notice the use of distributed tracing
+in <a href="https://github.com/DistributedClocks/tracing/blob/main/example/client-server/main.go">main.go</a>
+of the above example. The caller generates a token, passes it to
+the <code>GetName</code> RPC function as part of the <code>Args</code>
+struct. The callee runs <code>GetName</code> RPC and in the line just
+before returning generates a return token (<b>ret-token</b> in the RPC
+specs below) and returns this token as part of its return value in
+the <code>Reply</code> struct. The two tokens, one in the forward
+direction and one in return direction, allows us to reconstruct the
+happens-before <a href="https://en.wikipedia.org/wiki/Partially_ordered_set">partial
+ordering</a> of the distributed execution. The diagram below
+illustrates this in more detail:</p>
+
+<p align="center">
+  <img src="rpc-tracing.png" alt="shiviz example" style="width: 100%;">
+</p>
+
+
+<p>
+The tracing server also generates a ShiViz-compatible log that can be
+used with ShiViz to visualize the execution of the system. This log
+file is defined in the tracing server configuration file
+as <tt>ShivizOutputFile</tt>, which has the
+<tt>"shiviz_output.log"</tt> value by default.
+</p>
+
+<p>
+We can upload the generated ShiViz log, i.e., <code>shiviz_output.log</code>, to
+the <a href="https://bestchai.bitbucket.io/shiviz/">ShiViz online
+tool</a>. For this, click on the blue "Try out shiviz" button and
+select a file to upload, choosing your local <code>shiviz_output.log</code>
+file. You should then see the following diagram that you can interact
+with:
+</p>
+
+<p align="center">
+  <img src="shiviz-example.png" alt="shiviz example" style="width: 80%;">
+</p>
+
+
+
+<h3>2.1 Detecting failures with the fcheck library</h3>
+<div class="hbar"></div>
+
+<p>
+  In this assignment, the nim server your client communicates with may
+  fail. However, the A1 client protocol continuously re-transmits a
+  message that has not been replied to every 1 second,
+  indefinitely. The client needs (1) a way to detect that the server
+  has failed, and (2) needs to respond to server failures. The fcheck
+  library that you must develop is used for failure detection. This is
+  the focus of part 2 of A2. The fail over algorithm to using a new
+  nim server is described in part 3 of A2, further below.
+</p>
+
+<p>
+  The basic idea of the fcheck library is that it can be imported and
+  used by code in one node to detect if another node, that is also
+  using the fcheck library, has failed or not. The fcheck library uses
+  a simple heartbeat-ack protocol that resembles the nim protocol you
+  implemented in A1. fcheck is application-independent, and even
+  though you will use it in your nim server, you should build it in a
+  way that allows you to re-use it in A3.
+</p>
+
+<p>
+  In the fcheck library a node may optionally <i>monitor</i> one other
+  node and also allow itself to be monitored by any number of other
+  nodes. In A1, your client will monitor a single nim server (the one
+  the client is currently connected to). Some of the nim servers that
+  the client will connect to will also monitor your nim client.
+  Monitoring means that the monitoring node actively
+  sends <i>heartbeat</i> messages (a type of UDP message defined
+  below) to check if the node being monitored has failed, or not. Upon
+  receiving a heartbeat, fcheck must respond to the sender with
+  an <i>ack</i> message. Failure is determined/defined based on some
+  number of heartbeats that have not been acked. The exact policy is
+  described below. Note that your fcheck library should respond to a
+  heartbeat message regardless of which node sent the heartbeat (the
+  current nim server or some other server).
+</p>
+
+<p>
+The following diagram illustrates an example four node system and the
+failure monitoring relationships between the nodes with the fcheck
+(fc) library. In the diagram, Nodes 1 and 3 monitor Node 2 (e.g., Node
+1 sends heartbeats and receive acks). Node 2 does not monitor any
+node. Node 4 monitors Node 3 but is not monitored by any node. Note
+that a single instance of the fcheck library may monitor zero or one
+node, and may be monitored by zero or more nodes.<br/><br/>
+
+<img style="padding-left:20%" src="fcheck-topo-example.svg"/>
+<br/>
+</p>
+
+<h4>2.2 fcheck API</h4>
+<div class="hbarshort"></div>
+
+<p>
+Your fcheck must provide the following API. Note that below, each call
+(Start or Stop) invoked by the client must run to completion and
+return before another invocation by a client can be made. For
+presentation purposes we list two distinct Start functions below. In
+the starter Go code, however, there is just one Start function that
+takes a struct that can be used to determine if the first or second
+variant of Start is intended.
+</p>
+
+<p>
+Note that Start can be invoked multiple times, but Start must be
+invoked first (before Stop) and calls to Start must alternate with
+calls to Stop.
+
+Below, if <tt>err</tt> (of built-in error type) is nil then the call
+must have succeeded, otherwise <tt>err</tt> must include a descriptive
+message of the error. There are no constraints on what the error
+message is, the exact text does not matter.
+<ul>
+
+  <li><tt>err</tt> &#8592; <b>Start</b>(<tt>AckLocalIP:AckLocalPort</tt>)</li>
+<ul>
+  <li>
+    Starts the failure checking library in a mode where it does not
+    monitor any node, but it does respond to heartbeats (e.g., Node 2
+    in the diagram above).
+    <ul>
+
+      <li><tt>AckLocalIP:AckLocalPort</tt> : the library
+        must <i>receive</i> heartbeat messages on a
+        <i>local</i> UDP <tt>AckLocalIP:AckLocalPort</tt> address. The
+        responses (ack messages) should be always directed to the
+        source LocalIP:LocalPort of the corresponding <i>received</i>
+        heartbeat message. The library must use the
+        UDP <tt>AckLocalIP:AckLocalPort</tt> address for sending these
+        heartbeats. Note that fcheck can only receive and respond to
+        heartbeats on a single AckLocalIP:AckLocalPort. Inappropriate
+        ip:port values should result in an error, with the err
+        appropriately set.
+      </li>
+
+    </ul>
+</ul>
+
+
+<li><tt>notify-channel, err</tt>
+  &#8592; <b>Start</b>(
+  <tt>AckLocalIP:AckLocalPort</tt>,
+  <tt>epoch-nonce</tt>,
+  <tt>HBeatLocalIP:HBeatLocalPort</tt>,
+  <tt>HBeatRemoteIP:HBeatRemotePort</tt>,
+  <tt>lost-msgs-thresh</tt>
+  )</li>
+<ul>
+  <li>
+    Starts the failure checking library in a mode where it monitors
+    one node and it also responds to heartbeats (e.g., Nodes 1,3,4 in
+    the diagram above). The returned <tt>notify-channel</tt> channel
+    must have capacity of at least 1 and must be used by fcheck to
+    deliver failure notification of the monitored node.
+
+    <ul>
+      
+      <li><tt>AckLocalIP:AckLocalPort</tt> : see description above.
+      </li>
+
+      <li><tt>epoch-nonce</tt> : an epoch nonce value that must be
+        included in every heartbeat message (see below).
+      </li>
+
+      <li>The library must start monitoring (sending heartbeats to) a
+        node with remote UDP
+        address <tt>HBeatRemoteIP:HBeatRemotePort</tt> using the local
+        UDP
+        address <tt>HBeatLocalIP:HBeatLocalPort</tt>. The <tt>lost-msgs-thresh</tt>
+        specifies the number of consecutive and un-acked heartbeats
+        messages that the library should send before triggering a
+        failure notification.
+      </li>
+    </ul>
+</ul>
+
+<li><tt>nil</tt> &#8592; <b>Stop</b>()</li>
+<ul>
+  <li>
+    Stops the library from monitoring (sending heartbeats) and from
+    responding to heartbeat messages. This call always succeeds.
+  </li>
+</ul>
+
+</ul>
+
+<p>
+Notification semantics:
+<ul>
+
+  <li>
+    Monitored node failure notification must be delivered on
+    the <tt>notify-channel</tt> that is returned by Start.
+  </li>
+
+  <li>
+    A failure notification for a node must be represented (on the
+    notification channel) by the structure:
+    <pre>
+      type FailureDetected struct {
+          UDPIpPort string     // The HBeatRemoteIP:HBeatRemotePort of the failed node.
+          Timestamp time.Time  // The time when the failure was detected.
+      }
+    </pre>
+
+  </li>
+  
+  <li>If a node X was detected as failed, then (1) exactly one failure
+    notification must be generated, and (2) the library must stop
+    monitoring node X after generating the notification.</li>
+
+  <li>After the call to <tt>Stop()</tt> has returned, no failure
+    notifications must be generated.</li>
+
+  <li>After the call to <tt>Stop()</tt> has returned, heartbeats to
+    the library should not be acknowledged.</li>
+
+</ul>
+
+</p>
+
+<h4>2.3 The fcheck protocol on the wire</h4>
+<div class="hbarshort"></div>
+<p>
+The heartbeat and ack messages in your fcheck implementation must have a specific
+format:
+<pre>
+type HBeatMessage struct {
+	EpochNonce uint64 // Identifies this fcheck instance/epoch.
+	SeqNum     uint64 // Unique for each heartbeat in an epoch.
+}
+
+type AckMessage struct {
+	HBeatEpochNonce uint64 // Copy of what was received in the heartbeat.
+	HBeatSeqNum     uint64 // Copy of what was received in the heartbeat.
+}
+</pre>
+<ul>
+
+  <li>EpochNonce is used to distinguish different instances of
+    fcheck. On restart, fcheck would be initialized with a different
+    EpochNonce (with call to Start), and it must ignore all acks that
+    it receives that do not reference this latest EpochNonce.</li>
+
+  <li>The SeqNum is an identifier that is an arbitrary number which
+    uniquely identifies the heartbeat in an epoch. This number could
+    start at any value.</li>
+
+  <li>HBeatEpochNonce and HBeatSeqNum in the AckMessage simply
+    identify the HBeatMessage that the ack corresponds to.</li>
+
+</ul>
+
+The diagram below is a "time-space" diagram (time flows down) that
+illustrates how an fcheck instance at node X would detect the failure
+of node Y (by not observing acks from the fcheck instance at node Y):
+<br/>
+
+<img style="padding-left:20%" src="fcheck-time-space.svg"/>
+<br/>
+<br/>
+
+Note how fcheck at X resends the heartbeat message (after an RTT
+timeout) exactly three times (based on the <tt>lost-msgs-thresh</tt>
+value of 3 passed to Start). After three heartbeat messages
+have <b>all</b> timed-out, fcheck at X times out node Y and generates
+a failure notification. Your fcheck must implement this behavior
+precisely.
+</p>
+
+<p>
+In general, your timeout mechanism should behave as follows:
+
+<ul>
+
+<li>If an ack message is not received in the appropriate RTT timeout
+interval, then the count of lost msgs should be incremented by 1.</li>
+
+<li>When an ack message is received (even if it arrives after the RTT
+timeout), the count of lost msgs must be reset to 0.</li>
+
+<li>Acks that arrive after a failure notification has been generated
+  (or after <tt>Stop</tt> has been invoked) must be ignored.</li>
+
+</ul>
+
+</p>
+
+
+<h4>2.4 Round-trip time (RTT) estimation</h4>
+<div class="hbarshort"></div>
+
+<p>
+  Latency between nodes varies. We want the failure check library to
+  detect failures in networks with a wide range of latencies. We also
+  want to minimize the chance of a false positive (spurious failure
+  detection event).
+</p>
+  
+<p>
+  Your library must wait for a monitored node to reply to a heartbeat
+with an ack (stop-and-wait protocol). This means that there should, at
+most, be one heartbeat message in the network from a monitoring node
+to a monitored node. Only if the node does not reply in RTT time, then
+should the library send another heartbeat. How long should the library
+wait for a reply? Depending on where the node is physically located,
+the wait time will have to vary. Your library must implement a simple
+RTT estimator to customize the waiting time for the node being
+monitored. Note that this waiting time may vary for different
+heartbeat messages.
+</p>
+
+<p>
+Your RTT estimator should work as follows:
+
+<ul>
+
+<li>Use a value of 3 seconds as the initial RTT value when Start is
+  invoked.</li>
+
+<li>Each time an ack is received the library should (1) compute the
+  RTT based on when the heartbeat was sent, and (2) update the RTT to
+  be the average of the last RTT value and the computed RTT value in
+  (1). Note that the same calculation must be performed even if the
+  ack message arrives <i>after</i> the RTT timeout (but only if it
+  arrives before a failure notification is generated).</li>
+
+<li>The library should forget the RTT value after Stop is invoked (and
+  use 3 seconds on the next call to Start).</li>
+
+</ul>
+
+If fcheck receives an ack before the RTT timeout, then when should it
+send the next heartbeat? Your library should send the next heartbeat
+no longer than RTT time since the heartbeat that the received ack is
+acknowledging.
+</p>
+
+<p>
+<b>Example scenario.</b> Let's say the first heartbeat was sent at
+time 1 with RTT value of 5, and an ack for this heartbeat arrived at
+time 2. Then, the second heartbeat should be sent before time 6
+(=5+1). In this example, since the heartbeat was sent at time 1 and
+the ack was received at time 2, the computed RTT for this heartbeat-ack
+pair is 2. The new RTT for the connection must be updated as
+RTT' = (RTT + RTT-measurement) / 2 = (5 + 1) / 2 = 3.
+When the next heartbeat is sent at time 6 its re-transmission should
+occur at (6 + RTT) = (6 + 3) = 9.
+</p>
+
+
+<h3>3.1 Detecting nim server failures and failing over to a new server</h3>
+<div class="hbar"></div>
+
+
+<p>
+  Now that you've completed the fcheck library, it is time to
+  integrate it with your nim client. The integration is simple: before
+  your nim client connects to the nim server (sends an opening move),
+  it should begin monitoring the nim server. When fcheck notifies the
+  client that the nim server has failed, the client should <i>fail
+  over</i> and use another nim server. That is, it should invoke Stop
+  on fcheck, select a new nim server, invoke Start to monitor the
+  newly selected nim server, and attempt to continue the nim game with
+  the new nim server. The spec in A1 needs to be adjusted in the
+  following ways to support fail over:
+  <ol>
+    <li>the client must be aware of multiple nim servers,</li>
+    <li>the client must have an algorithm to select the next nim server,</li>
+    <li>the client must resume the game with the new nim server, and</li>
+    <li>the client must have an algorithm for what to do when all the nim servers are down.</li>
+    <li>the client should trace new actions related to fail over</li>
+  </ol>
+</p>
+
+<p>
+  <b>Multiple nim servers.</b> The client's configuration file will
+  include a list of nim servers the client should use. This list will
+  be ordered and will include at most 8 nim servers.
+</p>
+
+<p>
+  <b>Selecting the next nim server.</b> The client should use the
+  round robin policy for failing over: it should choose the next
+  server in the list specified in the config file. If it reaches the
+  end of the list, it should continue by selecting the first nim
+  server in the list (that by now might have come back up).
+</p>
+
+
+<p>
+  <b>Resuming the game with a new nim server.</b> When failing over to
+  a new nim server, the client should send its last valid move with
+  the appropriate GameState, MoveRow, and MoveCount fields values. The
+  client should not send an opening message to the new nim server if
+  it already started a game with another nim server. However, if no
+  game was started (the client has not previous received a
+  StateMoveMessage from any nim server), then the client should send
+  an opening move message to the server to which it fails over.
+</p>
+
+<p>
+  <b>When all the nim servers are down.</b> If the client has
+  attempted all the nim servers in the input servers list, and all the
+  servers were reported as failed by the fcheck library, then the
+  client should record the action <tt>AllNimServersDown</tt> and then
+  exit. Note that if the servers list is of length N and the client
+  was interacting with a non-failed server i (i	&lt; N), then the client
+  must have (1) detected server i as failed, <b>as well as</b> (2)
+  detected all servers j, j&gt;i and j&leq;N, as failed without any
+  StateMoveMessages from these servers, <b>as well as</b> (3) detected
+  all servers j, j&lt;i, as failed without any StateMoveMessages from
+  these servers before recording <tt>AllNimServersDown</tt> and exiting. 
+</p>
+
+<p>
+  <b>New tracing actions.</b> Your A2 solution must trace three new
+  trace actions on the nim client:
+  <ul>
+    <li><tt>NewNimServer</tt> : Before starting to monitor a nim server, the client should
+      record the <tt>NewNimServer</tt> action</li>
+
+    <li><tt>NimServerFailed</tt> : When a nim server has been detected as failed, the client
+      should record the <tt>NimServerFailed</tt> action before
+      initiating fail-over. </li>
+    
+    <li><tt>AllNimServersDown</tt> : If all the nim servers are down, the client should
+      record <tt>AllNimServersDown</tt> as its last recorded action
+      and then exit.</li>
+  </ul>
+</p>
+
+<p>
+And, as a reminder, your implementation should continue to emit the tracing
+actions defined in A1: 
+<ul>
+  <li><tt>GameStart{Seed}</tt> : marks the start of a new game. </li>
+  <li><tt>ClientMove{GameState, MoveRow, MoveCount}</tt> : indicates that a client has made a move.</li>
+  <li><tt>ServerMoveReceive{GameState, MoveRow, MoveCount}</tt> : indicates that a server's move has been received.</li>
+  <li><tt>GameComplete{Winner}</tt> : marks the end of a game.</li>
+</ul>
+However, due to the addition of fail-over, the semantics of some of these actions will need to be redefined. We will describe this next.
+</p>
+
+
+
+<h3>Tracing Semantics</h3>
+<div class="hbarshort"></div>
+
+<p>
+Your solution must precisely follow the tracing semantics described
+below. Your grade depends on the type of tracing log that your
+solution generates. For example, if traced actions are in the wrong
+order, or are missing, then you will lose points.
+</p>
+
+<p>
+You will use the tracing library as in A1 to report actions using
+calls to trace.RecordAction. You only need to implement tracing for
+actions within your own client.
+</p>
+
+<p>
+The semantics for ClientMove and ServerMoveReceive remain the same as
+in A1. The semantics for GameStart and GameComplete are slightly
+updated:
+
+<ul>
+
+  <li>[GameStart{Seed}] marks the start of a new game. </li>
+
+  <ul>
+    <li>This action should appear before any other actions are
+      recorded.</li>
+    
+    <li>Seed must be the randomization seed provided on the command
+      line.</li>
+
+    <li>Client must record GameStart <i>at most N times where N is the
+      number of provided nim servers</i>. For example, if no nim servers
+      fail, then the client will record GameStart just once (as in
+      A1). If one nim server fails, then the client may record
+      GameStart either once (if nim server failed after the game
+      started) or twice (if the nim server failed before the game
+      started). Note that this is different from A1 in which a
+      client's trace should include the GameStart action exactly
+      once.</li>
+    
+  </ul>
+
+
+  <li>[GameComplete{Winner}] marks the end of a game.</li>
+
+  <ul>
+    <li>This action must be recorded <i>at most</i> once, after either a
+      legal [ServerMoveReceive] or [ClientMove] (depending on the
+      winner) with all entries in its [GameState] equal to 0.</li>
+
+    <li>The last recorded action in a client's trace is either
+      GameComplete <b>or</b> AllNimServersDown. Note that this is
+      different from A1 in which every client trace was required to
+      terminate with GameComplete.</li>
+
+  </ul>
+</ul>
+    
+These semantics above combined with the rules below constitute the
+tracing rules that your implementation must respect. Below we describe
+the tracing rules in English. However, we have formal definitions for
+these in the trace checker. As well, some of these rules depend on
+tracing actions that are generated by the server (e.g., the server
+records its own failure as a tracing action before failing).
+
+<ul>
+  <li>The fcheck library used by the client only monitors the nim
+    server that it is currently playing against</li>
+
+  <li>The fcheck library used by the client responds to heartbeat
+    messages sent to it by other nodes</li>
+
+  <li>When the nim server that the client interacts with fails, the
+    client detects the nim server failure (within a time that scales
+    linearly with lost-msg-thresh and is directly proportional to the
+    RTT between client and the nim server).</li>
+
+  <li>When the nim server that the client interacts with fails, the
+    client chooses the correct new nim server: round robin from the
+    supplied list</li>
+
+  <li>Client does not attempt to play with a server that it has
+    detected as failed, unless all other nim servers have been
+    detected as failed</li>
+
+  <li>Client records AllNimServersDown if and only if all nim servers
+    have failed and have been detected as failed by the client.</li>
+
+</ul>
+</p>
+
+
+<h4>Assumptions you can make</h4>
+<div class="hbarshort"></div>
+<p>
+<ul>
+
+<li>Nim server failure can be detected using the fcheck strategy
+described above.</li>
+
+<li>You can assume that all messages fit into 1024 bytes.</li>
+
+<li>Nodes using fcheck will not monitor themselves
+  (i.e., <tt>AckLocalIP:AckLocalPort</tt> will not
+  equal <tt>HBeatRemoteIP:HBeatRemotePort</tt>).</li>
+
+</ul>
+
+</p>
+
+<h4>Assumptions you cannot make</h4>
+<div class="hbarshort"></div>
+<p>
+<ul>
+
+<li>UDP is reliable.</li>
+
+<li>Round-trip time between nodes is predictable or bounded.</li>
+
+<li><i>Nim servers do not fail</i></li>
+
+</ul>
+
+</p>
+
+
+<h4>Protocol corner cases</h4>
+<div class="hbarshort"></div>
+<p>
+
+  <ul>
+
+    <li>As in A1, during a game, the server will reply with the
+      previous move it made (if it has made such a move) to any
+      invalid message. Note that this means that on fail over, if the
+      first message to a nim server is invalid, the server will not
+      reply to this message.</li>
+
+    <li>Your code should <b>continue</b> to use the 1 second timeout
+    for message loss from A1 (before attempting to retransmit a
+    StateMoveMessage message). That is, the RTT computation described
+    above should be used solely in your fcheck library.
+</li>
+
+  </ul>
+
+</p>
+
+
+
+<h4>Implementation requirements</h4>
+<div class="hbarshort"></div>
+<p>
+  <ul>
+
+    <li><b>Unlike A1, your client should not implement/include a
+    tracing server. Your client should connect to and use an external
+    tracing server using the information in the config file provided
+    to your client.</b></li>
+
+    <li>Your code must be runnable on CS ugrad machines and be compatible
+      with Go version <b>1.16.7</b> (which is installed on ugrad
+      machines)</li>
+    
+    <li>You must use the UDP message types and tracing action types given
+      out in the starter code.</li>
+    
+    <li>Messages must be encoded using <tt>encoding/gob</tt>.</li>
+    
+    <li>Your solution can only
+      use <a href="https://golang.org/pkg/#stdlib">standard library</a> Go
+      packages.</li>
+    
+    <li>Your solution code must be Gofmt-ed
+      using <a href="https://blog.golang.org/go-fmt-your-code">gofmt</a>.
+    </li>
+
+</ul>
+</p>
+
+
+<h4>Solution spec</h4>
+<div class="hbarshort"></div>
+
+<p>
+For fcheck, write a single go source file called <tt>fcheck.go</tt>
+that implements the fcheck library described above. Download the
+fcheck.go starter code. Note that you <b>cannot</b> change the API in
+this fcheck.go. Our marking scripts will rely on this API to
+automatically grade your solution. Place your fcheck.go file at the
+top level of the UBC GitHub repository that you are using for your
+submission. But, you can have other files in the repository, e.g.,
+client code and scripts that you have developed ).
+</p>
+
+<p>
+  For your client, write a single go program called <b>client.go</b>
+  that acts as a client in the protocol described above. Your program
+  must be executable from the terminal using the following command:<br/>
+  <i><b>$ go run client.go [seed]</b></i><br/> Where [seed] is the
+  random seed to be sent to the server in the client's first move to
+  generate a game board.
+</p>
+
+<p>
+The [config/client_config.json] file must now include several new
+pieces of information (bolded below). Here is the full listing:
+
+<ul>
+
+  <li>[ClientAddress]: local address that the client uses to connect to the nim server
+    (i.e., the external IP of the machine the client is running on)</li>
+
+  <li>
+    <b>[NimServerAddressList]</b>: an <b>ordered list of</b> UDP addresses
+    that specify the nim servers, specifically the UDP ip:port on which
+    each nim server receives new client connections
+  </li>
+
+  <li>[TracingServerAddress]: the address of the tracing server your
+    client should connect to</li>y
+
+  <li>[Secret]: ignore</li>
+
+  <li>[TracingIdentity]: always set to "client"</li>
+
+  <li><b>[FCheckAckLocalAddr]</b>: The local address on which fcheck
+    receives heartbeats and on which it sends back acks.</li>
+  
+  <li><b>[FCheckHbeatLocalAddr]</b>: The local address that fcheck
+    uses for sending heartbeat messages (and receiving acks).</li>
+  
+  <li><b>[FCheckLostMsgsThresh]</b>: the lost messages threshold value
+  to use with fcheck.</li>
+
+</ul>
+
+</p>
+
+<p>Your solution cannot use any external libraries other than those
+related to the tracing library.</p>
+
+
+
+<h4>Starter code and testing servers</h4>
+<div class="hbarshort"></div>
+<p>
+Download the example fcheck library client code. This code
+illustrates how a node in a distributed system may use the fcheck
+library that you are designing. You can (and should) use this client
+to test your library, though you should also rigorously test your
+fcheck library with the nim client/servers.
+</p>
+
+<p>
+<b>Start code to be posted soon.</b>
+</p>
+
+<p>
+  We will post a set of testing nim server that you can use. There
+  will be four flavours of nim servers:
+
+  <ol>
+
+  <li><b>TracingNimServers</b> : nim servers that support distributed tracing
+    and do not implement fcheck. Use these in part 1.</li>
+
+  <li><b>TracingFCheckNimServers</b> : nim servers that support distributed
+    tracing and implement fcheck. These servers can be monitored, but
+    will not monitor you back. Use these in part 2.</li>
+
+  <li><b>TracingFCheckMonitoringNimServers</b> : nim servers that support
+    distributed tracing and implement fcheck. These servers can be
+    monitored and will also monitor your client. To monitor your node,
+    these servers will assume that your fcheck is responding from a
+    local UDP-IP:(Port+37) that was used to send the server the
+    heartbeats. Use these in part 2.</li>
+
+  <li><b>TracingFCheckFailingNimServers</b> : nim servers that support
+    distributed tracing and implement fcheck and will fail
+    approximately every 10 seconds. These servers can be monitored and
+    will also monitor your client (as above). Use these in part 3.</li>
+  
+  </ol>
+  
+</p>
+
+<p>The above list of nim servers you can test against will be posted
+to piazza.</p>
+
+
+<h4>Rough grading scheme</h4>
+<div class="hbarshort"></div>
+
+<p>
+<font color="FF0000"><b>Your code must compile on ugrad servers. Your
+code must not change the API above. Your code must work on ugrad
+servers. <br/> <br/>If any of these are violated, your mark for this
+assignment is 0. This is true regardless of how many characters had to
+be changed to make your solution compile, and regardless of how well
+your solution works with a different API or on a different
+machine.</b></font><br/><br/>
+
+The high-level A1 mark breakdown looks like this:
+<ul>
+
+  <li>25% : Distributed tracing works</li>
+  <li>25% : nim server failures are detected by fcheck in the nim client</li>
+  <li>40% : transparent nim server failover works</li>
+  <li>10% : nim servers total failure handled properly</li>
+  
+</ul>
+
+</p>
+
+<h4>Advice</h4>
+<div class="hbarshort"></div>
+<p>
+  <ul>
+
+    <li>Finish part i before starting on part i+1.</li>
+
+    <li>Test your code with the appropriate testing nim servers in
+      part i before moving on to part i+1.</li>
+
+    <li>Have the fcheck SeqNum start at 0 and increment by 1. This
+      will help with debugging.</li>
+
+    <li>Compile and run your code on the ugrad servers.</li>
+  
+    <li>If you write code that uses goroutines, then consider
+      using <a href="https://golang.org/pkg/sync/#Mutex">locks</a> to
+      serialize access to data structures that might need to be modified
+      and accessed by more than one goroutine</li>
+    
+    <li>Use <a href="https://golang.org/pkg/encoding/gob/">gob
+        encode/decode</a> for sending structs across the network.</li>
+
+    <li>The <a href="https://golang.org/pkg/time/">time package</a> is
+      helpful for measuring elapsed time between heartbeats and
+      ACKs.</li>
+
+    <li>You might find
+      the <a href="https://golang.org/pkg/net/#PacketConn">SetReadDeadline</a>
+      method useful.</li>
+
+    <li>
+      Note that due to NATs and Firewalls you may be unable to reach
+      your fcheck clients running on ugrad servers from outside of the
+      UBC network. Either test by running all code on ugrad nodes or by
+      using the UBC VPN.
+    </li>
+
+</ul>
+</p>
+
+<p>
+Make sure to follow the
+course <a href="../index.html#honesty">collaboration policy</a> and refer
+to the <a href="../index.html#submit">submission</a> instructions
+that detail how to submit your solution.
+</p>
+
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td style="padding:0px">
+<br/><br/><br/>
+<div id="footer">
+Last updated: January 25, 2022
+</div>
+<!--
+Local Variables:
+time-stamp-start: "^Last updated: "
+time-stamp-end: "\\.?$"
+time-stamp-format: "%:b %:d, %:y"
+time-stamp-line-limit: -50
+End:
+-->
+</td></tr>
+
+</table>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-793279-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+</body>
+</html>
