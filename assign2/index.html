@@ -640,7 +640,7 @@ type AckMessage struct {
           time 2. Then, the second heartbeat should be sent before time 6
           (=5+1). In this example, since the heartbeat was sent at time 1 and
           the ack was received at time 2, the computed RTT for this heartbeat-ack
-          pair is 2. The new RTT for the connection must be updated as
+          pair is 1. The new RTT for the connection must be updated as
           RTT' = (RTT + RTT-measurement) / 2 = (5 + 1) / 2 = 3.
           When the next heartbeat is sent at time 6 its re-transmission should
           occur at (6 + RTT) = (6 + 3) = 9.
