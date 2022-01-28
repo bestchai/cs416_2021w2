@@ -529,8 +529,8 @@ type HBeatMessage struct {
 }
 
 type AckMessage struct {
-	HBeatEpochNonce uint64 // Copy of what was received in the heartbeat.
-	HBeatSeqNum     uint64 // Copy of what was received in the heartbeat.
+	HBEatEpochNonce uint64 // Copy of what was received in the heartbeat.
+	HBEatSeqNum     uint64 // Copy of what was received in the heartbeat.
 }
 </pre>
         <ul>
@@ -544,7 +544,7 @@ type AckMessage struct {
             uniquely identifies the heartbeat in an epoch. This number could
             start at any value.</li>
 
-          <li>HBeatEpochNonce and HBeatSeqNum in the AckMessage simply
+          <li>HBEatEpochNonce and HBEatSeqNum in the AckMessage simply
             identify the HBeatMessage that the ack corresponds to.</li>
 
         </ul>
