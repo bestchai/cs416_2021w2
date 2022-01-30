@@ -710,7 +710,19 @@ type AckMessage struct {
           all servers j, j&lt;i, as failed without any StateMoveMessages from
           these servers before recording <tt>AllNimServersDown</tt> and exiting.
         </p>
-
+        <p>
+         <b>Example scenario.</b>
+          1 client, 3 servers: S1, S2, S3. The client starts the game with S1, makes 
+          two moves. S1 fails; Client fails over to S2. S2 does not respond. So the 
+          client fails over to S3. S3 does not respond. At this point, client tries S1 
+          because the last 2 <i>(not 3)</i> servers have not made a move/responded
+          So client tries S1. If S1 does not respond/make a move, the client can declare a 
+	  total failure. If S1 does respond for a few moves, the client should not report 
+	  total failure. The client should instead move on to try to play with S2.
+          The key distinction here is that client reports total failure only when all servers 
+          sequentially did not respond to any move messages. If any one of them has, then it 
+	  should keep going, until the last N did not.
+        </p>
         <p>
           <b>New tracing actions.</b> Your A2 solution must trace three new
           trace actions on the nim client:
