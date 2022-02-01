@@ -711,17 +711,17 @@ type AckMessage struct {
           these servers before recording <tt>AllNimServersDown</tt> and exiting.
         </p>
         <p>
-         <b>Example scenario.</b>
-          Let's say there is 1 client and 3 servers: S1, S2, S3. The client starts the game with S1, makes 
-          two moves. S1 fails; Client fails over to S2. S2 does not respond. So the 
-          client fails over and tries to use S3. S3 does not respond either. At this point, the client tries S1 
+          <b>Example scenario.</b>
+          Let's say there is 1 client and 3 servers: S1, S2, S3. The client starts the game with S1, makes
+          two moves. S1 fails; Client fails over to S2. S2 does not respond. So the
+          client fails over and tries to use S3. S3 does not respond either. At this point, the client tries S1
           because the last 2 <i>(not 3)</i> servers have not made a move/responded to the client.
           So the client tries S1. If S1 does not respond/make a move, the client can record <tt>AllNimServersDown</tt>.
           If S1 <i>does</i> respond for a few moves, the client should not record <tt>AllNimServersDown</tt>.
           The client should instead move on to try to play with S2.
-          The point here is that client should record <tt>AllNimServersDown</tt> only when all servers 
-          sequentially did not respond to any move messages. If any one of the servers did respond, then the client 
-	  should keep trying the next server, one at a time round-robin, until the last N did not respond with a move.
+          The point here is that client should record <tt>AllNimServersDown</tt> only when all servers
+          sequentially did not respond to any move messages. If any one of the servers did respond, then the client
+          should keep trying the next server, one at a time round-robin, until the last N did not respond with a move.
         </p>
         <p>
           <b>New tracing actions.</b> Your A2 solution must trace three new
@@ -773,8 +773,8 @@ type AckMessage struct {
         </p>
 
         <p>
-          The semantics for ClientMove and ServerMoveReceive remain the same as
-          in A1. The semantics for GameStart and GameComplete are slightly
+          <b>The semantics for [ClientMove] and [ServerMoveReceive] remain the same as
+            in A1</b>. The semantics for [GameStart] and [GameComplete] are slightly
           updated:
 
         <ul>
@@ -782,8 +782,10 @@ type AckMessage struct {
           <li>[GameStart{Seed}] marks the start of a new game. </li>
 
           <ul>
-            <li>This action should appear before any other actions are
-              recorded.</li>
+            <li> This action should appear before any other Nim-related actions (i.e., [GameComplete], [ClientMove],
+              [ClientMoveReceive], [ServerMove], [ServerMoveReceive]) are recorded. Note that this is different from A1
+              in which [GameStart] is the first action in a trace. In A2, the first action recorded should be
+              [NewNimServer]. </li>
 
             <li>Seed must be the randomization seed provided on the command
               line.</li>
@@ -797,9 +799,7 @@ type AckMessage struct {
               started). Note that this is different from A1 in which a
               client's trace should include the GameStart action exactly
               once.</li>
-
           </ul>
-
 
           <li>[GameComplete{Winner}] marks the end of a game.</li>
 
@@ -845,10 +845,68 @@ type AckMessage struct {
 
           <li>Client records AllNimServersDown if and only if all nim servers
             have failed and have been detected as failed by the client.</li>
+        </ul>
+        </p>
+
+        <p>
+          The formal definitions for fcheck related actions are given below:
+        <ul>
+          <li>[NewNimServer{NimServerAddress}]</li>
+          <ul>
+            <li> This action should be recorded <b>just before</b> calling fcheck.Start </li>
+            <li>This action should be the first action of the trace</li>
+            <li>For every [NewNimServer] in the trace, there must be a matching [NimServerFailed] or [GameComplete] in
+              the subsequent actions before the next [NewNimServer]</li>
+          </ul>
+
+          <li>[NimServerFailed{NimServerAddress}]</li>
+          <ul>
+            <li> This action should be recorded <b>just after</b> a failure notification is read from the
+              <tt>notify-channel</tt> provided by the fcheck library.
+            </li>
+            <li> This action should be preceded by a [NewNimServer] action </li>
+            <li> The <tt>NimServerAddress</tt> of the [NimServerFailed] and its preceding [NewNimServer] must be
+              identical. </li>
+          </ul>
+
+          <li>[AllNimServersDown{}]</li>
+          <ul>
+            <li> This action should appear at most once </li>
+            <li> This action should not co-exist with [GameComplete] </li>
+            <li> This action must always be the last recorded action if it appears in the trace </li>
+            <li> There must be exactly N [NimServerFailed] between the last [ServerMoveReceive] and this action, where N
+              is the length of the nim server list. </li>
+          </ul>
 
         </ul>
         </p>
 
+        <h4>Server Trace Actions</h4>
+        <div class="hbarshort"></div>
+        <p> NOTE: These are the actions recorded by nim servers (and collected by your distributed tracing server). You
+          don't need to record these actions, but the traces you collected should include them. </p>
+        <ul>
+          <li>[GameStart]</li>
+          <ul>
+            <li> This action is recorded when an opening move is received from a client </li>
+          </ul>
+          <li>[GameResume]</li>
+          <ul>
+            <li> This action is recorded when the first message received from a client is not an opening move </li>
+          </ul>
+          <li>[ServerFailed]</li>
+          <ul>
+            <li> This action is recorded when a nim server fails </li>
+          </ul>
+          <li>[ClientMoveReceive]</li>
+          <ul>
+            <li> This action is recorded when a nim server receives the [ClientMove] from a client. </li>
+          </ul>
+          <li>[ServerMove]</li>
+          <ul>
+            <li> This action is recorded when a nim server makes a move </li>
+          </ul>
+        </ul>
 
         <h4>Assumptions you can make</h4>
         <div class="hbarshort"></div>
