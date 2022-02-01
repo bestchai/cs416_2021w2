@@ -874,37 +874,44 @@ type AckMessage struct {
             <li> This action should appear at most once </li>
             <li> This action should not co-exist with [GameComplete] </li>
             <li> This action must always be the last recorded action if it appears in the trace </li>
-            <li> There must be exactly N [NimServerFailed] between the last [ServerMoveReceive] and this action, where N
-              is the length of the nim server list. </li>
+            <li> There must be <em>exactly</em> N [NimServerFailed] between the last [ServerMoveReceive] and this
+              action, where N is the length of the nim server list. </li>
           </ul>
 
         </ul>
         </p>
 
-        <h4>Server Trace Actions</h4>
+        <h4>Actions server records in the client trace</h4>
         <div class="hbarshort"></div>
         <p> NOTE: These are the actions recorded by nim servers (and collected by your distributed tracing server). You
-          don't need to record these actions, but the traces you collected should include them. </p>
+          don't need to record them in your client code, but the traces collected should include them. </p>
         <ul>
-          <li>[GameStart]</li>
+          <li>[ServerGameStart]</li>
           <ul>
-            <li> This action is recorded when an opening move is received from a client </li>
+            <li> This action is recorded <b>just after</b> an opening move is received from a client </li>
           </ul>
           <li>[GameResume]</li>
           <ul>
-            <li> This action is recorded when the first message received from a client is not an opening move </li>
+            <li> This action is recorded <b>just after</b> receving the first message from a client that is not an
+              opening move </li>
           </ul>
           <li>[ServerFailed]</li>
           <ul>
-            <li> This action is recorded when a nim server fails </li>
+            <li> This action is recorded by a failing server <b>just before</b> it fails </li>
+            <li> A nim server will record this action for every client connecting to it when failing </li>
           </ul>
           <li>[ClientMoveReceive]</li>
           <ul>
-            <li> This action is recorded when a nim server receives the [ClientMove] from a client. </li>
+            <li> This action is recorded <b>just after</b> a nim server receives the [ClientMove] from a client. </li>
+            <li> For every [ClientMoveReceive] in the trace, there should be at least one [ClientMove] that
+              happens-before it </li>
+            <li> This action and the most recent [ClientMove] that happens-before this action should have the exact same
+              <tt>GameState</tt>, <tt>MoveRow</tt>, and <tt>MoveCount</tt>
+            </li>
           </ul>
           <li>[ServerMove]</li>
           <ul>
-            <li> This action is recorded when a nim server makes a move </li>
+            <li> This action is recorded <b>just before</b> a nim server sends a move to a client </li>
           </ul>
         </ul>
 
