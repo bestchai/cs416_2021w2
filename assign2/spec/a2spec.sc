@@ -303,7 +303,7 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
     ),
 
     multiRule("[40%] Transparent nim server fail-over works", pointValue = 40)(
-      rule("[10%] When there is a GameComplete, NewNimServer recorded after NimServerFailed", pointValue = 10) {
+      rule("[10%] When there is a GameComplete, NewNimServer recorded after each NimServerFailed", pointValue = 10) {
         call(ifGameComplete).quantifying("GameComplete").forall { _ =>
           call(nimServerFailed).quantifying("NimServerFailed").forall { fail =>
             call(newNimServer).quantifying("NewNimServer").exists { newServer =>
@@ -316,20 +316,20 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
           }
         }
       },
-      rule("[15%] When there is a GameComplete, GameResume recorded after NimServerFailed", pointValue = 15) {
+      rule("[15%] When there is a GameComplete, GameStart/GameResume recorded after NimServerFailed", pointValue = 15) {
         call(ifGameComplete).quantifying("GameComplete").forall { _ =>
-          var idx = 0
+          var gameStarted = false
           call(nimServerFailed)
             .map(_.sorted(Element.VectorClockOrdering))
             .quantifying("NimServerFailed").forall { fail =>
-            if (idx == 0) {
-              idx += 1
+            if (!gameStarted) {
               for {
                 sgs <- call(theServerGameStart).label("the ServerGameStart")
                 grs <- call(gameResume).label("GameResumes")
                 _ <- if (fail <-< sgs.get) {
                   accept
                 } else if (grs.exists(gr => fail <-< gr)) {
+                  gameStarted = true
                   accept
                 } else {
                   reject("The game must start or resume after the first NimServerFailed")
