@@ -276,8 +276,8 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
       },
       rule("[15%] NimServerFailed is recorded when there's a corresponding ServerFailed", pointValue = 15){
         call(nimServerFailed).quantifying("NimServerFailed").forall { fail =>
-          call(newNimServer).quantifying("NewNimServer").exists { newServer =>
-            if (newServer.nimServerAddress == fail.nimServerAddress) {
+          call(serverFailed).quantifying("ServerFailed").exists { fs =>
+            if (fs.serverAddress == fail.nimServerAddress) {
               accept
             } else {
               reject("There must exist a corresponding ServerFailed for every NimServerFailed")
