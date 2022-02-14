@@ -314,7 +314,7 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
           }
         }
       },
-      rule("[15%] When thereis a GameComplete, the game progress normally, like A1", pointValue = 15) {
+      rule("[15%] When there is a GameComplete, the game progress normally, like A1", pointValue = 15) {
         call(ifGameComplete).quantifying("GameComplete").forall { gc =>
           for {
             _ <- call(theTrace).quantifying("move").forall {
