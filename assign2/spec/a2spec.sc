@@ -63,8 +63,8 @@ final case class ServerMoveReceive(gameState: Option[String], moveRow: Int, move
 final case class GameComplete(winner: String) extends Record
 
 // new actions in A2
-final case class NewNimServer(nimServerAddr: String) extends Record
-final case class NimServerFailed(nimServerAddr: String) extends Record
+final case class NewNimServer(nimServerAddress: String) extends Record
+final case class NimServerFailed(nimServerAddress: String) extends Record
 final case class AllNimServersDown() extends Record
 
 // server-side actions
@@ -72,7 +72,7 @@ final case class ServerGameStart(gameState: Option[String], moveRow: Int, moveCo
 final case class ServerMove(gameState: Option[String], moveRow: Int, moveCount: Int, tracingServerAddr: String, token: Option[String]) extends Record with StateMoveMessage
 final case class ClientMoveReceive(gameState: Option[String], moveRow: Int, moveCount: Int, tracingServerAddr: String, token: Option[String]) extends Record with StateMoveMessage
 final case class GameResume(gameState: Option[String], moveRow: Int, moveCount: Int, tracingServerAddr: String, token: Option[String]) extends Record with StateMoveMessage
-final case class ServerFailed(serverAddr: String) extends Record
+final case class ServerFailed(serverAddress: String) extends Record
 
 class Spec(seed: String, N: Int) extends Specification[Record] {
   import Specification._
@@ -266,7 +266,7 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
       rule("[10%] If NimServerFailed is recorded, then there's a NewNimServer happens before it with the identical address", pointValue = 10){
         call(nimServerFailed).quantifying("NimServerFailed").forall { fail =>
           call(newNimServer).quantifying("NewNimServer").exists { newServer =>
-            if (newServer.nimServerAddr == fail.nimServerAddr && newServer <-< fail) {
+            if (newServer.nimServerAddress == fail.nimServerAddress && newServer <-< fail) {
               accept
             } else {
               reject("There must exist a corresponding NewNimServer for every NimServerFailed")
@@ -277,7 +277,7 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
       rule("[15%] NimServerFailed is recorded when there's a corresponding ServerFailed", pointValue = 15){
         call(nimServerFailed).quantifying("NimServerFailed").forall { fail =>
           call(newNimServer).quantifying("NewNimServer").exists { newServer =>
-            if (newServer.nimServerAddr == fail.nimServerAddr) {
+            if (newServer.nimServerAddress == fail.nimServerAddress) {
               accept
             } else {
               reject("There must exist a corresponding ServerFailed for every NimServerFailed")
