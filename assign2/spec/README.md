@@ -30,9 +30,9 @@ Assuming a working Ammonite setup accessible via `./amm`, get the script's help 
 ./amm a2spec.sc --seed 100 -n 3 trace_output1.log trace_output2.log trace_output3.log
 ```
 
-The example trace output `trace_output.log` is provided, and comes from our private example solution, running against a pre-release version of the server, with the seed `100`.
-The checker script should claim this trace passes all conditions.
-To see failing outputs, you can "break" the example by editing it: try changing e.g `MoveCount` in one of the move records.
+- `--seed [seed]` is the seed you used to intiate the game.
+- `-n [N]` is the length of your nim server list
+- `trace_output1.log trace_output2.log ...` are the traces you want the script to check
 
 ## I think the checker is wrong, or the instructions didn't work for me
 
