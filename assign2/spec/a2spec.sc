@@ -103,10 +103,10 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
     }
 
   // A2 helper functions
-  val theServerGameStart: Query[Option[ServerGameStart]] =
+  val theServerGameStart: Query[ServerGameStart] =
     call(theTrace)
       .map(_.collect { case sgs: ServerGameStart => sgs })
-      .requireAtMostOne
+      .requireOne
 
   val ifTheServerGameStart: Query[Option[ServerGameStart]] =
     call(theTrace)
@@ -326,7 +326,7 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
               for {
                 sgs <- call(theServerGameStart).label("the ServerGameStart")
                 grs <- call(gameResume).label("GameResumes")
-                _ <- if (fail <-< sgs.get) {
+                _ <- if (fail <-< sgs) {
                   accept
                 } else if (grs.exists(gr => fail <-< gr)) {
                   gameStarted = true
