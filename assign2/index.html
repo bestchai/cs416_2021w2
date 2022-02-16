@@ -2,6 +2,15 @@
 
 <head>
   <link rel="stylesheet" type="text/css" href="./style.css" />
+  <style>
+    .blue {
+      color: blue
+    }
+    .bold-blue {
+      color: blue;
+      font-weight: bolder;
+    }
+  </style>
 </head>
 
 <body>
@@ -711,17 +720,25 @@ type AckMessage struct {
           these servers before recording <tt>AllNimServersDown</tt> and exiting.
         </p>
         <p>
-          <b>Example scenario.</b>
-          Let's say there is 1 client and 3 servers: S1, S2, S3. The client starts the game with S1, makes
-          two moves. S1 fails; Client fails over to S2. S2 does not respond. So the
-          client fails over and tries to use S3. S3 does not respond either. At this point, the client tries S1
-          because the last 2 <i>(not 3)</i> servers have not made a move/responded to the client.
-          So the client tries S1. If S1 does not respond/make a move, the client can record <tt>AllNimServersDown</tt>.
-          If S1 <i>does</i> respond for a few moves, the client should not record <tt>AllNimServersDown</tt>.
-          The client should instead move on to try to play with S2.
-          The point here is that client should record <tt>AllNimServersDown</tt> only when all servers
-          sequentially did not respond to any move messages. If any one of the servers did respond, then the client
-          should keep trying the next server, one at a time round-robin, until the last N did not respond with a move.
+          <b>Example scenario.</b>  Let's say there is 1 client and 3
+          servers: S1, S2, S3. The client starts the game with S1,
+          makes two moves (records several <tt>ServerMoveReceive</tt>
+          actions). S1 fails (client records <tt>NimServerFailed</tt>
+          action); Client fails over to S2. S2 does not respond
+          (client records <tt>NimServerFailed</tt> action). So the
+          client fails over and tries to use S3. S3 does not respond
+          either (client again records <tt>NimServerFailed</tt>
+          action). At this point, the client has recorded
+          3 <tt>NimServerFailed</tt> actions after the
+          last <tt>ServerMoveReceive</tt> action. Since the number of
+          servers, N, is 3, at this point the client should
+          record <tt>AllNimServersDown</tt> and exit. The point here
+          is that client should record <tt>AllNimServersDown</tt> only
+          when all servers sequentially did not respond to any move
+          messages. If any one of the servers did respond (and the
+          client recorded a <tt>ServerMoveReceive</tt> action), then
+          the client should keep trying the next server, one at a time
+          round-robin, until the last N did not respond with a move.
         </p>
         <p>
           <b>New tracing actions.</b> Your A2 solution must trace three new
@@ -853,7 +870,7 @@ type AckMessage struct {
         <ul>
           <li>[NewNimServer{NimServerAddress}]</li>
           <ul>
-            <li> This action should be recorded <b>just before</b> calling fcheck.Start </li>
+            <li> This action should be recorded <b>just before</b> calling <tt>fcheck.Start</tt> </li>
             <li>This action should be the first action of the trace</li>
             <li>For every [NewNimServer] in the trace, there must be a matching [NimServerFailed] or [GameComplete] in
               the subsequent actions before the next [NewNimServer]</li>
@@ -867,6 +884,8 @@ type AckMessage struct {
             <li> This action should be preceded by a [NewNimServer] action </li>
             <li> The <tt>NimServerAddress</tt> of the [NimServerFailed] and its preceding [NewNimServer] must be
               identical. </li>
+            <li> For each [NimServerFailed] recorded, there is a corresponding [ServerFailed] with the identical
+              <tt>NimServerAddress</tt> collected in the trace. </li>
           </ul>
 
           <li>[AllNimServersDown{}]</li>
@@ -1140,14 +1159,37 @@ type AckMessage struct {
             </b>
           </font><br /><br />
 
-          The high-level A1 mark breakdown looks like this:
+          The A2 mark breakdown (in terms of the recorded distributed trace):
+          <p>The actions marked in <span class="bold-blue">blue</span> are recorded by servers.</p>
         <ul>
-
           <li>25% : Distributed tracing works</li>
+          <ul>
+            <li>5% : <span class="blue">[ServerGameStart]</span> is recorded after the first [ClientMove]</li>
+            <li>10% : A [ClientMove] is recorded before each <span class="blue">[ClientMoveReceive]</span></li>
+            <li>10% : A <span class="blue">[ServerMove]</span> is recorded before each [ServerMoveReceive]</li>
+          </ul>
           <li>25% : nim server failures are detected by fcheck in the nim client</li>
+          <ul>
+            <li>10% : If a [NimServerFailed{NimServerAddress}] is recorded, then there is a [NewNimServer{X}] event that happens-before this
+              [NimServerFailed{NimServerAddress}] event and <tt>X</tt> has the same port number as <tt>NimServerAddress</tt>.</li>
+            <li>15% : Given a nim server with which the client has successfully exchanged a move, if a [NimServerFailed{NimServerAddress}] is recorded, there is a corresponding <span class="blue">[ServerFailed{X}]</span>
+              with <tt>X = NimServerAddress</tt> recorded somewhere in the trace.
+            </li>
+          </ul>
           <li>40% : transparent nim server failover works</li>
+          <ul>
+            <li>10% : If there is a [GameComplete] in the trace, then every instance of [NimServerFailed] is followed by an instance of [NewNimServer]</li>
+            <li>15% : If there is a [GameComplete] in the trace, then every instance of [NimServerFailed] is followed by an instance of <span class="blue">[GameResume]</span> or <span class="blue">[ServerGameStart]</span> (if the game has not started yet).</li>
+            <li>15% : If there is a [GameComplete] in the trace, then the game progresses and finishes correctly, according to the rules in A1</li>
+          </ul>
           <li>10% : nim servers total failure handled properly</li>
-
+          <ul>
+            <li>5% : If there is a [AllNimServersDown] recorded, then (1) it only appears once in the trace, and (2) [GameComplete]
+              does not appear in the trace. </li>
+            <li>5% : There are exactly N [NimServerFailed] between the last [ServerMoveReceive] (or the start of the trace, if
+              there's no [ServerMoveReceive] in the trace) and [AllNimServersDown], where N is the length of the nim
+              server list. </li>
+          </ul>
         </ul>
 
         </p>
