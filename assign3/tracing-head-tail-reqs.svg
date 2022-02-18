@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="1145.2119 847.9082 988.0475 114.84178" width="988.0475" height="114.84178">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 18 14" markerWidth="18" markerHeight="14" color="black">
+      <g>
+        <path d="M 16 0 L 0 0 M 0 -6 L 16 0 L 0 6" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#0053b7">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Courier New" font-size="8" panose-1="2 7 3 9 2 2 5 2 4 4" units-per-em="1000" underline-position="-232.91016" underline-thickness="41.015625" slope="0" x-height="422.85156" cap-height="571.28906" ascent="832.5195" descent="-300.29297" font-weight="400">
+      <font-face-src>
+        <font-face-name name="CourierNewPSMT"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.19.2\n2022-02-17 23:18:48 +0000</metadata>
+  <g id="tracing" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
+    <title>tracing</title>
+    <rect fill="white" x="1145.2119" y="847.9082" width="988.0475" height="114.84178"/>
+    <g id="tracing_Layer_1">
+      <title>Layer 1</title>
+      <g id="Line_136">
+        <line x1="1495.6447" y1="869.9286" x2="1495.6447" y2="952.7082" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_135">
+        <text transform="translate(1478.4816 852.9082)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">Coord</tspan>
+        </text>
+      </g>
+      <g id="Line_134">
+        <line x1="1495.3849" y1="925.6929" x2="1318.6399" y2="925.6929" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_130">
+        <line x1="1309.1257" y1="896.8884" x2="1485.939" y2="896.8884" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_129">
+        <rect x="1436.1499" y="918.1929" width="44.01758" height="16" fill="white"/>
+        <text transform="translate(1437.1499 919.1929)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Server1</tspan>
+        </text>
+      </g>
+      <g id="Line_128">
+        <line x1="1309.1257" y1="870.5333" x2="1309.1257" y2="952.7082" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_126">
+        <text transform="translate(1289.7399 852.9082)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">kvslib</tspan>
+        </text>
+      </g>
+      <g id="Graphic_122">
+        <rect x="1323.2395" y="889.3884" width="88.04492" height="16" fill="white"/>
+        <text transform="translate(1324.2395 890.3884)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Get head server</tspan>
+        </text>
+      </g>
+      <g id="Graphic_139">
+        <circle cx="1308.461" cy="884.3983" r="3.17383784331891" fill="#0053b7"/>
+      </g>
+      <g id="Line_138">
+        <line x1="1305.2872" y1="884.4038" x2="1291.4854" y2="884.4277" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_137">
+        <path d="M 1208.872 879 L 1290.4854 879 C 1291.0376 879 1291.4854 879.4477 1291.4854 880 L 1291.4854 889 C 1291.4854 889.5523 1291.0376 890 1290.4854 890 L 1208.872 890 C 1208.3198 890 1207.872 889.5523 1207.872 889 L 1207.872 880 C 1207.872 879.4477 1208.3198 879 1208.872 879 Z" fill="white"/>
+        <path d="M 1208.872 879 L 1290.4854 879 C 1291.0376 879 1291.4854 879.4477 1291.4854 880 L 1291.4854 889 C 1291.4854 889.5523 1291.0376 890 1290.4854 890 L 1208.872 890 C 1208.3198 890 1207.872 889.5523 1207.872 889 L 1207.872 880 C 1207.872 879.4477 1208.3198 879 1208.872 879 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1208.872 880)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">HeadReq(clientId)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_142">
+        <circle cx="1309.461" cy="936.6238" r="3.17383784331893" fill="#0053b7"/>
+      </g>
+      <g id="Line_141">
+        <line x1="1306.2872" y1="936.6194" x2="1291.4854" y2="936.5993" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_140">
+        <path d="M 1146.4619 931 L 1290.4854 931 C 1291.0376 931 1291.4854 931.4477 1291.4854 932 L 1291.4854 941 C 1291.4854 941.5523 1291.0376 942 1290.4854 942 L 1146.4619 942 C 1145.9096 942 1145.4619 941.5523 1145.4619 941 L 1145.4619 932 C 1145.4619 931.4477 1145.9096 931 1146.4619 931 Z" fill="white"/>
+        <path d="M 1146.4619 931 L 1290.4854 931 C 1291.0376 931 1291.4854 931.4477 1291.4854 932 L 1291.4854 941 C 1291.4854 941.5523 1291.0376 942 1290.4854 942 L 1146.4619 942 C 1145.9096 942 1145.4619 941.5523 1145.4619 941 L 1145.4619 932 C 1145.4619 931.4477 1145.9096 931 1146.4619 931 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1146.4619 932)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">HeadResRecvd(clientId,Server1)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_145">
+        <circle cx="1495.978" cy="905.3945" r="3.17383784331887" fill="#0053b7"/>
+      </g>
+      <g id="Line_144">
+        <line x1="1499.1517" y1="905.3994" x2="1510.7573" y2="905.4173" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_143">
+        <path d="M 1511.7573 900 L 1617.3745 900 C 1617.9268 900 1618.3745 900.4477 1618.3745 901 L 1618.3745 910 C 1618.3745 910.5523 1617.9268 911 1617.3745 911 L 1511.7573 911 C 1511.205 911 1510.7573 910.5523 1510.7573 910 L 1510.7573 901 C 1510.7573 900.4477 1511.205 900 1511.7573 900 Z" fill="white"/>
+        <path d="M 1511.7573 900 L 1617.3745 900 C 1617.9268 900 1618.3745 900.4477 1618.3745 901 L 1618.3745 910 C 1618.3745 910.5523 1617.9268 911 1617.3745 911 L 1511.7573 911 C 1511.205 911 1510.7573 910.5523 1510.7573 910 L 1510.7573 901 C 1510.7573 900.4477 1511.205 900 1511.7573 900 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1511.7573 901)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">HeadReqRecvd(clientId)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_151">
+        <circle cx="1495.978" cy="919.6168" r="3.17383784331885" fill="#0053b7"/>
+      </g>
+      <g id="Line_150">
+        <line x1="1499.1517" y1="919.6119" x2="1510.7573" y2="919.594" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_149">
+        <path d="M 1511.7573 914 L 1631.7768 914 C 1632.3291 914 1632.7768 914.4477 1632.7768 915 L 1632.7768 924 C 1632.7768 924.5523 1632.3291 925 1631.7768 925 L 1511.7573 925 C 1511.205 925 1510.7573 924.5523 1510.7573 924 L 1510.7573 915 C 1510.7573 914.4477 1511.205 914 1511.7573 914 Z" fill="white"/>
+        <path d="M 1511.7573 914 L 1631.7768 914 C 1632.3291 914 1632.7768 914.4477 1632.7768 915 L 1632.7768 924 C 1632.7768 924.5523 1632.3291 925 1631.7768 925 L 1511.7573 925 C 1511.205 925 1510.7573 924.5523 1510.7573 924 L 1510.7573 915 C 1510.7573 914.4477 1511.205 914 1511.7573 914 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1511.7573 915)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">HeadRes(clientId,Server1)</tspan>
+        </text>
+      </g>
+      <g id="Line_219">
+        <line x1="1995.074" y1="870.5204" x2="1995.074" y2="953.3" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_218">
+        <text transform="translate(1977.9109 853.5)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">Coord</tspan>
+        </text>
+      </g>
+      <g id="Line_217">
+        <line x1="1994.8142" y1="926.2847" x2="1818.069" y2="926.2847" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_216">
+        <line x1="1808.555" y1="897.4802" x2="1985.3683" y2="897.4802" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_215">
+        <rect x="1934.1541" y="918.6055" width="46.009766" height="16" fill="white"/>
+        <text transform="translate(1935.1541 919.6055)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">ServerN</tspan>
+        </text>
+      </g>
+      <g id="Line_214">
+        <line x1="1808.555" y1="871.1251" x2="1808.555" y2="953.3" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_213">
+        <text transform="translate(1789.1691 853.5)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">kvslib</tspan>
+        </text>
+      </g>
+      <g id="Graphic_212">
+        <rect x="1820.0398" y="889.9802" width="76.68945" height="16" fill="white"/>
+        <text transform="translate(1821.0398 890.9802)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Get tail server</tspan>
+        </text>
+      </g>
+      <g id="Graphic_211">
+        <circle cx="1807.8903" cy="884.9901" r="3.17383784331896" fill="#0053b7"/>
+      </g>
+      <g id="Line_210">
+        <line x1="1804.7165" y1="884.9964" x2="1791.5386" y2="885.0225" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_209">
+        <path d="M 1708.9253 879.6055 L 1790.5386 879.6055 C 1791.091 879.6055 1791.5386 880.0532 1791.5386 880.6055 L 1791.5386 889.6055 C 1791.5386 890.1577 1791.091 890.6055 1790.5386 890.6055 L 1708.9253 890.6055 C 1708.373 890.6055 1707.9253 890.1577 1707.9253 889.6055 L 1707.9253 880.6055 C 1707.9253 880.0532 1708.373 879.6055 1708.9253 879.6055 Z" fill="white"/>
+        <path d="M 1708.9253 879.6055 L 1790.5386 879.6055 C 1791.091 879.6055 1791.5386 880.0532 1791.5386 880.6055 L 1791.5386 889.6055 C 1791.5386 890.1577 1791.091 890.6055 1790.5386 890.6055 L 1708.9253 890.6055 C 1708.373 890.6055 1707.9253 890.1577 1707.9253 889.6055 L 1707.9253 880.6055 C 1707.9253 880.0532 1708.373 879.6055 1708.9253 879.6055 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1708.9253 880.6055)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">TailReq(clientId)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_208">
+        <circle cx="1808.8903" cy="937.2155" r="3.17383784331896" fill="#0053b7"/>
+      </g>
+      <g id="Line_207">
+        <line x1="1805.7165" y1="937.2116" x2="1792.9129" y2="937.1958" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_206">
+        <path d="M 1647.8894 931.6055 L 1791.9129 931.6055 C 1792.4651 931.6055 1792.9129 932.0532 1792.9129 932.6055 L 1792.9129 941.6055 C 1792.9129 942.1577 1792.4651 942.6055 1791.9129 942.6055 L 1647.8894 942.6055 C 1647.3371 942.6055 1646.8894 942.1577 1646.8894 941.6055 L 1646.8894 932.6055 C 1646.8894 932.0532 1647.3371 931.6055 1647.8894 931.6055 Z" fill="white"/>
+        <path d="M 1647.8894 931.6055 L 1791.9129 931.6055 C 1792.4651 931.6055 1792.9129 932.0532 1792.9129 932.6055 L 1792.9129 941.6055 C 1792.9129 942.1577 1792.4651 942.6055 1791.9129 942.6055 L 1647.8894 942.6055 C 1647.3371 942.6055 1646.8894 942.1577 1646.8894 941.6055 L 1646.8894 932.6055 C 1646.8894 932.0532 1647.3371 931.6055 1647.8894 931.6055 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1647.8894 932.6055)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">TailResRecvd(clientId,ServerN)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_205">
+        <circle cx="1995.4072" cy="905.9863" r="3.17383784331887" fill="#0053b7"/>
+      </g>
+      <g id="Line_204">
+        <line x1="1998.581" y1="905.9918" x2="2010.99" y2="906.0131" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_203">
+        <path d="M 2011.99 900.6055 L 2117.607 900.6055 C 2118.1594 900.6055 2118.607 901.0532 2118.607 901.6055 L 2118.607 910.6055 C 2118.607 911.1577 2118.1594 911.6055 2117.607 911.6055 L 2011.99 911.6055 C 2011.4376 911.6055 2010.99 911.1577 2010.99 910.6055 L 2010.99 901.6055 C 2010.99 901.0532 2011.4376 900.6055 2011.99 900.6055 Z" fill="white"/>
+        <path d="M 2011.99 900.6055 L 2117.607 900.6055 C 2118.1594 900.6055 2118.607 901.0532 2118.607 901.6055 L 2118.607 910.6055 C 2118.607 911.1577 2118.1594 911.6055 2117.607 911.6055 L 2011.99 911.6055 C 2011.4376 911.6055 2010.99 911.1577 2010.99 910.6055 L 2010.99 901.6055 C 2010.99 901.0532 2011.4376 900.6055 2011.99 900.6055 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(2011.99 901.6055)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">TailReqRecvd(clientId)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_202">
+        <circle cx="1995.4072" cy="920.2086" r="3.17383784331887" fill="#0053b7"/>
+      </g>
+      <g id="Line_201">
+        <line x1="1998.581" y1="920.2043" x2="2010.99" y2="920.1876" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_200">
+        <path d="M 2011.99 914.6055 L 2132.0095 914.6055 C 2132.5617 914.6055 2133.0095 915.0532 2133.0095 915.6055 L 2133.0095 924.6055 C 2133.0095 925.1577 2132.5617 925.6055 2132.0095 925.6055 L 2011.99 925.6055 C 2011.4376 925.6055 2010.99 925.1577 2010.99 924.6055 L 2010.99 915.6055 C 2010.99 915.0532 2011.4376 914.6055 2011.99 914.6055 Z" fill="white"/>
+        <path d="M 2011.99 914.6055 L 2132.0095 914.6055 C 2132.5617 914.6055 2133.0095 915.0532 2133.0095 915.6055 L 2133.0095 924.6055 C 2133.0095 925.1577 2132.5617 925.6055 2132.0095 925.6055 L 2011.99 925.6055 C 2011.4376 925.6055 2010.99 925.1577 2010.99 924.6055 L 2010.99 915.6055 C 2010.99 915.0532 2011.4376 914.6055 2011.99 914.6055 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(2011.99 915.6055)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">TailRes(clientId,ServerN)</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

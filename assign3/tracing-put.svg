@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="1198.6445 1271.5 764.2648 241.75" width="764.2648" height="241.75">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 18 14" markerWidth="18" markerHeight="14" color="black">
+      <g>
+        <path d="M 16 0 L 0 0 M 0 -6 L 16 0 L 0 6" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#08980e">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Courier New" font-size="8" panose-1="2 7 3 9 2 2 5 2 4 4" units-per-em="1000" underline-position="-232.91016" underline-thickness="41.015625" slope="0" x-height="422.85156" cap-height="571.28906" ascent="832.5195" descent="-300.29297" font-weight="400">
+      <font-face-src>
+        <font-face-name name="CourierNewPSMT"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#08990d">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.19.2\n2022-02-17 23:48:41 +0000</metadata>
+  <g id="tracing" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
+    <title>tracing</title>
+    <rect fill="white" x="1198.6445" y="1271.5" width="764.2648" height="241.75"/>
+    <g id="tracing_Layer_1">
+      <title>Layer 1</title>
+      <g id="Line_343">
+        <line x1="1497.97" y1="1290.167" x2="1497.97" y2="1502.3446" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_342">
+        <text transform="translate(1491.131 1274.6726)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">S1</tspan>
+        </text>
+      </g>
+      <g id="Graphic_340">
+        <text transform="translate(1677.9921 1274.6726)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">S2</tspan>
+        </text>
+      </g>
+      <g id="Graphic_339">
+        <text transform="translate(1864.169 1274.6726)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">S2</tspan>
+        </text>
+      </g>
+      <g id="Line_338">
+        <line x1="1871.0078" y1="1290.167" x2="1871.0078" y2="1502.3446" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_335">
+        <line x1="1311.451" y1="1291.6224" x2="1311.451" y2="1502.3446" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_333">
+        <text transform="translate(1292.065 1274.6726)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">kvslib</tspan>
+        </text>
+      </g>
+      <g id="Line_332">
+        <line x1="1311.9366" y1="1330.9789" x2="1487.8101" y2="1330.9789" marker-end="url(#FilledArrow_Marker)" stroke="#08980e" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_331">
+        <rect x="1321.3929" y="1323.4789" width="43.33789" height="16" fill="white"/>
+        <text transform="translate(1322.3929 1324.4789)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Put(k,v)</tspan>
+        </text>
+      </g>
+      <g id="Line_330">
+        <line x1="1684.4889" y1="1291.6224" x2="1684.4889" y2="1503.8" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_350">
+        <path d="M 1276.707 1314.6713 L 1291.1094 1314.6713 C 1291.6617 1314.6713 1292.1094 1315.119 1292.1094 1315.6713 L 1292.1094 1324.6713 C 1292.1094 1325.2236 1291.6617 1325.6713 1291.1094 1325.6713 L 1276.707 1325.6713 C 1276.1547 1325.6713 1275.707 1325.2236 1275.707 1324.6713 L 1275.707 1315.6713 C 1275.707 1315.119 1276.1547 1314.6713 1276.707 1314.6713 Z" fill="white"/>
+        <path d="M 1276.707 1314.6713 L 1291.1094 1314.6713 C 1291.6617 1314.6713 1292.1094 1315.119 1292.1094 1315.6713 L 1292.1094 1324.6713 C 1292.1094 1325.2236 1291.6617 1325.6713 1291.1094 1325.6713 L 1276.707 1325.6713 C 1276.1547 1325.6713 1275.707 1325.2236 1275.707 1324.6713 L 1275.707 1315.6713 C 1275.707 1315.119 1276.1547 1314.6713 1276.707 1314.6713 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1276.707 1315.6713)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">Put</tspan>
+        </text>
+      </g>
+      <g id="Line_349">
+        <line x1="1307.6667" y1="1320.1713" x2="1292.1094" y2="1320.1713" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_348">
+        <circle cx="1310.8405" cy="1320.1713" r="3.17383784331891" fill="#08990d"/>
+      </g>
+      <g id="Line_347">
+        <line x1="1216.5181" y1="1302.4354" x2="1302.0366" y2="1302.4354" marker-end="url(#FilledArrow_Marker_2)" stroke="#08990d" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_346">
+        <rect x="1220.2174" y="1294.9354" width="43.33789" height="16" fill="white"/>
+        <text transform="translate(1221.2174 1295.9354)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Put(k,v)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_357">
+        <circle cx="1498.6819" cy="1346.616" r="3.17383784331894" fill="#08990d"/>
+      </g>
+      <g id="Line_356">
+        <line x1="1501.8557" y1="1346.616" x2="1510.7573" y2="1346.616" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_355">
+        <path d="M 1511.7573 1341.116 L 1550.1635 1341.116 C 1550.7158 1341.116 1551.1635 1341.5637 1551.1635 1342.116 L 1551.1635 1351.116 C 1551.1635 1351.6683 1550.7158 1352.116 1550.1635 1352.116 L 1511.7573 1352.116 C 1511.205 1352.116 1510.7573 1351.6683 1510.7573 1351.116 L 1510.7573 1342.116 C 1510.7573 1341.5637 1511.205 1341.116 1511.7573 1341.116 Z" fill="white"/>
+        <path d="M 1511.7573 1341.116 L 1550.1635 1341.116 C 1550.7158 1341.116 1551.1635 1341.5637 1551.1635 1342.116 L 1551.1635 1351.116 C 1551.1635 1351.6683 1550.7158 1352.116 1550.1635 1352.116 L 1511.7573 1352.116 C 1511.205 1352.116 1510.7573 1351.6683 1510.7573 1351.116 L 1510.7573 1342.116 C 1510.7573 1341.5637 1511.205 1341.116 1511.7573 1341.116 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1511.7573 1342.116)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">PutRecvd</tspan>
+        </text>
+      </g>
+      <g id="Graphic_360">
+        <circle cx="1498.8185" cy="1365.0224" r="3.17383784331888" fill="#08990d"/>
+      </g>
+      <g id="Line_359">
+        <line x1="1501.9924" y1="1365.0224" x2="1510.7573" y2="1365.0224" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_358">
+        <path d="M 1511.7573 1359.5224 L 1583.769 1359.5224 C 1584.3213 1359.5224 1584.769 1359.9701 1584.769 1360.5224 L 1584.769 1369.5224 C 1584.769 1370.0747 1584.3213 1370.5224 1583.769 1370.5224 L 1511.7573 1370.5224 C 1511.205 1370.5224 1510.7573 1370.0747 1510.7573 1369.5224 L 1510.7573 1360.5224 C 1510.7573 1359.9701 1511.205 1359.5224 1511.7573 1359.5224 Z" fill="white"/>
+        <path d="M 1511.7573 1359.5224 L 1583.769 1359.5224 C 1584.3213 1359.5224 1584.769 1359.9701 1584.769 1360.5224 L 1584.769 1369.5224 C 1584.769 1370.0747 1584.3213 1370.5224 1583.769 1370.5224 L 1511.7573 1370.5224 C 1511.205 1370.5224 1510.7573 1370.0747 1510.7573 1369.5224 L 1510.7573 1360.5224 C 1510.7573 1359.9701 1511.205 1359.5224 1511.7573 1359.5224 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1511.7573 1360.5224)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">PutOrdered(gid)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_363">
+        <circle cx="1498.8185" cy="1385.755" r="3.17383784331888" fill="#08990d"/>
+      </g>
+      <g id="Line_362">
+        <line x1="1501.9924" y1="1385.755" x2="1510.7573" y2="1385.755" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_361">
+        <path d="M 1511.7573 1380.255 L 1564.5659 1380.255 C 1565.1182 1380.255 1565.5659 1380.7027 1565.5659 1381.255 L 1565.5659 1390.255 C 1565.5659 1390.8072 1565.1182 1391.255 1564.5659 1391.255 L 1511.7573 1391.255 C 1511.205 1391.255 1510.7573 1390.8072 1510.7573 1390.255 L 1510.7573 1381.255 C 1510.7573 1380.7027 1511.205 1380.255 1511.7573 1380.255 Z" fill="white"/>
+        <path d="M 1511.7573 1380.255 L 1564.5659 1380.255 C 1565.1182 1380.255 1565.5659 1380.7027 1565.5659 1381.255 L 1565.5659 1390.255 C 1565.5659 1390.8072 1565.1182 1391.255 1564.5659 1391.255 L 1511.7573 1391.255 C 1511.205 1391.255 1510.7573 1390.8072 1510.7573 1390.255 L 1510.7573 1381.255 C 1510.7573 1380.7027 1511.205 1380.255 1511.7573 1380.255 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1511.7573 1381.255)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">PutFwd(gid)</tspan>
+        </text>
+      </g>
+      <g id="Line_365">
+        <line x1="1498.3438" y1="1402" x2="1675.0889" y2="1402" marker-end="url(#FilledArrow_Marker)" stroke="#08980e" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_364">
+        <rect x="1509.2915" y="1394.5" width="43.33789" height="16" fill="white"/>
+        <text transform="translate(1510.2915 1395.5)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Put(k,v)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_371">
+        <circle cx="1685.7009" cy="1413.2188" r="3.17383784331891" fill="#08990d"/>
+      </g>
+      <g id="Line_370">
+        <line x1="1688.8747" y1="1413.2188" x2="1697.6396" y2="1413.2188" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_369">
+        <path d="M 1698.6396 1407.7188 L 1775.4521 1407.7188 C 1776.0044 1407.7188 1776.4521 1408.1665 1776.4521 1408.7188 L 1776.4521 1417.7188 C 1776.4521 1418.2711 1776.0044 1418.7188 1775.4521 1418.7188 L 1698.6396 1418.7188 C 1698.0873 1418.7188 1697.6396 1418.2711 1697.6396 1417.7188 L 1697.6396 1408.7188 C 1697.6396 1408.1665 1698.0873 1407.7188 1698.6396 1407.7188 Z" fill="white"/>
+        <path d="M 1698.6396 1407.7188 L 1775.4521 1407.7188 C 1776.0044 1407.7188 1776.4521 1408.1665 1776.4521 1408.7188 L 1776.4521 1417.7188 C 1776.4521 1418.2711 1776.0044 1418.7188 1775.4521 1418.7188 L 1698.6396 1418.7188 C 1698.0873 1418.7188 1697.6396 1418.2711 1697.6396 1417.7188 L 1697.6396 1408.7188 C 1697.6396 1408.1665 1698.0873 1407.7188 1698.6396 1407.7188 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1698.6396 1408.7188)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">PutFwdRecvd(gid)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_368">
+        <circle cx="1685.7009" cy="1429.5" r="3.17383784331885" fill="#08990d"/>
+      </g>
+      <g id="Line_367">
+        <line x1="1688.8747" y1="1429.5" x2="1697.6396" y2="1429.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_366">
+        <path d="M 1698.6396 1424 L 1751.4482 1424 C 1752.0005 1424 1752.4482 1424.4477 1752.4482 1425 L 1752.4482 1434 C 1752.4482 1434.5523 1752.0005 1435 1751.4482 1435 L 1698.6396 1435 C 1698.0873 1435 1697.6396 1434.5523 1697.6396 1434 L 1697.6396 1425 C 1697.6396 1424.4477 1698.0873 1424 1698.6396 1424 Z" fill="white"/>
+        <path d="M 1698.6396 1424 L 1751.4482 1424 C 1752.0005 1424 1752.4482 1424.4477 1752.4482 1425 L 1752.4482 1434 C 1752.4482 1434.5523 1752.0005 1435 1751.4482 1435 L 1698.6396 1435 C 1698.0873 1435 1697.6396 1434.5523 1697.6396 1434 L 1697.6396 1425 C 1697.6396 1424.4477 1698.0873 1424 1698.6396 1424 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1698.6396 1425)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">PutFwd(gid)</tspan>
+        </text>
+      </g>
+      <g id="Line_373">
+        <line x1="1685.0033" y1="1444.9776" x2="1861.7483" y2="1444.9776" marker-end="url(#FilledArrow_Marker)" stroke="#08980e" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_379">
+        <circle cx="1872.1817" cy="1452" r="3.17383784331888" fill="#08990d"/>
+      </g>
+      <g id="Line_378">
+        <line x1="1875.3555" y1="1452" x2="1883.8469" y2="1452" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_377">
+        <path d="M 1884.8469 1446.5 L 1961.6594 1446.5 C 1962.2116 1446.5 1962.6594 1446.9477 1962.6594 1447.5 L 1962.6594 1456.5 C 1962.6594 1457.0523 1962.2116 1457.5 1961.6594 1457.5 L 1884.8469 1457.5 C 1884.2946 1457.5 1883.8469 1457.0523 1883.8469 1456.5 L 1883.8469 1447.5 C 1883.8469 1446.9477 1884.2946 1446.5 1884.8469 1446.5 Z" fill="white"/>
+        <path d="M 1884.8469 1446.5 L 1961.6594 1446.5 C 1962.2116 1446.5 1962.6594 1446.9477 1962.6594 1447.5 L 1962.6594 1456.5 C 1962.6594 1457.0523 1962.2116 1457.5 1961.6594 1457.5 L 1884.8469 1457.5 C 1884.2946 1457.5 1883.8469 1457.0523 1883.8469 1456.5 L 1883.8469 1447.5 C 1883.8469 1446.9477 1884.2946 1446.5 1884.8469 1446.5 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1884.8469 1447.5)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">PutFwdRecvd(gid)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_376">
+        <circle cx="1872.1817" cy="1468.2812" r="3.17383784331891" fill="#08990d"/>
+      </g>
+      <g id="Line_375">
+        <line x1="1875.3555" y1="1468.2812" x2="1883.8469" y2="1468.2812" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_374">
+        <path d="M 1884.8469 1462.7812 L 1952.0578 1462.7812 C 1952.61 1462.7812 1953.0578 1463.2289 1953.0578 1463.7812 L 1953.0578 1472.7812 C 1953.0578 1473.3335 1952.61 1473.7812 1952.0578 1473.7812 L 1884.8469 1473.7812 C 1884.2946 1473.7812 1883.8469 1473.3335 1883.8469 1472.7812 L 1883.8469 1463.7812 C 1883.8469 1463.2289 1884.2946 1462.7812 1884.8469 1462.7812 Z" fill="white"/>
+        <path d="M 1884.8469 1462.7812 L 1952.0578 1462.7812 C 1952.61 1462.7812 1953.0578 1463.2289 1953.0578 1463.7812 L 1953.0578 1472.7812 C 1953.0578 1473.3335 1952.61 1473.7812 1952.0578 1473.7812 L 1884.8469 1473.7812 C 1884.2946 1473.7812 1883.8469 1473.3335 1883.8469 1472.7812 L 1883.8469 1463.7812 C 1883.8469 1463.2289 1884.2946 1462.7812 1884.8469 1462.7812 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1884.8469 1463.7812)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">PutResult(gid)</tspan>
+        </text>
+      </g>
+      <g id="Line_380">
+        <path d="M 1871.134 1481.3886 L 1689.9889 1481.3886 C 1689.9889 1475.8886 1678.9889 1475.8886 1678.9889 1481.3886 L 1503.47 1481.3886 C 1503.47 1475.8886 1492.47 1475.8886 1492.47 1481.3886 L 1321.351 1481.3886" marker-end="url(#FilledArrow_Marker)" stroke="#08980e" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_372">
+        <rect x="1818.8142" y="1471.6664" width="43.33789" height="20.444247" fill="white"/>
+        <text transform="translate(1817.8074 1474.8886)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Success</tspan>
+        </text>
+      </g>
+      <g id="Graphic_385">
+        <path d="M 1199.8945 1484.5018 L 1291.1094 1484.5018 C 1291.6617 1484.5018 1292.1094 1484.9496 1292.1094 1485.5018 L 1292.1094 1494.5018 C 1292.1094 1495.0541 1291.6617 1495.5018 1291.1094 1495.5018 L 1199.8945 1495.5018 C 1199.3422 1495.5018 1198.8945 1495.0541 1198.8945 1494.5018 L 1198.8945 1485.5018 C 1198.8945 1484.9496 1199.3422 1484.5018 1199.8945 1484.5018 Z" fill="white"/>
+        <path d="M 1199.8945 1484.5018 L 1291.1094 1484.5018 C 1291.6617 1484.5018 1292.1094 1484.9496 1292.1094 1485.5018 L 1292.1094 1494.5018 C 1292.1094 1495.0541 1291.6617 1495.5018 1291.1094 1495.5018 L 1199.8945 1495.5018 C 1199.3422 1495.5018 1198.8945 1495.0541 1198.8945 1494.5018 L 1198.8945 1485.5018 C 1198.8945 1484.9496 1199.3422 1484.5018 1199.8945 1484.5018 Z" stroke="#08990d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1199.8945 1485.5018)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">PutResultRecvd(gid)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_384">
+        <ellipse cx="1311.3586" cy="1490.0018" rx="3.17383784331888" ry="3.29935366352399" fill="#08990d"/>
+      </g>
+      <g id="Line_386">
+        <line x1="1308.1848" y1="1490.0018" x2="1292.1094" y2="1490.0018" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_387">
+        <rect x="1697.6396" y="1437.4776" width="43.33789" height="16" fill="white"/>
+        <text transform="translate(1698.6396 1438.4776)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Put(k,v)</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="1201.7389 1597.5 386.4793 158.75" width="386.4793" height="158.75">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 18 14" markerWidth="18" markerHeight="14" color="black">
+      <g>
+        <path d="M 16 0 L 0 0 M 0 -6 L 16 0 L 0 6" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#ff9400">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Courier New" font-size="8" panose-1="2 7 3 9 2 2 5 2 4 4" units-per-em="1000" underline-position="-232.91016" underline-thickness="41.015625" slope="0" x-height="422.85156" cap-height="571.28906" ascent="832.5195" descent="-300.29297" font-weight="400">
+      <font-face-src>
+        <font-face-name name="CourierNewPSMT"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.19.2\n2022-02-17 22:20:47 +0000</metadata>
+  <g id="tracing" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
+    <title>tracing</title>
+    <rect fill="white" x="1201.7389" y="1597.5" width="386.4793" height="158.75"/>
+    <g id="tracing_Layer_1">
+      <title>Layer 1</title>
+      <g id="Line_438">
+        <line x1="1501.0643" y1="1616.6819" x2="1501.0643" y2="1746.8" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_437">
+        <text transform="translate(1471.9861 1600.9531)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">Tail server</tspan>
+        </text>
+      </g>
+      <g id="Line_433">
+        <line x1="1314.5453" y1="1617.5978" x2="1314.5453" y2="1746.8" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_432">
+        <text transform="translate(1295.1594 1600.9531)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">kvslib</tspan>
+        </text>
+      </g>
+      <g id="Line_431">
+        <line x1="1315.0309" y1="1663.64" x2="1490.9044" y2="1663.64" marker-end="url(#FilledArrow_Marker)" stroke="#ff9400" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_430">
+        <rect x="1325.3948" y="1656.14" width="35.333984" height="16" fill="white"/>
+        <text transform="translate(1326.3948 1657.14)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Get(k)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_424">
+        <path d="M 1279.8014 1647.3324 L 1294.2037 1647.3324 C 1294.756 1647.3324 1295.2037 1647.78 1295.2037 1648.3324 L 1295.2037 1657.3324 C 1295.2037 1657.8847 1294.756 1658.3324 1294.2037 1658.3324 L 1279.8014 1658.3324 C 1279.249 1658.3324 1278.8014 1657.8847 1278.8014 1657.3324 L 1278.8014 1648.3324 C 1278.8014 1647.78 1279.249 1647.3324 1279.8014 1647.3324 Z" fill="white"/>
+        <path d="M 1279.8014 1647.3324 L 1294.2037 1647.3324 C 1294.756 1647.3324 1295.2037 1647.78 1295.2037 1648.3324 L 1295.2037 1657.3324 C 1295.2037 1657.8847 1294.756 1658.3324 1294.2037 1658.3324 L 1279.8014 1658.3324 C 1279.249 1658.3324 1278.8014 1657.8847 1278.8014 1657.3324 L 1278.8014 1648.3324 C 1278.8014 1647.78 1279.249 1647.3324 1279.8014 1647.3324 Z" stroke="#ff9400" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1279.8014 1648.3324)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">Get</tspan>
+        </text>
+      </g>
+      <g id="Line_423">
+        <line x1="1310.761" y1="1652.8324" x2="1295.2037" y2="1652.8324" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_422">
+        <circle cx="1313.9348" cy="1652.8324" r="3.17383784331885" fill="#ff9400"/>
+      </g>
+      <g id="Line_421">
+        <line x1="1219.6125" y1="1635.0965" x2="1305.1309" y2="1635.0965" marker-end="url(#FilledArrow_Marker)" stroke="#ff9400" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_420">
+        <rect x="1225.9928" y="1627.5965" width="35.333984" height="16" fill="white"/>
+        <text transform="translate(1226.9928 1628.5965)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Get(k)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_399">
+        <circle cx="1502.0177" cy="1674.7737" r="3.17383784331882" fill="#ff9400"/>
+      </g>
+      <g id="Line_398">
+        <line x1="1505.1915" y1="1674.7737" x2="1513.9564" y2="1674.7737" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_397">
+        <path d="M 1514.9564 1669.2737 L 1553.3627 1669.2737 C 1553.915 1669.2737 1554.3627 1669.7215 1554.3627 1670.2737 L 1554.3627 1679.2737 C 1554.3627 1679.826 1553.915 1680.2737 1553.3627 1680.2737 L 1514.9564 1680.2737 C 1514.4041 1680.2737 1513.9564 1679.826 1513.9564 1679.2737 L 1513.9564 1670.2737 C 1513.9564 1669.7215 1514.4041 1669.2737 1514.9564 1669.2737 Z" fill="white"/>
+        <path d="M 1514.9564 1669.2737 L 1553.3627 1669.2737 C 1553.915 1669.2737 1554.3627 1669.7215 1554.3627 1670.2737 L 1554.3627 1679.2737 C 1554.3627 1679.826 1553.915 1680.2737 1553.3627 1680.2737 L 1514.9564 1680.2737 C 1514.4041 1680.2737 1513.9564 1679.826 1513.9564 1679.2737 L 1513.9564 1670.2737 C 1513.9564 1669.7215 1514.4041 1669.2737 1514.9564 1669.2737 Z" stroke="#ff9400" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1514.9564 1670.2737)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">GetRecvd</tspan>
+        </text>
+      </g>
+      <g id="Graphic_396">
+        <circle cx="1501.5177" cy="1705.2812" r="3.17383784331885" fill="#ff9400"/>
+      </g>
+      <g id="Line_395">
+        <line x1="1504.6915" y1="1705.2812" x2="1513.9564" y2="1705.2812" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_394">
+        <path d="M 1514.9564 1699.7812 L 1582.1674 1699.7812 C 1582.7197 1699.7812 1583.1674 1700.229 1583.1674 1700.7812 L 1583.1674 1709.7812 C 1583.1674 1710.3335 1582.7197 1710.7812 1582.1674 1710.7812 L 1514.9564 1710.7812 C 1514.4041 1710.7812 1513.9564 1710.3335 1513.9564 1709.7812 L 1513.9564 1700.7812 C 1513.9564 1700.229 1514.4041 1699.7812 1514.9564 1699.7812 Z" fill="white"/>
+        <path d="M 1514.9564 1699.7812 L 1582.1674 1699.7812 C 1582.7197 1699.7812 1583.1674 1700.229 1583.1674 1700.7812 L 1583.1674 1709.7812 C 1583.1674 1710.3335 1582.7197 1710.7812 1582.1674 1710.7812 L 1514.9564 1710.7812 C 1514.4041 1710.7812 1513.9564 1710.3335 1513.9564 1709.7812 L 1513.9564 1700.7812 C 1513.9564 1700.229 1514.4041 1699.7812 1514.9564 1699.7812 Z" stroke="#ff9400" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1514.9564 1700.7812)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">GetResult(gid)</tspan>
+        </text>
+      </g>
+      <g id="Line_393">
+        <line x1="1500.8044" y1="1713.005" x2="1325.4453" y2="1713.005" marker-end="url(#FilledArrow_Marker)" stroke="#ff9400" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_392">
+        <rect x="1460" y="1704.3617" width="35.333984" height="16.668479" fill="white"/>
+        <text transform="translate(1463.3232 1705.696)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">value</tspan>
+        </text>
+      </g>
+      <g id="Graphic_391">
+        <path d="M 1202.9889 1730.5 L 1294.2037 1730.5 C 1294.756 1730.5 1295.2037 1730.9477 1295.2037 1731.5 L 1295.2037 1740.5 C 1295.2037 1741.0523 1294.756 1741.5 1294.2037 1741.5 L 1202.9889 1741.5 C 1202.4366 1741.5 1201.9889 1741.0523 1201.9889 1740.5 L 1201.9889 1731.5 C 1201.9889 1730.9477 1202.4366 1730.5 1202.9889 1730.5 Z" fill="white"/>
+        <path d="M 1202.9889 1730.5 L 1294.2037 1730.5 C 1294.756 1730.5 1295.2037 1730.9477 1295.2037 1731.5 L 1295.2037 1740.5 C 1295.2037 1741.0523 1294.756 1741.5 1294.2037 1741.5 L 1202.9889 1741.5 C 1202.4366 1741.5 1201.9889 1741.0523 1201.9889 1740.5 L 1201.9889 1731.5 C 1201.9889 1730.9477 1202.4366 1730.5 1202.9889 1730.5 Z" stroke="#ff9400" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1202.9889 1731.5)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">GetResultRecvd(gid)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_390">
+        <ellipse cx="1314.453" cy="1736.191" rx="3.17383784331888" ry="3.29935366352387" fill="#ff9400"/>
+      </g>
+      <g id="Line_389">
+        <line x1="1311.2791" y1="1736.1818" x2="1295.2037" y2="1736.1352" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_474">
+        <circle cx="1502.0177" cy="1691.6906" r="3.17383784331888" fill="#ff9400"/>
+      </g>
+      <g id="Line_473">
+        <line x1="1505.1915" y1="1691.6906" x2="1513.9564" y2="1691.6906" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_472">
+        <path d="M 1514.9564 1686.1906 L 1586.9682 1686.1906 C 1587.5204 1686.1906 1587.9682 1686.6383 1587.9682 1687.1906 L 1587.9682 1696.1906 C 1587.9682 1696.7428 1587.5204 1697.1906 1586.9682 1697.1906 L 1514.9564 1697.1906 C 1514.4041 1697.1906 1513.9564 1696.7428 1513.9564 1696.1906 L 1513.9564 1687.1906 C 1513.9564 1686.6383 1514.4041 1686.1906 1514.9564 1686.1906 Z" fill="white"/>
+        <path d="M 1514.9564 1686.1906 L 1586.9682 1686.1906 C 1587.5204 1686.1906 1587.9682 1686.6383 1587.9682 1687.1906 L 1587.9682 1696.1906 C 1587.9682 1696.7428 1587.5204 1697.1906 1586.9682 1697.1906 L 1514.9564 1697.1906 C 1514.4041 1697.1906 1513.9564 1696.7428 1513.9564 1696.1906 L 1513.9564 1687.1906 C 1513.9564 1686.6383 1514.4041 1686.1906 1514.9564 1686.1906 Z" stroke="#ff9400" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1514.9564 1687.1906)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">GetOrdered(gid)</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

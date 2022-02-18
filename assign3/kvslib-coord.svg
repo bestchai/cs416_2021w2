@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="605 156 612.4584 227.9917" width="612.4584" height="227.9917">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 18 14" markerWidth="18" markerHeight="14" color="black">
+      <g>
+        <path d="M 16 0 L 0 0 M 0 -6 L 16 0 L 0 6" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#0053b7">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#08980e">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_3" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#ff9300">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.19.2\n2022-02-13 18:12:24 +0000</metadata>
+  <g id="kvslib-coord" stroke="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke-dasharray="none">
+    <title>kvslib-coord</title>
+    <rect fill="white" x="605" y="156" width="612.4584" height="227.9917"/>
+    <g id="kvslib-coord_Layer_1">
+      <title>Layer 1</title>
+      <g id="Line_255">
+        <line x1="815.90485" y1="178.0204" x2="815.90485" y2="373.19805" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_254">
+        <text transform="translate(798.7418 161)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">Coord</tspan>
+        </text>
+      </g>
+      <g id="Line_253">
+        <line x1="815.645" y1="233.78472" x2="638.9" y2="233.78472" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_252">
+        <text transform="translate(981.2464 161)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">Server1</tspan>
+        </text>
+      </g>
+      <g id="Graphic_250">
+        <text transform="translate(1166.4271 161)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">ServerN</tspan>
+        </text>
+      </g>
+      <g id="Line_249">
+        <line x1="1188.9428" y1="178.0204" x2="1188.9428" y2="373.19805" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_238">
+        <line x1="629.3859" y1="204.98017" x2="806.1992" y2="204.98017" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_235">
+        <rect x="760.3805" y="226.28472" width="44.01758" height="16" fill="white"/>
+        <text transform="translate(761.3805 227.28472)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Server1</tspan>
+        </text>
+      </g>
+      <g id="Line_234">
+        <line x1="629.3859" y1="179.36405" x2="629.3859" y2="373.19805" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_231">
+        <line x1="1003.4238" y1="274" x2="1057.8736" y2="274" marker-end="url(#FilledArrow_Marker_2)" stroke="#08980e" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_229">
+        <text transform="translate(610 161)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">kvslib</tspan>
+        </text>
+      </g>
+      <g id="Line_225">
+        <path d="M 629 258.86286 L 810.40485 258.86286 C 810.40485 253.36286 821.4049 253.36286 821.4049 258.86286 L 993.5238 258.86286" marker-end="url(#FilledArrow_Marker_2)" stroke="#08980e" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_224">
+        <rect x="639.3278" y="251.36286" width="43.33789" height="16" fill="white"/>
+        <text transform="translate(640.3278 252.36286)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Put(k,v)</tspan>
+        </text>
+      </g>
+      <g id="Line_223">
+        <line x1="1002.4238" y1="179.36405" x2="1002.4238" y2="374.5417" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_222">
+        <rect x="643.4996" y="197.48017" width="88.04492" height="16" fill="white"/>
+        <text transform="translate(644.4996 198.48017)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Get head server</tspan>
+        </text>
+      </g>
+      <g id="Line_266">
+        <line x1="815.645" y1="317.72983" x2="638.4458" y2="317.72983" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_265">
+        <line x1="628.9317" y1="291.441" x2="805.745" y2="291.441" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_264">
+        <rect x="758.9303" y="310.22983" width="46.009766" height="16" fill="white"/>
+        <text transform="translate(759.9303 311.22983)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">ServerN</tspan>
+        </text>
+      </g>
+      <g id="Graphic_263">
+        <rect x="648.7232" y="283.941" width="76.68945" height="16" fill="white"/>
+        <text transform="translate(649.7232 284.941)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Get tail server</tspan>
+        </text>
+      </g>
+      <g id="Line_268">
+        <path d="M 628.59195 340.5 L 810.40485 340.5 C 810.40485 335 821.4049 335 821.4049 340.5 L 996.9238 340.5 C 996.9238 335 1007.9238 335 1007.9238 340.5 L 1180.0428 340.5" marker-end="url(#FilledArrow_Marker_3)" stroke="#ff9300" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_267">
+        <rect x="642.9217" y="333" width="35.333984" height="16" fill="white"/>
+        <text transform="translate(643.9217 334)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Get(k)</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

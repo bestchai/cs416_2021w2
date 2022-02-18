@@ -1,0 +1,1471 @@
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="./style.css" />
+</head>
+
+<body>
+  <title>Assignment 3</title>
+
+  <table id="main">
+
+    <tr>
+      <td style="padding-bottom: 20px">
+        <h2><a href="../index.html">416</a> Distributed Systems: Assignment 3 [Chained-KV]</h2>
+        <h3>Due: March 7 at 11:59pm PST</h3>
+        <p style="color:gray"><small>Winter 2022</small></p>
+        <p style="color:gray">
+          <small>
+            <script src="hash.js"></script>
+          </small>
+        </p>
+      </td>
+    </tr>
+
+
+    <!-- -------------------------------------------------------------->
+
+    <tr>
+      <td>
+
+        <p>
+          In this assignment you will work in a team of three people
+          to build a key-value storage system (KVS). Your system will
+          store the association between "keys" and "values" and
+          support a simple Get(k) and Put(k,v) API. The assignment
+          specification below explains how your system should
+          behave. However, the implementation of the system is up to
+          you. The spec leaves many choices undefined and you will
+          need to figure out how to realize the specified behavior on
+          your own.
+        </p>
+
+
+        <h3>Assignment overview</h3>
+        <div class="hbarshort"></div>
+
+        <p align="center">
+          <img style="width:60%" src="arch.svg" alt="Nodes in the system" />
+        </p>
+
+        <p>
+          Your system will have three types of nodes: a number of
+          <b>clients</b>, a number of <b>servers</b>, and a
+          single <b>coord</b> node. The clients will use a local Go
+          library called kvslib to access the system (similar to the
+          fcheck library in A2). We will specify the API for this
+          library, but you will have to implement this library on your
+          own. The kvslib will not store KV state, instead this state
+          will be stored by the servers in your system. These storage
+          servers will be arranged in a logical chain (see diagram
+          above). This chain structure, coupled with specific get/put
+          and failure semantics that we detail below will provide the
+          system with strong data consistency guarantees. Your system
+          will need to provide service to multiple concurrent clients
+          simultaneously. The coord node will coordinate the servers
+          and help clients find the server at the front of the chain
+          and at the tail of the chain.
+        </p>
+
+        <br/>
+
+        <p align="center">
+          <img style="width:60%" src="put-get-flow.svg" alt="Flow of puts and gets in the system" />
+        </p>
+
+        <p>
+          Your system will support two types of operations on
+          keys/values: Put and Get. A put is a mutable operation that
+          must update all the available servers before the client
+          receives a success confirmation. A get is an immutable
+          operation that can only read state from the last server in
+          the chain. The servers can maintain KV state in memory and
+          do not need to store KV state durably on disk.
+        </p>
+        
+        <p>
+          <b>Put operations.</b> Put operations in your system must be
+          issued by clients (via kvslib) and flow from the head of the
+          chain of servers to the tail. The server at the tail of the
+          chain will then acknowledge the put to the kvslib instance
+          that issued the put. As the put moves down the chain from
+          server to server, each server updates its local KV state
+          based on the put command. 
+        </p>
+
+
+        <p>
+          <b>Get operations.</b> Get operations in your system must be
+          issued by clients (via kvslib) to the server at the tail of
+          the chain. This tail server is responsible for handling and
+          responding to all get requests and it must respond to get
+          requests without interacting with the other servers in the
+          chain.
+        </p>
+
+        <p>
+          <b>Server failures.</b> Your system must be able to deal
+          with servers that fail in a fail-stop manner. You will
+          assume that network failures do not occur and that clients
+          and the coord node do not fail. A KVS with N servers will
+          experience at most N-1 server failures.
+        </p>
+
+
+        <p>
+          <i>
+          <b>A note about diagrams.</b> This spec contains a number of
+          diagrams. These are not intended to be precise protocol
+          diagrams and describe the expected data flow your system
+          should implement. Except for the use of fcheck (see below)
+          the spec does not require you to use a particular
+          protocol. For example, the choice of RPC/TCP/UDP is up to
+          you, and the specifics of the protocol design are also up to
+          you. The spec does, however, place constraints on which node
+          communicates with which node and the type of information
+          they may exchange.
+          </i>
+        </p>
+
+
+        <h3>1.1 kvslib API</h3>
+        <div class="hbarshort"></div>
+        
+        <p align="center">
+          <img src="kvslib.svg" alt="KVS lib API" style="width:60%;">
+        </p>
+        
+        <p>
+          In this assignment you will develop the kvslib library that
+          a client will use to access your KVS. Unlike A2, clients
+          will indirectly interact with each other via the KVS and the
+          KVS will allow a client to issue multiple concurrent
+          operations. The KVS associates arbitrary string keys with
+          arbitrary string values.
+        </p>
+        
+        <p>
+          The kvslib Start, Get, and Put API calls below must
+          each create a new distributed trace instance using
+          Tracer.CreateTrace(). This instance is created per
+          invocation. In the case of Get and Put calls it will be used
+          to trace the specific put/get request. Also note that each
+          call below (Start, Get, Put) will always be invoked one
+          at a time by the client (i.e., new call will be invoked once
+          a previous call has returned). For example, the client will
+          not call Get and Put concurrently. In the descriptions
+          below, if err (of built-in error type) is nil then the call
+          succeeded, otherwise err must include a descriptive message
+          of the error. There are no constraints on what the error
+          message is, the exact text does not matter. The kvslib has a
+          KVS struct that must provide the following API (stub methods
+          are given in <code>kvslib/kvslib.go)</code>.
+          
+          <ul>
+            
+            <li><tt>notify-channel, err</tt>
+              &#8592; <b>Start</b>(<tt>localTracer *tracing.Tracer</tt>, <tt>clientId string</tt>, <tt>CoordIP:CoordPort</tt>, <tt>ChCapacity</tt>)</li>
+            <ul>
+              <li>
+                Starts the instance of <tt>KVS</tt> to use for connecting
+                to the system with the given coord's IP:port. The
+                returned <tt>notify-channel</tt> channel must have
+                capacity <tt>ChCapacity</tt> and must be used by kvslib to
+                deliver all get/put output notifications. <tt>ChCapacity</tt>
+                determines the concurrency factor at the client: the client
+                will never have more than <tt>ChCapacity</tt> number of
+                operations outstanding (pending concurrently) at any one time.
+                If there is an issue with connecting to the coord, this should return an
+                appropriate <tt>err</tt> value, otherwise <tt>err</tt> should
+                be set to nil.
+              </li>
+            </ul>
+            
+            
+            <li><tt>opId, err</tt> &#8592; <b>Get</b>(<tt>tracer *tracing.Tracer,
+                clientId string, key string</tt>)</li>
+            
+            <ul>
+              <li>
+                This is a <b>non-blocking</b> request from the client to make
+                a get call for a given key. In case there is an underlying
+                issue (for example, servers/coord cannot be reached), this
+                should return an appropriate <tt>err</tt> value,
+                otherwise <tt>err</tt> should be set to nil. Note that this
+                call is non-blocking. The returned value must be delivered
+                asynchronously to the client via the <tt>notify-channel</tt>
+                channel returned in the Start call. The
+                value <tt>opId</tt> is used to identify this request and
+                associate the returned value with this request.
+              </li>
+            </ul>
+            
+            <li><tt>opId, err</tt> &#8592; <b>Put</b>(<tt>tracer *tracing.Tracer,
+                clientId string, key string, value string</tt>)</li>
+            
+            <ul>
+              <li>
+                This is a <b>non-blocking</b> request from the client to update
+                the value associated with a key. In case there is an underlying
+                issue (for example, the servers/coord cannot be reached), this should
+                return an appropriate <tt>err</tt> value, otherwise <tt>err</tt>
+                should be set to nil. Note that this call is non-blocking. The
+                value <tt>opId</tt> is used to identify this request and
+                associate the returned value with this request. The returned
+                value must be delivered asynchronously via
+                the <tt>notify-channel</tt> channel returned in the Start
+                call.
+              </li>
+            </ul>
+            
+            <li><tt>err</tt> &#8592; <b>Stop</b>()</li>
+            <ul>
+              <li>
+                Stops the <tt>KVS</tt> instance from communicating with the
+                KVS and from delivering any results via
+                the <tt>notify-channel</tt>.  If there is an issue with
+                stopping, this should return an appropriate
+                <tt>err</tt> value, otherwise <tt>err</tt> should be set to nil.
+              </li>
+            </ul>
+          </ul>
+          
+          
+          The <code>OpId</code> values must have the following properties:
+          <ul>
+            <li>
+              Values of <code>opId</code> must monotonically increase at each
+              kvslib and be locally unique. They should be comparable at a
+              single client to determine <i>client-local operation request
+                order</i>. Globally, across kvslib instances, values
+              of <code>opId</code> do not need to be comparable.
+            </li>
+            
+            <li>
+              The <code>opId</code> type is uint32. You can assume that a
+              client will not issue more than 2^32 operations during the
+              execution of your system (you do not need to implement id
+              rollover).
+            </li>
+          </ul>
+          
+          
+          Items returned via the <tt>notify-channel</tt> should have the
+          following type:
+          <pre>  
+type ResultStruct struct {
+    opId uint32
+    gId uint64
+    result *string
+}
+          </pre>
+          
+          Values of <code>ResultStruct</code> must conform to the following:
+          <ul>
+            <li>
+              <code>opId</code> must correspond to some previously issued
+              operation that synchronously returned this <code>opId</code>.
+            </li>
+            <li>
+              If <code>opId</code> corresponds to a <code>Get(k)</code>
+              operation, then <code>result</code> should contain the value
+              associated with key <code>k</code>. A get on a key that has not
+              been previously put should set <code>result</code>
+              to <code>nil</code>.
+            </li>
+            <li>
+              If <code>opId</code> corresponds to a <code>Put(k,v)</code>
+              operation, then <code>result</code> should be set
+              to <code>v</code>.
+            </li>
+            <li>
+              <code>gId</code> is the global ordering id used for this
+              operation by the KVS (see below).
+            </li>
+          </ul>
+
+          Note that the API above assumes that Get and Put operations
+          always eventually succeed. This is because the coord node
+          never fails and at least one server will always be
+          available.
+        </p>
+
+
+                
+        <h4>1.2 Consistency semantics</h4>
+        <div class="hbarshort"></div>
+        <p>
+          Your system must provide strong consistency semantics. Your
+          design can achieve this by (1) totally ordering put requests
+          at the head server, (2) maintaining that ordering at each
+          server in the chain, and (3) ordering put requests with get
+          requests into a single total order at the tail server.
+        </p>
+
+        <p>
+          Further below you will notice <code>GetOrdered(gid)</code>
+          and <code>PutOrdered(gid)</code> tracing actions for traces
+          that are associated with get and put requests,
+          respectively. The <code>gid</code> parameter is a global
+          unique identifier that represents the total ordering noted
+          in the paragraph above. The total ordering of put and get
+          operations should make your replicated KV system appear as
+          if it was single server.
+        </p>
+
+        <p>
+          Your system must provide the above data consistency
+          semantics under all circumstances: regardless of the number
+          of servers, number of clients, server failures, server failure
+          pattern, etc.
+        </p>
+        
+        <h3>2.1 Client-coord interaction</h3>
+        <div class="hbarshort"></div>
+        
+        <p align="center">
+          <img src="kvslib-coord.svg" alt="kvslib-coord node interaction" style="width:80%;">
+        </p>
+        
+        <p>
+          The coord node provides a consistent view of the server
+          chain. It acts as a source of truth about the state of the
+          chain. The kvslib is provided with the coord node
+          address. Before the call to <tt>Start</tt>, kvslib does
+          not know about any servers in the system. To learn about the
+          servers in the system the client must coordinate with the
+          coord node.  The diagram above captures the basic
+          coordination between the kvslib and the coord
+          node. A couple of points of note:
+          
+          <ul>
+
+            <li>
+              As in A2, you will use distributed traces
+              extensively. The distributed tracing library API is
+              unchanged. This spec assumes tracing. That is, we
+              require that all of your protocols carry and return
+              tracing tokens, just as was described in A2.
+            </li>
+            
+            <li>
+              <b>The coord node does not, and should not, implement
+                any key-value state caching</b>. Furthermore, it
+                should not be on the data path: the clients' Put/Get
+                operations are not routed through the coord node, but
+                are sent directly to the head/tail servers in the chain.
+            </li>
+
+            <li>
+              <b>Clients should only know about the current head/tail of
+              the chain of servers. They should not know about the other
+              servers in the chain.</b>
+            </li>
+            
+            <li>
+              <b>Likewise, the kvslib does not, and should not,
+                implement any key-value state caching</b>.
+            </li>
+            
+          </ul>
+        </p>
+        
+        
+        <h3>3.1 Server-coord interaction</h3>
+        <div class="hbarshort"></div>
+
+        <p>
+          The coord node provides a consistent view of the server
+          chain. It acts as a source of truth about the state of the
+          chain. In interaction with servers, the coord node allows
+          joining servers to link up into a chain, detects when
+          servers fails, and removes failed servers from the chain.
+          The coord is a simplification of how you would build this
+          system in practice: the coord's role would be distributed
+          among the servers in the system. By centralizing the view of
+          the system in one node we resolve the distributed consensus
+          problem that we would need to solve in order for the servers
+          to arrive at the same view of the system.
+        </p>
+
+
+
+        <h4>3.2 Server join process</h4>
+        <div class="hbarshort"></div>
+
+        
+        <p align="center">
+          <img src="server-join.svg" alt="Server join process" style="width:80%;">
+        </p>
+
+        
+        <p>
+          The server join process (shown above) takes place at the
+          start. That is, all servers must join the system before any
+          client operations may be issued to any server. Clients may
+          start simultaneously as the servers, but their operations
+          must be queued/blocked while the servers are joining. The
+          coord node will start knowing to expect exactly N servers
+          (coord will have N as a parameter). This N is fixed for the
+          lifetime of the system. Once N servers join and are
+          configured in a chain, the coord node can allow clients to
+          learn about the head of the chain to issue their operations.
+          Each server will have a serverId which denote the order in
+          which the servers should be arranged in the chain: server
+          with serverId 1 should be first (head), while server with
+          serverId N should be last (tail). Note, however, that
+          servers may not necessarily start and connect to coord in
+          serverId order. Multiple servers may attempt to join
+          simultaneously. The coord can serialize these concurrent
+          joins in the order of serverId.
+        </p>
+
+        <p>
+          The figure illustrates a single new server S new joining the
+          system of two servers S1 &rarr; S2. The timelines of the
+          nodes shows how that node's view of the system changed as a
+          result of the join. For example, S2's view was S1 &rarr; S2;
+          eventually, its view became S2 &rarr; S new. A couple of
+          points about the join process:
+          
+          <ul>
+
+            <li>
+              <b>Newly joining servers must be added at the end of the
+              chain.</b>
+            </li>
+
+            <li>
+              <b>Servers only know about the previous server and next
+              server in the chain and never about the entire
+              chain.</b> For example, above, the view of the chain for
+              S1 does not change. If another server were to join after
+              S new, then S2's view of the system would similarly not
+              change.
+            </li>
+
+            <li>
+              The coord does not update its view of the system until
+              the servers impacted by the join have acknowledged the new
+              view of the chain.
+            </li>
+
+            <li>
+              Servers may join at the same time. The easiest way to
+              handle is to have the coord serialize these joins and
+              carry out the above join process one at a time for each
+              joining server.
+            </li>
+            
+          </ul>
+        </p>
+
+
+        
+        <h4>3.3 Server failure detection and chain reconfiguration</h4>
+        <div class="hbarshort"></div>
+
+        
+        <p align="center">
+          <img src="failure-reconfig.svg" alt="Server failure detection and chain reconfiguration" style="width:80%;">
+        </p>
+
+        <p>
+          Servers may fail at any time once client operations have
+          started to flow through the chain (you can assume that
+          servers will not fail before all of them have joined the
+          system, see <code>AllServersJoined</code> action
+          below). Servers may fail concurrently. However, at least one
+          server will always be available. That is, for a system of N
+          servers, the system may experience at most N-1 server
+          failures. Once a server fails it does not re-join the
+          system: failed servers remain failed for all time.
+        </p>
+
+        <p>
+          Servers should not detect each other's failures. Instead,
+          they should use the coord node as a centralized failure
+          detector. The coord node should monitor the servers using a
+          variant of the fcheck library that you have developed in
+          A2. The small difference is that the coord node's fcheck
+          must be able to monitor all the servers simultaneously (not
+          just a single server as in A2). Note that the failure
+          detection process shown above omits the fcheck messages
+          (heartbeats/acks).
+        </p>
+
+        <p>
+          Once the coord node detects a failure it should immediately
+          reconfigure the chain to minimize unavailability period for
+          the clients. The reconfiguration process shown above is one
+          way to structure this process: notify each server impacted
+          by the failure about their updated predecessor/successor
+          server.
+        </p>
+
+        <p>
+          The figure omits important details that you have to figure
+          out on your own. Specifically, it does not explain how nodes
+          update their internal key-value states in response to
+          failure and how these failures impact kvslib instances that
+          have outstanding put/get operations. Here are a few notes to
+          help guide your design (see Section 3.1 in the OSDI paper
+          linked below for more information):
+          
+          <ul>
+
+            <li>
+              If the head server fails then some pending put requests
+              might be lost (those requests that have not yet made it
+              to the second server in the chain). The coord node will
+              detect the head server failure, but since it is not on
+              the data path it cannot know that put requests were
+              lost. Neither do the other servers in the chain. It is
+              therefore the responsibility of kvslib to detect such
+              lost requests and to resubmit them (remember that put
+              and get operations must always eventually succeed).
+            </li>
+
+            <li>
+              If the tail server fails then it should be safe to use
+              the previous server node as the new tail (i.e., its KV
+              state is at least as up to date as the tail server that
+              failed). However, put requests that have not yet been
+              responded to must be responded to from the new
+              tail. This may require coordination between kvslib and
+              the coord node (for kvslib to learn about the identity
+              of the new tail) and kvslib and the new tail. Note that
+              get operations will become unavailable during tail
+              failures. These get requests (that were sent to the
+              failed tail server) must be resubmitted to the new tail
+              server.
+            </li>
+
+            <li>
+              If a server in the middle of the chain fails, then the
+              servers that are adjacent to the failed server should
+              (1) learn about one another via the coord node (see
+              diagram above), and (2) exchange relevant KV state. For
+              example, given a chain S1 &rarr; S2 &rarr; S3, the
+              failure of S2 may lose put operations that have been
+              forwarded from S1 to S2 but have not yet made it to S3
+              when S2 failed. These put operations must be resent by
+              S1 to S3.
+            </li>
+            
+            <li>
+              Failures must not violate the consistency semantics of
+              the system described above.
+            </li>
+
+            <li>
+              Tail and head server failures will be visible to kvslib
+              (which must adjust to use the new head/tail
+              servers). However, except for performance degradation of
+              the put data path, kvslib should not be impacted by
+              failures of servers in the middle of the chain.
+            </li>
+            
+            <li>
+              <b>Server failures should never be visible to the client of
+              kvslib</b>. From the client's point of view, the KVS system
+              is always available (a view that is maintained by the
+              kvslib and the coord node).
+            </li>
+            
+          </ul>
+        </p>
+
+
+        <h3>4.1 Non-kvslib API specifications</h3>
+        <div class="hbarshort"></div>
+        <p>
+          The kvslib API was described earlier. The coord and server
+          nodes you will implement also have APIs that you must
+          follow. These are simple APIs that initialize and start the
+          coord/server processes. We will use these to start your
+          coord/server instances.
+        </p>
+        
+        <p>
+          <ul>
+            <li><b>Coord start API</b></li>
+            <ul>
+              <li><code>
+                  err &larr; Start(
+                  clientAPIListenAddr string,
+                  serverAPIListenAddr string,
+                  lost-msgs-thresh uint8,
+                  numServers uint8,
+                  ctrace *tracing.Tracer
+                </code>
+                )</li>
+              <ul>
+                <li>
+                  When successful, this call should not return. The coord
+                  node should run until the program is terminated.  This
+                  call should return an error if there are networking issues
+                  (e.g., incorrect ip:port given) or other unrecoverable
+                  issues.
+                </li>
+                
+                <li><code>clientAPIListenAddr</code> is the IP:port where the coord
+                  will expect clients to connect to it.</li>
+                
+                <li><code>serverAPIListenAddr</code> is the IP:port
+                  where the coord will expect servers to connect to
+                  it. Note that the coord node cannot connect to
+                  server nodes without having them connect first.</li>
+                
+                <li>The <code>lost-msgs-thresh</code> specifies the
+                  number of consecutive and un-acked heartbeats
+                  messages that the underlying fcheck library should
+                  send before triggering a failure.</li>
+
+                <li><code>numServers</code> is the number of servers
+                  that coord should expect to join. This is the N
+                  parameter described above. Each joining server is
+                  expected to have a unique <code>serverId</code> that
+                  is between 1 and N, inclusive.</li>
+                
+                <li><code>ctrace</code> is a <i>coord tracer
+                  instance</i>; use this to (1) create a new
+                  distributed trace instance using
+                  Tracer.CreateTrace(), and (2) record local coord
+                  actions in the created trace that are not associated
+                  with any particular client request (see below).</li>
+              </ul>
+            </ul>
+            
+            <li><b>Server start API</b></li>
+            <ul>
+              <li>
+                <code>
+                  err &larr; Start(
+                  serverId uint8,
+                  coordAddr string,
+                  serverAddr string,
+                  serverListenAddr string,
+                  strace *tracing.Tracer
+                </code>
+                )</li>
+              <ul>
+                <li>When successful, this call should not return. The server
+                  node should run until the program is terminated.  This
+                  call should return an error if there are networking issues
+                  (e.g., incorrect ip:port given), or other unrecoverable issues.
+                </li>
+
+                <li><code>serverId</code> is the identity of this
+                  server. It is a unique number that is between 1 and
+                  N, the total number of servers in the system.</li>
+                
+                <li><code>coordAddr</code> is the IP:port of the coord node that this
+                  server node should connect to.</li>
+                
+                <li><code>serverAddr</code> is the local IP:port that this server
+                  node should use to connect to the coord node.</li>
+
+                <li><code>serverListenAddr</code> is the local IP:port
+                  that this server node should use to receive
+                  connections from other (i.e., chain adjacent)
+                  servers.</li>
+                
+                <li><code>strace</code> is a <i>server tracer instance</i>; use this
+                  (1) create a new distributed trace instance
+                  using Tracer.CreateTrace(), and (2) record local server
+                  actions in the created trace that are not associated with
+                  any particular client request (see below).</li>
+                
+              </ul>
+            </ul>
+          </ul>
+        </p>
+        
+        
+        
+        
+        <h3>Tracing Semantics</h3>
+        <div class="hbarshort"></div>
+        
+        <p>
+          As in A2, all actions that you record in this assignment
+          will be part of distributed tracing.  Keep in mind that all
+          ordering constraints are evaluated according to the happens
+          before relation (i.e., using vector clocks), not physical
+          clock timestamps. Below we use the generic term <i>trace</i>
+          to refer to a trace that was created by some node with the
+          understanding that the trace type is clear.  The colors in
+          the legend below help to disambiguate. There are traces
+          generated to trace a put or a get operation. But, there are
+          also traces for other components.  We sometimes refer to
+          kvslib traces as ktrace, coord traces as ctrace, and server
+          traces as strace when discussing actions recorded as part of
+          the kvslib/coord/server traces. These are distinct from the
+          put/get traces (though they are part of the same logical
+          timespace). The diagrams below illustrates the actions that
+          you should record with circles on the timeline. These
+          diagrams, as the diagrams above, illustrate the simple cases
+          with no concurrent clients/failures and describe the traces
+          separately (even though, in practice, tracing will occur
+          concurrently at the different components). The horizontal
+          solid arrows in the diagrams below indicates
+          the <i>happens-before</i> relation.
+        </p>
+
+        <br/>
+        <p align="center">
+          <img src="tracing-init.svg" alt="Tracing init" style="width:80%;">
+        </p>
+
+        <p>
+          There will be five types of traces in your system (five
+          colors in the legend). The most basic tracing actions are
+          those associated with the API calls to start the kvslib
+          library and coord/server nodes. The coord and server
+          processes are expected to run forever, so they do not have a
+          corresponding Stop call.
+        </p>
+
+
+        <br/>
+        <p align="center">
+          <img src="tracing-head-tail-reqs.svg" alt="Tracing head and tail requests" style="width:100%;">
+        </p>
+
+        <p>
+          The kvslib requests to learn about the current head and tail
+          of the chain should be traced as above. Note that there is
+          an action recorded before the request/reply is sent and an
+          action recorded when the request/reply is received. This
+          pattern is followed in the diagrams below, as well.
+        </p>
+
+        <br/>        
+        <p align="center">
+          <img src="tracing-get.svg" alt="Tracing get request" style="width:40%;">
+        </p>
+
+        <p>
+          Get requests generated by the client (to the kvslib)
+          generate their own traces: the kvslib services the get
+          request with a single round-trip exchange with the current
+          tail server. Note the <code>gid</code> (global id) parameter
+          at the tail server: this is a unique identifier that
+          globally and totally orders this get request relative to all
+          other get and put requests. The <code>GetOrdered(gid)</code>
+          action captures the get ordering. In case of tail server
+          failures, this trace may span multiple servers (all but one
+          of which have failed). Regardless of server failures,
+          <code>Get</code> and
+          <code>GetResultRecvd</code> actions should only be recorded
+          one time for a single get request.
+        </p>
+
+
+        <br/>        
+        <p align="center">
+          <img src="tracing-put.svg" alt="Tracing put request" style="width:80%;">
+        </p>
+
+        <p>
+          A put request also generates its own trace. Unlike a get,
+          this traces extends across the entire chain of
+          servers. Because puts always succeed (as do gets), this
+          put-forwading style of tracing must be preserved even if
+          servers fail. Like a get, a put also receives
+          a unique <code>gid</code>. Unlike a get, this gid is generated at
+          the head server (<code>PutOrdered(gid)</code> at S1 in the diagram).
+        </p>
+
+        <p align="center">
+          <img src="tracing-join.svg" alt="Tracing during server joins" style="width:90%;">
+        </p>
+
+        <p>
+          Servers join by contacting the coord node. This generates
+          the <code>ServerJoining</code>
+          and <code>ServerJoiningRecvd</code> trace actions. Since
+          servers join at the tail, the predecessor server must be
+          involved in the join protocol. It records
+          a <code>NextServerJoining</code> before the join protocol
+          and a <code>NewJoinedSuccessor</code> after the join
+          protocol. The <code>ServerJoined</code> and
+          <code>ServerJoinedRecvd</code> events book-end the join
+          protocol. After the join protocol completes, the coord node
+          records a <code>NewChain</code> to indicate that the chain
+          has reconfigured and optionally
+          the <code>AllServersJoined</code> action if all servers have
+          joined the system.
+        </p>
+
+
+        <br/>        
+        <p align="center">
+          <img src="tracing-server-fail.svg" alt="Tracing during server failure" style="width:100%;">
+        </p>
+
+        <p>
+          Server failures generate a variety of events. The scope of
+          these events is limited to the coord node that detected the
+          failure and the one or two servers that happen to be
+          adjacent to the failed server (if a head or tail servers
+          fail, then only one server will be
+          impacted). <code>ServerFail</code> starts things off; this
+          action is logged when the failure is detected. It is logged
+          only once per failure. <code>ServerFailRecvd</code> is
+          generated by servers adjacent to the failed server and
+          indicates that they learned about the failure. After this
+          point the failure protocol (that you design) runs. This
+          protocol terminates at each impacted server with either a
+          <code>NewFailoverSuccessor</code> or
+          a <code>NewFailoverPredecessor</code>. The failure protocol
+          termination is signalled to the coord node with a
+          corresponding action
+          <code>ServerFailHandled</code> recorded before the signal.
+          The coord must record a <code>NewChain</code> action (as in
+          the join case). This action indicates that the coord and the
+          chain of servers have resolved the failure and the chain has
+          successfully reconfigured.
+        </p>
+
+
+        <!-- <p> -->
+        <!--   A more detailed description of the tracing actions, including -->
+        <!--   temporal requirements that your solution must satisfy, will be -->
+        <!--   posted later this week.  -->
+        <!-- </p> -->
+
+        <p>
+          <strong>Actions to be recorded by kvslib (as part of ktrace, put trace, get trace):</strong></strong>
+          <ul>
+            <li><code>KvslibStart{<i>clientId</i>}</code>: Recorded in
+              ktrace. Signifies the start of a client's kvslib. For
+              each unique <i>ClientId</i> corresponding to a running
+              client, the <i>tracing log as a whole</i> should contain
+              this action exactly once, as part of ktrace.  This action should happen-before all other
+              actions recorded by the client with <i>ClientId</i>.
+            </li>
+
+            <li><code>KvslibStop{<i>clientId</i>}</code>: Recorded in
+              ktrace. For a specific <i>clientId</i>, kvslib records
+              this action to mark the end of a client session,
+              corresponding to the completion
+              of <code>KVS.Stop()</code>.  For each <i>ClientId</i>
+              corresponding to a running client, <i>the tracing log as
+              a whole</i> should contain this action exactly once, as
+              part of ktrace. This action should happen-after all
+              other actions reported by a given <i>clientId</i>.
+            </li>
+
+            <!-- ... -->
+            <br/>
+            
+            <li><code>Put{<i>clientId, opId, key, value</i>}</code>:
+            Recorded in a put trace. For a
+            given <i>ClientId</i>, <i>Key</i> and <i>Value</i>, kvslib
+            should record this action just before sending a Put
+            operation to the server at the head of the chain (head
+            server).
+              <ul>
+
+                <li>A trace must contain this action, or a Get action,
+                  exactly once before either of the corresponding
+                  KvslibPutResult and KvslibStop.</li>
+                
+                <li>This action must happen-before all corresponding
+                  PutRecvd/PutOrdered/PutFwd/PutFwdRecvd/PutResult instances
+                  recorded by the servers.</li>
+                
+            </ul></li>
+
+            <li><code>PutResultRecvd{<i>opId, gId, key</i>}</code>: Recorded in
+            a put trace. kvslib should record this action just after
+            receiving the Put results from tail of the chain.
+              <ul>
+                
+                <li>If a Put action is recorded, a trace must contain
+                  this action exactly once after KvslibStart and after
+                  the Put action.</li>
+                
+                <li>A trace must contain this action after
+                  PutRecvd/PutOrdered/PutFwd/PutFwdRecvd/PutResult instances
+                  recorded at servers that are available when this
+                  action is recorded.
+                </li>
+                
+            </ul></li>
+
+            <!-- ... -->
+            <br/>
+            
+            <li><code>Get{<i>clientId, opId, key</i>}</code>: Recorded
+            in a get trace. For a given <i>ClientId</i>
+            and <i>Key</i>, kvslib should record this action just
+            before sending a Get operation to the server at the tail
+            of the chain. 
+
+              <ul>
+
+                <li>A trace must contain this action, or a Put action,
+                  exactly once before either of the corresponding
+                  GetResultRecvd and KvslibStop.</li>
+
+                <li>This action must happen-before corresponding
+                  GetRecvd/GetOrdered/GetResult instances recorded by
+                  servers that process this get.</li>
+
+            </ul></li>
+            
+            
+            <li><code>GetResultRecvd{<i>opId, gId, key, value</i>}</code>:
+              Recorded in a get trace. kvslib should record this
+              action just after receiving the Get results from tail of
+              the chain. Here <i>value</i> is the value of the
+              key <i>key</i>.
+
+              <ul>
+                <li>If Get action is present, a trace must contain
+                  this action exactly once after KvslibStart and the
+                  Get action.</li>
+                
+                <li>This action must happen-after corresponding
+                  GetRecvd/GetOrdered/GetResult instances recorded by
+                  servers that processed this get.
+                </li>
+                
+              </ul>
+            </li>
+
+            
+          </ul>
+          
+          <b>For each client, OpIds are unique:</b> Any two traces
+          from the same client that contain opIds, must have distinct
+          opId values.
+        </p>
+
+
+        <p>
+          <strong>Actions to be recorded by coord (as part of ctrace, ktrace, and strace):</strong>
+          <ul>
+
+            <li><code>CoordStart{}</code>: Recorded in ctrace. Signifies
+              the start of the coordinator node. For a single
+              execution of your system, this action should appear just
+              once as there is a single non-failing coordinator node.
+            </li>
+            
+            <li><code>ServerFail{<i>serverId</i>}</code>: Recorded in
+              ctrace. Indicates that the coord detected failure of
+              server with id <i>serverId</i>.
+            </li>
+            
+            <li><code>ServerFailHandledRecvd{<i>failedServerId</i>, <i>adjacentServerId</i>}</code>:
+              Recorded in ctrace. Indicates that a server with
+              id <i>adjacentServerId</i> adjacent to a failed
+              server <i>failedServerId</i> has completed the failure
+              protocol.</li>
+            
+            <li><code>NewChain{<i>chain</i>}</code>: Recorded in
+              ctrace. Indicates that the system has finished
+              reconfiguring into a new chain of servers <i>chain</i>,
+              where <i>chain</i> is a totally ordered list of server
+              ids.
+            </li>
+            
+            <li><code>AllServersJoined{}</code>: Recorded in
+              ctrace. Indicates that (1) the expected number of
+              servers have joined the system, and (2) the KVS is ready
+              to process client operations.</li>
+
+            <!-- ... -->            
+            <br/>
+            <li><code>HeadReqRecvd{<i>clientId</i>}</code>: Recorded
+              in ktrace. Indicates that the coordinator received a
+              request for the head server from client with
+              id <i>clientId</i>.</li>
+            
+            <li><code>HeadRes{<i>clientId, serverId</i>}</code>:
+              Recorded in ktrace. Indicates that the coord will respond
+              to head request from <i>clientId</i> with <i>serverId</i>.</li>
+            
+            <li><code>TailReqRecvd{<i>clientId</i>}</code>: Recorded
+              in ktrace. Indicates that the coordinator received a
+              request for the tail server from client with
+              id <i>clientId</i>.</li>
+            
+            <li><code>TailRes{<i>clientId, serverId</i>}</code>:
+              Recorded in ktrace. Indicates that the coord will
+              respond to head request from <i>clientId</i>
+              with <i>serverId</i>.</li>
+
+            <!-- ... -->
+            <br/>
+            <li><code>ServerJoiningRecvd<i>{serverId</i>}</code>:
+              Recorded in strace. Indicates that the coord has received
+              a join request from a server with id <i>serverId</i>.</li>
+            
+            <li><code>ServerJoinedRecvd<i>{serverId</i></code>:
+              Recorded in strace. Indicates the coord's knowledge
+              about the fact that the server with id <i>serverId</i>
+              has successfully joined the system.</li>
+            
+          </ul>
+        </p>
+
+        <p>
+          <strong>Actions to be recorded by server (as part of ctrace, strace, put trace, get trace):</strong>
+          <ul>
+
+            <li><code>ServerStart<i>{serverId</i>}</code>: Recorded in strace.
+              Signifies the start of a server node. Each server will
+              record this action just once for a single execution of
+              your system since servers start once and when they fail
+              they do not rejoin an existing system.</li>
+            
+            <li><code>ServerJoining{<i>serverId</i>}</code>: Recorded
+              in strace of the joining server. Indicates that the
+              server with id <i>serverId</i> is about to join the
+              system.
+
+            </li>
+            
+            <li><code>NextServerJoining<i>{nextServerId</i>}</code>:
+              Recorded in strace. Indicates that the server with
+              id <i>serverId</i> is joining the system and that this
+              server will be in the chain after the server that
+              records this action.</li>
+            
+            <li><code>NewJoinedSuccessor<i>{nextServerId</i>}</code>:
+              Recorded in strace. Indicates that the server with
+              id <i>serverId</i> has completed joining the system and
+              that this joined server will be in the chain after the
+              server that records this action.</li>
+            
+            <li><code>ServerJoined<i>{serverId</i>}</code>: Recorded
+            in strace of the joining server. Indicates that the server
+            with id <i>serverId</i> has joined the system.</li>
+
+            <!-- ... -->
+            <br/>
+            
+            <li><code>ServerFailRecvd<i>{failedServerId}</i></code>:
+              Recorded in ctrace. Indicates that the server recording
+              this action has just learned that the server with id
+              <i>failedServerId</i> has failed.</li>
+            
+            <li><code>NewFailoverSuccessor<i>{newNextServerId}</i></code>:
+              Recorded in ctrace. Indicates that the server recording
+              this action has completed the failure protocol and will
+              now use <i>newNextServerId</i> as its successor in the
+              chain.
+            </li>
+            
+            <li><code>NewFailoverPredecessor<i>{newPrevServerId}</i></code>:
+              Recorded in ctrace. Indicates that the server recording
+              this action has completed the failure protocol and will
+              now use <i>newPrevServerId</i> as its predecessor in the
+              chain.</li>
+            
+            <li><code>ServerFailHandled<i>{failedServerId}</i></code>:
+              Recorded in ctrace. Recorded by a server just before it
+              communicates to the coord to notify the coord that this
+              server has successfully completely the failure protocol
+              to reconfigure the chain to omit the server with
+              id <i>failedServerId</i>.
+            </li>
+
+            <!-- ... -->
+            <br/>
+            
+            <li><code>PutRecvd{<i>clientId, opId, key, value}</i></code>:
+              Recorded in put trace. Recorded by a
+              server that is the head of the chain (at the time of
+              recording this action) and indicates that it has received
+              a put operation from the client.
+            </li>
+            
+            <li><code>PutOrdered{<i>clientId, opId, gId, key,
+                  value}</i></code>: Recorded in put trace. Recorded by a
+              server that is the head of the chain (at the time of
+              recording this action) and indicates that it has ordered
+              the received put operation from the client with global
+              id <i>gId</i>.</li>
+            
+            <li><code>PutFwd{<i>clientId, opId, gId, key,
+              value}</i></code>: Recorded in put trace. Recorded by a
+              server just before it forwards the corresponding put
+              operation down the chain to the next server.</li>
+
+            <li><code>PutFwdRecvd{<i>clientId, opId, gId, key,
+                  value}</i></code>: Recorded in put trace. Recorded
+                  by a server when it has received the corresponding
+              put operation from a predecessor server in the
+              chain.</li>
+            
+            <li><code>PutResult{<i>clientId, opId, gId, key,
+            value}</i></code>: Recorded in put trace. Recorded by the
+            (tail) server that replies with a confirmation to kvslib
+            about the corresponding put operation.</li>
+
+            <!-- ... -->
+            <br/>
+            
+            <li><code>GetRecvd{<i>clientId, opId, key}</i></code>:
+            Recorded in get trace. Indicates that the (tail) server has
+            received the corresponding get operation from kvslib.</li>
+            
+            <li><code>GetOrdered{<i>clientId, opId, gId,
+            key}</i></code>: Recorded in get trace. Indicates that the
+            (tail) server has ordered the corresponding get operation
+            with global id <i>gId</i>.</li>
+            
+            <li><code>GetResult{<i>clientId, opId, gId, key,
+            value}</i></code>: Recorded in get trace. Recorded by the
+            (head) server that replies to the kvslib with result of
+            executing the corresponding get operation</li>
+            
+          </ul>
+        </p>
+        
+        
+        <h4>Assumptions you can make</h4>
+        <div class="hbarshort"></div>
+        <p>
+          <ul>
+            
+            <li>KV server failure can be detected reliably from the
+              coord node using the fcheck strategy described in
+              A2.</li>
+            
+            <li>The coord node does not fail</li>
+            
+            <li>Client nodes do not fail</li>
+
+            <li>A single client will not issue more than 2^32
+              operations during the execution of your system.</li>
+
+            <li>There will be at most 16 servers in the system (i.e.,
+              N is at most 16).</li>
+
+            <li>There will be at most 256 clients in the system.</li>
+
+            <li>There will be at most N-1 server failures.</li>
+
+            <li>Servers will not fail before coord has logged the
+              event <code>AllServersJoined</code>.</li>
+
+            <li>Your system will not experience a network
+              partition.</li>
+
+            <li>ChCapacity will be no larger than 1024</li>
+            
+          </ul>
+          
+        </p>
+        
+        <h4>Assumptions you cannot make</h4>
+        <div class="hbarshort"></div>
+        <p>
+          <ul>
+            
+            <li>The network is reliable.</li>
+            
+            <li>Round-trip time between nodes is predictable or bounded.</li>
+            
+            <li>Servers do not fail</li>
+            
+          </ul>
+          
+        </p>
+        
+
+        <h4>Design questions to resolve</h4>
+        <div class="hbarshort"></div>
+        <p>
+          This assignment allows for substantial design
+          flexibility. Here are a few design questions you will have
+          to answer as part of working on A3:
+          
+          <ul>
+            
+            <li>Should client detect server failures or be notified
+              about server failures by the coord. You can use fcheck
+              at the clients, but be careful with using two distinct
+              failure detectors: always trust the fcheck at the coord
+              and use/think of the client fcheck as an
+              optimization. Same design question pertains to servers:
+              should servers detect server failures? The
+              considerations are similar.</li>
+
+            <li>
+              The fcheck library that you will use for failure
+              detection must rely on UDP. But, the other protocols you
+              will design can use higher-level protocols. We recommend
+              using RPC for all the protocol you design: it provides
+              reliability and Go's built-in RPC library is easy to
+              use. But, you can use another protocol if you wish.
+            </li>
+
+            <li>
+              A concern with tail server failures is the impact on
+              clients who have issued get requests that have been
+              lost. Clients have to participate in recovery (since
+              other, non tail, servers do not know about get
+              requests), but the exact protocol is up to you to
+              design.
+            </li>
+
+            <li>
+              A concern with head server failures is the impact on
+              clients who have issued put requests that have been lost
+              with the head server. As with tail server failures,
+              clients may have to participate in recovery. Unlike tail
+              server failures, some put requests may be known to other
+              servers in the chain. Your design should likely
+              distinguish these two types of put requests. Be
+              especially careful with ordering of put requests during
+              failures. A good protocol would not re-order put
+              requests that has been ordered (and whose ordering is
+              known to non-failed servers).
+            </li>  
+            
+            
+          </ul>
+          
+        </p>
+        
+        
+        
+        <h4>Implementation requirements</h4>
+        <div class="hbarshort"></div>
+        <p>
+          <ul>
+            
+            <li>Your code should connect to and use an external
+              tracing server using the information in the APIs
+              (kvslib, server, coord).</li>
+            
+            <li>Your code must be runnable on CS ugrad machines and be
+              compatible with Go version <b>1.16.7</b> (which is
+              installed on ugrad machines)</li>
+            
+            <li>You must use the A2 UDP message types for fcheck to
+              detect server failures from the coord.</li>
+
+            <li>You cannot change the APIs above and you must use the
+              tracing actions defined in the code.</li>
+            
+            <li>Your solution can only
+              use <a href="https://golang.org/pkg/#stdlib">standard library</a> Go
+              packages.</li>
+            
+            <li>Your solution code must be Gofmt-ed
+              using <a href="https://blog.golang.org/go-fmt-your-code">gofmt</a>.
+            </li>
+            
+          </ul>
+        </p>
+        
+        
+        <h4>Starter code</h4>
+        <div class="hbarshort"></div>
+        <p>
+          We provide code for tracing actions and the APIs listed
+          above: kvslib, server, and coord. The starter code also
+          includes a sample client that uses the kvslib API and a
+          program to start the server and the coord processes
+          following the server/coord APIs.
+        </p>
+        
+        <!-- <p>  -->
+        <!--   <b>Starter code can be found -->
+        <!--     <a href="https://github.com/bestchai/cs416_2021w2/tree/main/assign3/">here</a>.</b> -->
+        <!-- </p> -->
+
+        <p> 
+          <b>Starter code available soon</b>
+        </p>
+
+
+        <h4>Rough grading scheme</h4>
+        <div class="hbarshort"></div>
+
+        <p>
+          <font color="FF0000">
+            <b>
+              <ul>
+
+                <li>Your code must compile and work on ugrad servers</li>
+                <li>Your code must not change the APIs defined above</li>
+                <li>You must not change the name and path of your config files</li>
+                <li>Your code must be configurable using the config files</li>
+                <li>The command <tt>make client</tt> must be able to compile your client code</li>
+                <li>The executable of your client must be generated at <tt>bin/client</tt> after compilation</li>
+                <li>Similarly for coord and server compilation: <code>make coord</code> and <code>make server</code>.</li>
+              </ul>
+              If any of these are violated, your mark for this
+              assignment is 0. This is true regardless of how many characters had to
+              be changed to make your solution compile, and regardless of how well
+              your solution works with a different API or on a different
+              machine.
+            </b>
+          </font><br /><br />
+
+          Your system must satisfy the above data consistency and
+          tracing semantics. We will evaluate your system under
+          different scenarios. Each scenario will include several
+          concurrent clients and concurrent put/get operations. Below, 
+          <i>work correctly</i> means that the output traces of your
+          system (ktraces, ctrace, straces, put traces, get traces)
+          satisfy the data consistency and tracing semantics above.
+          The high-level A3 mark breakdown across the scenarios looks
+          like this:
+        <ul>
+
+          <li>10% : Puts/Gets work correctly with a single server</li>
+
+          <li>10% : Puts/Gets work correctly with multiple servers that do not fail</li>
+
+          <li>20% : Gets continue to work correctly when tail server(s) fail</li>
+
+          <li>20% : Puts continue to work correctly when head server(s) fail</li>
+          
+          <li>40% : System works correctly when up to N-1 servers fail</li>
+
+        </ul>
+
+        </p>
+
+        <h4>Further reading</h4>
+        <div class="hbarshort"></div>
+        <p>
+          Chain replication originated in an OSDI 2004 conference
+          paper. Since then it has made its way into a number of
+          products
+          like <a href="https://docs.mongodb.com/manual/tutorial/manage-chained-replication/">MongoDB</a>. The
+          following set of links are recommended reading to further
+          develop your understanding of the ideas behind this
+          proposal. You should note that the assignment spec has
+          nuanced tracing semantics that you won't find in external
+          readings. And you'll find that the spec has a simpler design
+          than what most readings assume: the assignment design
+          offloads failure detection and chain reconfiguration to a
+          centralized coord node.
+          
+        <ul>
+
+          <li>Start with the
+            original <a href="https://www.cs.cornell.edu/home/rvr/papers/OSDI04.pdf">OSDI
+              paper</a> by Renesse and Schneider. This is not an easy
+            read, but you should at least skim it.</li>
+          
+          <li>Murat's <a href="http://muratbuffalo.blogspot.com/2011/02/chain-replication-for-supporting-high.html">blog
+              post</a> explains the paper at the high level and refers
+              to some follow on work. It's an easy ready with most
+              complexity squeezed into one or two paragraphs.</li>
+
+          <li>There are many random blog posts about chained
+            replication. Some are fairly detailed,
+            like <a href="https://medium.com/coinmonks/chain-replication-how-to-build-an-effective-kv-storage-part-1-2-b0ce10d5afc3">this
+            one</a>. And <a href="http://dsrg.pdos.csail.mit.edu/2013/08/08/chain-replication/">here
+            is one</a> that is perhaps too high level. If you find a
+            good resource, let me know and I can include it here.</li>
+
+        </ul>
+        </p>
+
+        
+        <h4>Advice</h4>
+        <div class="hbarshort"></div>
+        <p>
+          <ul>
+
+            <li>
+              Use your team effectively. This assignment is hard to
+              do on your own. You have to be smart about who works
+              on what and how you integrate your work
+              together. There are three components: kvslib, coord,
+              server. Splitting these up between each of the three
+              people on your team is one way to slice up the work.
+            </li>
+            
+
+          <li>Compile and run your code on the ugrad servers.</li>
+
+          <li>If you write code that uses goroutines, then consider
+            using <a href="https://golang.org/pkg/sync/#Mutex">locks</a> to
+            serialize access to data structures that might need to be modified
+            and accessed by more than one goroutine</li>
+
+          <li>Use <a href="https://golang.org/pkg/encoding/gob/">gob
+              encode/decode</a> for sending structs across the network.</li>
+
+          <li>The <a href="https://golang.org/pkg/time/">time package</a> is
+            helpful for measuring elapsed time between heartbeats and
+            ACKs.</li>
+
+          <li>You might find
+            the <a href="https://golang.org/pkg/net/#PacketConn">SetReadDeadline</a>
+            method useful.</li>
+
+          <li>
+            Note that due to NATs and Firewalls you may be unable to
+            reach your KV servers running on ugrad servers from
+            outside of the UBC network. Either test by running all
+            code on ugrad nodes or by using the UBC VPN.
+          </li>
+
+        </ul>
+        </p>
+
+        <p>
+          Make sure to follow the
+          course <a href="../index.html#honesty">collaboration policy</a> and refer
+          to the <a href="../index.html#submit">submission</a> instructions
+          that detail how to submit your solution.
+        </p>
+
+      </td>
+    </tr>
+
+    <!-- -------------------------------------------------------------->
+
+    <tr>
+      <td style="padding:0px">
+        <br /><br /><br />
+        <div id="footer">
+          Last updated: January 25, 2022
+        </div>
+        <!--
+Local Variables:
+time-stamp-start: "^Last updated: "
+time-stamp-end: "\\.?$"
+time-stamp-format: "%:b %:d, %:y"
+time-stamp-line-limit: -50
+End:
+-->
+      </td>
+    </tr>
+
+  </table>
+
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-793279-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+
+
+</body>
+
+</html>

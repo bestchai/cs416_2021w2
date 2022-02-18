@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="1205.375 686.9867 694.3985 113.98777" width="694.3985" height="113.98777">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#0053b7">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="8" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 18 14" markerWidth="18" markerHeight="14" color="black">
+      <g>
+        <path d="M 16 0 L 0 0 M 0 -6 L 16 0 L 0 6" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Courier New" font-size="8" panose-1="2 7 3 9 2 2 5 2 4 4" units-per-em="1000" underline-position="-232.91016" underline-thickness="41.015625" slope="0" x-height="422.85156" cap-height="571.28906" ascent="832.5195" descent="-300.29297" font-weight="400">
+      <font-face-src>
+        <font-face-name name="CourierNewPSMT"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#0053b7">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_3" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#6045c3">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_4" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#00cdb3">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.19.2\n2022-02-17 23:17:18 +0000</metadata>
+  <g id="tracing" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
+    <title>tracing</title>
+    <rect fill="white" x="1205.375" y="686.9867" width="694.3985" height="113.98777"/>
+    <g id="tracing_Layer_1">
+      <title>Layer 1</title>
+      <g id="Line_468">
+        <path d="M 1315 731.6995 C 1342.1084 731.7824 1382.8902 729.796 1396.3333 731.9484 C 1409.7764 734.1008 1409.2209 742.2679 1395.6667 744.6151 C 1383.6956 746.6881 1350.919 745.8366 1324.9029 745.935" marker-end="url(#FilledArrow_Marker)" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_292">
+        <rect x="1205.5" y="717.078" width="76.68945" height="79.32118" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_291">
+        <circle cx="1215.335" cy="742" r="4.00000639160752" fill="#009051"/>
+        <circle cx="1215.335" cy="742" r="4.00000639160752" stroke="#a5a5a5" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_290">
+        <path d="M 1227.8936 736 L 1262.206 736 C 1262.7583 736 1263.206 736.4477 1263.206 737 L 1263.206 747 C 1263.206 747.5523 1262.7583 748 1262.206 748 L 1227.8936 748 C 1227.3413 748 1226.8936 747.5523 1226.8936 747 L 1226.8936 737 C 1226.8936 736.4477 1227.3413 736 1227.8936 736 Z" fill="white"/>
+        <text transform="translate(1227.8936 737)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="1.1484375" y="8">Put trace</tspan>
+        </text>
+      </g>
+      <g id="Graphic_289">
+        <circle cx="1215.8018" cy="727" r="4.00000639160752" fill="#0053b7"/>
+        <circle cx="1215.8018" cy="727" r="4.00000639160752" stroke="#a5a5a5" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_288">
+        <path d="M 1227.8604 721 L 1267.8721 721 C 1268.4244 721 1268.8721 721.4477 1268.8721 722 L 1268.8721 732 C 1268.8721 732.5523 1268.4244 733 1267.8721 733 L 1227.8604 733 C 1227.3081 733 1226.8604 732.5523 1226.8604 732 L 1226.8604 722 C 1226.8604 721.4477 1227.3081 721 1227.8604 721 Z" fill="white"/>
+        <text transform="translate(1227.8604 722)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="0" y="8">kvslib trace</tspan>
+        </text>
+      </g>
+      <g id="Graphic_287">
+        <circle cx="1215.8018" cy="772" r="4.00000639160754" fill="#6045c3"/>
+        <circle cx="1215.8018" cy="772" r="4.00000639160754" stroke="#a5a5a5" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_286">
+        <path d="M 1227.8604 766 L 1269.6573 766 C 1270.2095 766 1270.6573 766.4477 1270.6573 767 L 1270.6573 777 C 1270.6573 777.5523 1270.2095 778 1269.6573 778 L 1227.8604 778 C 1227.3081 778 1226.8604 777.5523 1226.8604 777 L 1226.8604 767 C 1226.8604 766.4477 1227.3081 766 1227.8604 766 Z" fill="white"/>
+        <text transform="translate(1227.8604 767)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="0" y="8">Coord trace</tspan>
+        </text>
+      </g>
+      <g id="Graphic_285">
+        <circle cx="1215.8018" cy="787" r="4.00000639160754" fill="#00cdb4"/>
+        <circle cx="1215.8018" cy="787" r="4.00000639160754" stroke="#a5a5a5" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_284">
+        <path d="M 1227.8936 781 L 1271.4639 781 C 1272.0162 781 1272.4639 781.4477 1272.4639 782 L 1272.4639 792 C 1272.4639 792.5523 1272.0162 793 1271.4639 793 L 1227.8936 793 C 1227.3413 793 1226.8936 792.5523 1226.8936 792 L 1226.8936 782 C 1226.8936 781.4477 1227.3413 781 1227.8936 781 Z" fill="white"/>
+        <text transform="translate(1227.8936 782)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="0" y="8">Server trace</tspan>
+        </text>
+      </g>
+      <g id="Graphic_283">
+        <circle cx="1215.335" cy="756.7386" r="4.00000639160754" fill="#ff9300"/>
+        <circle cx="1215.335" cy="756.7386" r="4.00000639160754" stroke="#a5a5a5" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_282">
+        <path d="M 1227.3936 751 L 1260.2959 751 C 1260.8482 751 1261.2959 751.4477 1261.2959 752 L 1261.2959 762 C 1261.2959 762.5523 1260.8482 763 1260.2959 763 L 1227.3936 763 C 1226.8413 763 1226.3936 762.5523 1226.3936 762 L 1226.3936 752 C 1226.3936 751.4477 1226.8413 751 1227.3936 751 Z" fill="white"/>
+        <text transform="translate(1227.3936 752)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="0" y="8">Get trace</tspan>
+        </text>
+      </g>
+      <g id="Graphic_281">
+        <rect x="1206.248" y="700" width="77.60352" height="16" fill="white"/>
+        <text transform="translate(1207.248 701)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Traces legend</tspan>
+        </text>
+      </g>
+      <g id="Line_448">
+        <line x1="1637.47" y1="709.0071" x2="1637.47" y2="741.3074" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_447">
+        <text transform="translate(1620.3068 691.9867)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">Coord</tspan>
+        </text>
+      </g>
+      <g id="Graphic_446">
+        <text transform="translate(1806.1484 691.9867)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">Server</tspan>
+        </text>
+      </g>
+      <g id="Line_445">
+        <line x1="1407.8769" y1="709.3496" x2="1407.8769" y2="791.5245" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_444">
+        <text transform="translate(1388.491 691.9867)" fill="#434343">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="#434343" x="0" y="11">kvslib</tspan>
+        </text>
+      </g>
+      <g id="Line_443">
+        <line x1="1823.9889" y1="709.27994" x2="1823.9889" y2="741.5803" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_442">
+        <path d="M 1429.2961 732.80605 L 1530.1126 732.80605 C 1530.6648 732.80605 1531.1126 733.2538 1531.1126 733.80605 L 1531.1126 742.80605 C 1531.1126 743.3583 1530.6648 743.80605 1530.1126 743.80605 L 1429.2961 743.80605 C 1428.7439 743.80605 1428.2961 743.3583 1428.2961 742.80605 L 1428.2961 733.80605 C 1428.2961 733.2538 1428.7439 732.80605 1429.2961 732.80605 Z" fill="white"/>
+        <path d="M 1429.2961 732.80605 L 1530.1126 732.80605 C 1530.6648 732.80605 1531.1126 733.2538 1531.1126 733.80605 L 1531.1126 742.80605 C 1531.1126 743.3583 1530.6648 743.80605 1530.1126 743.80605 L 1429.2961 743.80605 C 1428.7439 743.80605 1428.2961 743.3583 1428.2961 742.80605 L 1428.2961 733.80605 C 1428.2961 733.2538 1428.7439 732.80605 1429.2961 732.80605 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1429.2961 733.80605)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">KvslibStart(clientId)</tspan>
+        </text>
+      </g>
+      <g id="Line_441">
+        <line x1="1410.9584" y1="738.30605" x2="1428.2961" y2="738.30605" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_440">
+        <circle cx="1407.7846" cy="738.30605" r="3.1738378433189" fill="#0053b7"/>
+      </g>
+      <g id="Graphic_449">
+        <rect x="1318.668" y="723" width="27.341797" height="16" fill="white"/>
+        <text transform="translate(1319.668 724)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Start</tspan>
+        </text>
+      </g>
+      <g id="Graphic_456">
+        <path d="M 1658.8652 719.7803 L 1706.873 719.7803 C 1707.4253 719.7803 1707.873 720.228 1707.873 720.7803 L 1707.873 729.7803 C 1707.873 730.3326 1707.4253 730.7803 1706.873 730.7803 L 1658.8652 730.7803 C 1658.313 730.7803 1657.8652 730.3326 1657.8652 729.7803 L 1657.8652 720.7803 C 1657.8652 720.228 1658.313 719.7803 1658.8652 719.7803 Z" fill="white"/>
+        <path d="M 1658.8652 719.7803 L 1706.873 719.7803 C 1707.4253 719.7803 1707.873 720.228 1707.873 720.7803 L 1707.873 729.7803 C 1707.873 730.3326 1707.4253 730.7803 1706.873 730.7803 L 1658.8652 730.7803 C 1658.313 730.7803 1657.8652 730.3326 1657.8652 729.7803 L 1657.8652 720.7803 C 1657.8652 720.228 1658.313 719.7803 1658.8652 719.7803 Z" stroke="#6046c3" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1658.8652 720.7803)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">CoordStart</tspan>
+        </text>
+      </g>
+      <g id="Line_455">
+        <line x1="1640.47" y1="725.3404" x2="1657.8652" y2="725.31574" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_454">
+        <circle cx="1637.296" cy="725.3449" r="3.17383784331888" fill="#6045c3"/>
+      </g>
+      <g id="Graphic_459">
+        <path d="M 1845.7149 716.935 L 1898.5235 716.935 C 1899.0758 716.935 1899.5235 717.3827 1899.5235 717.935 L 1899.5235 726.935 C 1899.5235 727.4873 1899.0758 727.935 1898.5235 727.935 L 1845.7149 727.935 C 1845.1626 727.935 1844.7149 727.4873 1844.7149 726.935 L 1844.7149 717.935 C 1844.7149 717.3827 1845.1626 716.935 1845.7149 716.935 Z" fill="white"/>
+        <path d="M 1845.7149 716.935 L 1898.5235 716.935 C 1899.0758 716.935 1899.5235 717.3827 1899.5235 717.935 L 1899.5235 726.935 C 1899.5235 727.4873 1899.0758 727.935 1898.5235 727.935 L 1845.7149 727.935 C 1845.1626 727.935 1844.7149 727.4873 1844.7149 726.935 L 1844.7149 717.935 C 1844.7149 717.3827 1845.1626 716.935 1845.7149 716.935 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1845.7149 717.935)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">ServerStart</tspan>
+        </text>
+      </g>
+      <g id="Line_458">
+        <line x1="1827.9072" y1="722.91935" x2="1844.7149" y2="722.7352" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_457">
+        <circle cx="1824.7335" cy="722.9541" r="3.17383784331885" fill="#00cdb3"/>
+      </g>
+      <g id="Graphic_467">
+        <path d="M 1429.2961 775.5 L 1525.3118 775.5 C 1525.864 775.5 1526.3118 775.9477 1526.3118 776.5 L 1526.3118 785.5 C 1526.3118 786.0523 1525.864 786.5 1525.3118 786.5 L 1429.2961 786.5 C 1428.7439 786.5 1428.2961 786.0523 1428.2961 785.5 L 1428.2961 776.5 C 1428.2961 775.9477 1428.7439 775.5 1429.2961 775.5 Z" fill="white"/>
+        <path d="M 1429.2961 775.5 L 1525.3118 775.5 C 1525.864 775.5 1526.3118 775.9477 1526.3118 776.5 L 1526.3118 785.5 C 1526.3118 786.0523 1525.864 786.5 1525.3118 786.5 L 1429.2961 786.5 C 1428.7439 786.5 1428.2961 786.0523 1428.2961 785.5 L 1428.2961 776.5 C 1428.2961 775.9477 1428.7439 775.5 1429.2961 775.5 Z" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <text transform="translate(1429.2961 776.5)" fill="black">
+          <tspan font-family="Courier New" font-size="8" font-weight="400" fill="black" x="0" y="7">KvslibStop(clientId)</tspan>
+        </text>
+      </g>
+      <g id="Line_466">
+        <line x1="1411.7447" y1="781.1289" x2="1428.2961" y2="781.09635" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_465">
+        <circle cx="1408.5709" cy="781.1351" r="3.1738378433189" fill="#0053b7"/>
+      </g>
+      <g id="Line_469">
+        <path d="M 1315 774.7303 C 1342.1084 774.81325 1382.8902 772.8268 1396.3333 774.9792 C 1409.7764 777.1316 1409.2209 785.2987 1395.6667 787.6459 C 1383.6956 789.7189 1350.919 788.8674 1324.9029 788.9658" marker-end="url(#FilledArrow_Marker_2)" stroke="#0053b7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_463">
+        <rect x="1321.665" y="765.9611" width="26.685547" height="16" fill="white"/>
+        <text transform="translate(1322.665 766.9611)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Stop</tspan>
+        </text>
+      </g>
+      <g id="Line_470">
+        <path d="M 1544.0186 719.5366 C 1571.127 719.6196 1611.9088 717.6332 1625.3519 719.7856 C 1638.795 721.93795 1638.2394 730.1051 1624.6852 732.4522 C 1612.7141 734.5252 1579.9375 733.6738 1553.9214 733.7721" marker-end="url(#FilledArrow_Marker_3)" stroke="#6045c3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_471">
+        <path d="M 1732.3597 716.8336 C 1759.4681 716.9166 1800.25 714.9302 1813.693 717.0826 C 1827.1361 719.235 1826.5806 727.4021 1813.0264 729.7493 C 1801.0553 731.8223 1768.2787 730.9708 1742.2626 731.06915" marker-end="url(#FilledArrow_Marker_4)" stroke="#00cdb3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_450">
+        <rect x="1548.4946" y="711.935" width="27.341797" height="16" fill="white"/>
+        <text transform="translate(1549.4946 712.935)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Start</tspan>
+        </text>
+      </g>
+      <g id="Graphic_452">
+        <rect x="1737.5" y="708.8191" width="27.341797" height="16" fill="white"/>
+        <text transform="translate(1738.5 709.8191)" fill="#666">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="#666" x="0" y="11">Start</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
