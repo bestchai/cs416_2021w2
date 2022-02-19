@@ -164,21 +164,35 @@
           <ul>
             
             <li><tt>notify-channel, err</tt>
-              &#8592; <b>Start</b>(<tt>localTracer *tracing.Tracer</tt>, <tt>clientId string</tt>, <tt>CoordIP:CoordPort</tt>, <tt>ChCapacity</tt>)</li>
+              &#8592; <b>Start</b>(<tt>localTracer *tracing.Tracer</tt>, <tt>clientId string</tt>, <tt>coordIPPort string</tt>, <tt>localCoordIPPort string</tt>, <tt>localHeadServerIPPort string</tt>, <tt>localTailServerIPPort string</tt>, <tt>chCapacity int</tt>)</li>
             <ul>
               <li>
                 Starts the instance of <tt>KVS</tt> to use for connecting
-                to the system with the given coord's IP:port. The
+                to the system with the given coord's IP:port (<tt>coordIPPort</tt>). The
                 returned <tt>notify-channel</tt> channel must have
-                capacity <tt>ChCapacity</tt> and must be used by kvslib to
-                deliver all get/put output notifications. <tt>ChCapacity</tt>
+                capacity <tt>chCapacity</tt> and must be used by kvslib to
+                deliver all get/put output notifications. <tt>chCapacity</tt>
                 determines the concurrency factor at the client: the client
-                will never have more than <tt>ChCapacity</tt> number of
+                will never have more than <tt>chCapacity</tt> number of
                 operations outstanding (pending concurrently) at any one time.
                 If there is an issue with connecting to the coord, this should return an
                 appropriate <tt>err</tt> value, otherwise <tt>err</tt> should
-                be set to nil.
+                be set to nil. Note that the KVS library is always an active endpoint
+                (opening connections to coord and head/tail servers).
               </li>
+
+              <li><code>localCoordIPPort</code> is the local IP:port
+                that this client node should use to connect
+                to the coord node.</li>
+
+              <li><code>localHeadServerIPPort</code> is the local
+                IP:port that this client node should use to connect to
+                the head server(s).</li>
+
+              <li><code>localTailServerIPPort</code> is the local
+                IP:port that this client node should use to connect to
+                the tail server(s).</li>
+              
             </ul>
             
             
@@ -218,14 +232,12 @@
               </li>
             </ul>
             
-            <li><tt>err</tt> &#8592; <b>Stop</b>()</li>
+            <li><tt>nil</tt> &#8592; <b>Stop</b>()</li>
             <ul>
               <li>
                 Stops the <tt>KVS</tt> instance from communicating with the
                 KVS and from delivering any results via
-                the <tt>notify-channel</tt>.  If there is an issue with
-                stopping, this should return an appropriate
-                <tt>err</tt> value, otherwise <tt>err</tt> should be set to nil.
+                the <tt>notify-channel</tt>. This call always succeeds.
               </li>
             </ul>
           </ul>
@@ -256,7 +268,7 @@
 type ResultStruct struct {
     opId uint32
     gId uint64
-    result *string
+    result string
 }
           </pre>
           
@@ -646,6 +658,7 @@ type ResultStruct struct {
                   coordAddr string,
                   serverAddr string,
                   serverListenAddr string,
+                  clientListenAddr string,
                   strace *tracing.Tracer
                 </code>
                 )</li>
@@ -671,6 +684,10 @@ type ResultStruct struct {
                   connections from other (i.e., chain adjacent)
                   servers.</li>
                 
+                <li><code>clientListenAddr</code> is the local IP:port
+                  that this server node should use to receive
+                  connections from clients.</li>
+
                 <li><code>strace</code> is a <i>server tracer instance</i>; use this
                   (1) create a new distributed trace instance
                   using Tracer.CreateTrace(), and (2) record local server
@@ -1006,7 +1023,7 @@ type ResultStruct struct {
               Recorded in strace. Indicates that the coord has received
               a join request from a server with id <i>serverId</i>.</li>
             
-            <li><code>ServerJoinedRecvd<i>{serverId</i></code>:
+            <li><code>ServerJoinedRecvd<i>{serverId</i>}</code>:
               Recorded in strace. Indicates the coord's knowledge
               about the fact that the server with id <i>serverId</i>
               has successfully joined the system.</li>
@@ -1189,6 +1206,23 @@ type ResultStruct struct {
           to answer as part of working on A3:
           
           <ul>
+
+            <li>
+            You will notice that unlike A2 we do not include
+            parameters for addresses from which your fcheck library
+            should send/receive heartbeats and acks. In A3 we consider
+            fcheck as an internal implementation detail. You can
+            assume that for coord's fcheck you can use the same IP as
+            in the argument <code>serverAPIListenAddr</code> to
+            coord's Start. And, you can assume that for server's
+            fcheck you can use the same IP as in the
+            argument <code>serverAddr</code> to server's Start. For
+            fchecks' UDP ports you will need to pick random ports to
+            get a free port (do not hardcode these!). Because fcheck
+            requires knowing the UDP port of the remote end-point, you
+            will need to exchange the selected random ports over
+            another connection (e.g., over RPC).
+            </li>
             
             <li>Should client detect server failures or be notified
               about server failures by the coord. You can use fcheck
@@ -1275,19 +1309,14 @@ type ResultStruct struct {
           We provide code for tracing actions and the APIs listed
           above: kvslib, server, and coord. The starter code also
           includes a sample client that uses the kvslib API and a
-          program to start the server and the coord processes
-          following the server/coord APIs.
+          program to start the server and another program to start the
+          coord.
         </p>
         
-        <!-- <p>  -->
-        <!--   <b>Starter code can be found -->
-        <!--     <a href="https://github.com/bestchai/cs416_2021w2/tree/main/assign3/">here</a>.</b> -->
-        <!-- </p> -->
-
-        <p> 
-          <b>Starter code available soon</b>
+        <p>
+          <b>Starter code can be found
+            <a href="https://github.com/bestchai/cs416_2021w2/tree/main/assign3/starter/">here</a>.</b>
         </p>
-
 
         <h4>Rough grading scheme</h4>
         <div class="hbarshort"></div>
