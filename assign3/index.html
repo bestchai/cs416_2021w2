@@ -283,7 +283,7 @@ type ResultStruct struct {
               operation, then <code>result</code> should contain the value
               associated with key <code>k</code>. A get on a key that has not
               been previously put should set <code>result</code>
-              to <code>nil</code>.
+              to an empty string<code>""</code>.
             </li>
             <li>
               If <code>opId</code> corresponds to a <code>Put(k,v)</code>
