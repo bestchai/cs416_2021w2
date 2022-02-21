@@ -67,6 +67,6 @@ type Coord struct {
 	// Coord state may go here
 }
 
-func (*Coord) Start(clientAPIListenAddr string, serverAPIListenAddr string, lostMsgsThresh uint8, numServers uint8, ctrace *tracing.Tracer) error {
+func (c *Coord) Start(clientAPIListenAddr string, serverAPIListenAddr string, lostMsgsThresh uint8, numServers uint8, ctrace *tracing.Tracer) error {
 	return errors.New("not implemented")
 }

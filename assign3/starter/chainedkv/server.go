@@ -117,6 +117,6 @@ type ServerConfig struct {
 	TracingIdentity   string
 }
 
-func (*Server) Start(serverId uint8, coordAddr string, serverAddr string, serverListenAddr string, clientListenAddr string, strace *tracing.Tracer) error {
+func (s *Server) Start(serverId uint8, coordAddr string, serverAddr string, serverListenAddr string, clientListenAddr string, strace *tracing.Tracer) error {
 	return errors.New("not implemented")
 }
