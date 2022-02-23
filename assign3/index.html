@@ -5,7 +5,11 @@
 </head>
 
 <style>
-  ul {
+  ul.ktrace,
+  ul.ctrace,
+  ul.strace,
+  ul.gtrace,
+  ul.ptrace {
     list-style: none; /* Remove default bullets */
   }
 
@@ -213,6 +217,11 @@
           are given in <code>kvslib/kvslib.go)</code>.
 
           <ul>
+
+            <li><tt>*KVS</tt> &#8592; <b>NewKVS</b>()</li>
+            <ul>
+              <li>Construct and return an instance of KVS</li>
+            </ul>
 
             <li><tt>notify-channel, err</tt>
               &#8592; <b>Start</b>(<tt>localTracer *tracing.Tracer</tt>, <tt>clientId string</tt>, <tt>coordIPPort string</tt>, <tt>localCoordIPPort string</tt>, <tt>localHeadServerIPPort string</tt>, <tt>localTailServerIPPort string</tt>, <tt>chCapacity int</tt>)</li>
@@ -652,8 +661,12 @@ type ResultStruct struct {
 
         <p>
           <ul>
-            <li><b>Coord start API</b></li>
+            <li><b>Coord APIs</b></li>
             <ul>
+              <li><code>*Coord &larr; NewCoord()</code></li>
+              <ul>
+                <li>Construct and return a coord node instance</li>
+              </ul>
               <li><code>
                   err &larr; Start(
                   clientAPIListenAddr string,
@@ -700,8 +713,12 @@ type ResultStruct struct {
               </ul>
             </ul>
 
-            <li><b>Server start API</b></li>
+            <li><b>Server APIs</b></li>
             <ul>
+              <li><code>*Server &larr; NewServer()</code></li>
+              <ul>
+                <li>Construct and return a server node instance.</li>
+              </ul>
               <li>
                 <code>
                   err &larr; Start(
