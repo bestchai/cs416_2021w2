@@ -14,6 +14,6 @@ func main() {
 		TracerIdentity: config.TracingIdentity,
 		Secret:         config.Secret,
 	})
-	server := chainedkv.Server{}
+	server := chainedkv.NewServer()
 	server.Start(config.ServerId, config.CoordAddr, config.ServerAddr, config.ServerListenAddr, config.ClientListenAddr, stracer)
 }
