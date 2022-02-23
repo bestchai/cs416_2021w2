@@ -42,6 +42,24 @@ type GetResultRecvd struct {
 	Value string
 }
 
+type HeadReq struct {
+	ClientId string
+}
+
+type HeadResRecvd struct {
+	ClientId string
+	ServerId uint8
+}
+
+type TailReq struct {
+	ClientId string
+}
+
+type TailResRecvd struct {
+	ClientId string
+	ServerId uint8
+}
+
 // NotifyChannel is used for notifying the client about a mining result.
 type NotifyChannel chan ResultStruct
 

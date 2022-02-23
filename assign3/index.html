@@ -4,6 +4,57 @@
   <link rel="stylesheet" type="text/css" href="./style.css" />
 </head>
 
+<style>
+  ul {
+    list-style: none; /* Remove default bullets */
+  }
+
+  ul.ktrace li::before {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: blue; /* Change the color */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1em; /* Also needed for space (tweak if needed) */
+    margin-left: -1em; /* Also needed for space (tweak if needed) */
+  }
+
+  ul.ctrace li::before {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: purple; /* Change the color */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1em; /* Also needed for space (tweak if needed) */
+    margin-left: -1em; /* Also needed for space (tweak if needed) */
+  }
+
+  ul.strace li::before {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: cyan; /* Change the color */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1em; /* Also needed for space (tweak if needed) */
+    margin-left: -1em; /* Also needed for space (tweak if needed) */
+  }
+
+  ul.gtrace li::before {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: orange; /* Change the color */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1em; /* Also needed for space (tweak if needed) */
+    margin-left: -1em; /* Also needed for space (tweak if needed) */
+  }
+
+  ul.ptrace li::before {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: green; /* Change the color */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1em; /* Also needed for space (tweak if needed) */
+    margin-left: -1em; /* Also needed for space (tweak if needed) */
+  }
+</style>
+
 <body>
   <title>Assignment 3</title>
 
@@ -82,7 +133,7 @@
           the chain. The servers can maintain KV state in memory and
           do not need to store KV state durably on disk.
         </p>
-        
+
         <p>
           <b>Put operations.</b> Put operations in your system must be
           issued by clients (via kvslib) and flow from the head of the
@@ -90,7 +141,7 @@
           chain will then acknowledge the put to the kvslib instance
           that issued the put. As the put moves down the chain from
           server to server, each server updates its local KV state
-          based on the put command. 
+          based on the put command.
         </p>
 
 
@@ -130,11 +181,11 @@
 
         <h3>1.1 kvslib API</h3>
         <div class="hbarshort"></div>
-        
+
         <p align="center">
           <img src="kvslib.svg" alt="KVS lib API" style="width:60%;">
         </p>
-        
+
         <p>
           In this assignment you will develop the kvslib library that
           a client will use to access your KVS. Unlike A2, clients
@@ -143,7 +194,7 @@
           operations. The KVS associates arbitrary string keys with
           arbitrary string values.
         </p>
-        
+
         <p>
           The kvslib Start, Get, and Put API calls below must
           each create a new distributed trace instance using
@@ -160,9 +211,9 @@
           message is, the exact text does not matter. The kvslib has a
           KVS struct that must provide the following API (stub methods
           are given in <code>kvslib/kvslib.go)</code>.
-          
+
           <ul>
-            
+
             <li><tt>notify-channel, err</tt>
               &#8592; <b>Start</b>(<tt>localTracer *tracing.Tracer</tt>, <tt>clientId string</tt>, <tt>coordIPPort string</tt>, <tt>localCoordIPPort string</tt>, <tt>localHeadServerIPPort string</tt>, <tt>localTailServerIPPort string</tt>, <tt>chCapacity int</tt>)</li>
             <ul>
@@ -192,13 +243,13 @@
               <li><code>localTailServerIPPort</code> is the local
                 IP:port that this client node should use to connect to
                 the tail server(s).</li>
-              
+
             </ul>
-            
-            
+
+
             <li><tt>opId, err</tt> &#8592; <b>Get</b>(<tt>tracer *tracing.Tracer,
                 clientId string, key string</tt>)</li>
-            
+
             <ul>
               <li>
                 This is a <b>non-blocking</b> request from the client to make
@@ -213,10 +264,10 @@
                 associate the returned value with this request.
               </li>
             </ul>
-            
+
             <li><tt>opId, err</tt> &#8592; <b>Put</b>(<tt>tracer *tracing.Tracer,
                 clientId string, key string, value string</tt>)</li>
-            
+
             <ul>
               <li>
                 This is a <b>non-blocking</b> request from the client to update
@@ -231,7 +282,7 @@
                 call.
               </li>
             </ul>
-            
+
             <li><tt>nil</tt> &#8592; <b>Stop</b>()</li>
             <ul>
               <li>
@@ -241,8 +292,8 @@
               </li>
             </ul>
           </ul>
-          
-          
+
+
           The <code>OpId</code> values must have the following properties:
           <ul>
             <li>
@@ -252,7 +303,7 @@
                 order</i>. Globally, across kvslib instances, values
               of <code>opId</code> do not need to be comparable.
             </li>
-            
+
             <li>
               The <code>opId</code> type is uint32. You can assume that a
               client will not issue more than 2^32 operations during the
@@ -260,18 +311,18 @@
               rollover).
             </li>
           </ul>
-          
-          
+
+
           Items returned via the <tt>notify-channel</tt> should have the
           following type:
-          <pre>  
+          <pre>
 type ResultStruct struct {
     opId uint32
     gId uint64
     result string
 }
           </pre>
-          
+
           Values of <code>ResultStruct</code> must conform to the following:
           <ul>
             <li>
@@ -303,7 +354,7 @@ type ResultStruct struct {
         </p>
 
 
-                
+
         <h4>1.2 Consistency semantics</h4>
         <div class="hbarshort"></div>
         <p>
@@ -331,14 +382,14 @@ type ResultStruct struct {
           of servers, number of clients, server failures, server failure
           pattern, etc.
         </p>
-        
+
         <h3>2.1 Client-coord interaction</h3>
         <div class="hbarshort"></div>
-        
+
         <p align="center">
           <img src="kvslib-coord.svg" alt="kvslib-coord node interaction" style="width:80%;">
         </p>
-        
+
         <p>
           The coord node provides a consistent view of the server
           chain. It acts as a source of truth about the state of the
@@ -349,7 +400,7 @@ type ResultStruct struct {
           coord node.  The diagram above captures the basic
           coordination between the kvslib and the coord
           node. A couple of points of note:
-          
+
           <ul>
 
             <li>
@@ -359,7 +410,7 @@ type ResultStruct struct {
               require that all of your protocols carry and return
               tracing tokens, just as was described in A2.
             </li>
-            
+
             <li>
               <b>The coord node does not, and should not, implement
                 any key-value state caching</b>. Furthermore, it
@@ -373,16 +424,16 @@ type ResultStruct struct {
               the chain of servers. They should not know about the other
               servers in the chain.</b>
             </li>
-            
+
             <li>
               <b>Likewise, the kvslib does not, and should not,
                 implement any key-value state caching</b>.
             </li>
-            
+
           </ul>
         </p>
-        
-        
+
+
         <h3>3.1 Server-coord interaction</h3>
         <div class="hbarshort"></div>
 
@@ -405,12 +456,12 @@ type ResultStruct struct {
         <h4>3.2 Server join process</h4>
         <div class="hbarshort"></div>
 
-        
+
         <p align="center">
           <img src="server-join.svg" alt="Server join process" style="width:80%;">
         </p>
 
-        
+
         <p>
           The server join process (shown above) takes place at the
           start. That is, all servers must join the system before any
@@ -439,7 +490,7 @@ type ResultStruct struct {
           result of the join. For example, S2's view was S1 &rarr; S2;
           eventually, its view became S2 &rarr; S new. A couple of
           points about the join process:
-          
+
           <ul>
 
             <li>
@@ -468,16 +519,16 @@ type ResultStruct struct {
               carry out the above join process one at a time for each
               joining server.
             </li>
-            
+
           </ul>
         </p>
 
 
-        
+
         <h4>3.3 Server failure detection and chain reconfiguration</h4>
         <div class="hbarshort"></div>
 
-        
+
         <p align="center">
           <img src="failure-reconfig.svg" alt="Server failure detection and chain reconfiguration" style="width:80%;">
         </p>
@@ -523,7 +574,7 @@ type ResultStruct struct {
           have outstanding put/get operations. Here are a few notes to
           help guide your design (see Section 3.1 in the OSDI paper
           linked below for more information):
-          
+
           <ul>
 
             <li>
@@ -564,7 +615,7 @@ type ResultStruct struct {
               when S2 failed. These put operations must be resent by
               S1 to S3.
             </li>
-            
+
             <li>
               Failures must not violate the consistency semantics of
               the system described above.
@@ -577,14 +628,14 @@ type ResultStruct struct {
               the put data path, kvslib should not be impacted by
               failures of servers in the middle of the chain.
             </li>
-            
+
             <li>
               <b>Server failures should never be visible to the client of
               kvslib</b>. From the client's point of view, the KVS system
               is always available (a view that is maintained by the
               kvslib and the coord node).
             </li>
-            
+
           </ul>
         </p>
 
@@ -598,7 +649,7 @@ type ResultStruct struct {
           coord/server processes. We will use these to start your
           coord/server instances.
         </p>
-        
+
         <p>
           <ul>
             <li><b>Coord start API</b></li>
@@ -620,15 +671,15 @@ type ResultStruct struct {
                   (e.g., incorrect ip:port given) or other unrecoverable
                   issues.
                 </li>
-                
+
                 <li><code>clientAPIListenAddr</code> is the IP:port where the coord
                   will expect clients to connect to it.</li>
-                
+
                 <li><code>serverAPIListenAddr</code> is the IP:port
                   where the coord will expect servers to connect to
                   it. Note that the coord node cannot connect to
                   server nodes without having them connect first.</li>
-                
+
                 <li>The <code>lost-msgs-thresh</code> specifies the
                   number of consecutive and un-acked heartbeats
                   messages that the underlying fcheck library should
@@ -639,7 +690,7 @@ type ResultStruct struct {
                   parameter described above. Each joining server is
                   expected to have a unique <code>serverId</code> that
                   is between 1 and N, inclusive.</li>
-                
+
                 <li><code>ctrace</code> is a <i>coord tracer
                   instance</i>; use this to (1) create a new
                   distributed trace instance using
@@ -648,7 +699,7 @@ type ResultStruct struct {
                   with any particular client request (see below).</li>
               </ul>
             </ul>
-            
+
             <li><b>Server start API</b></li>
             <ul>
               <li>
@@ -672,10 +723,10 @@ type ResultStruct struct {
                 <li><code>serverId</code> is the identity of this
                   server. It is a unique number that is between 1 and
                   N, the total number of servers in the system.</li>
-                
+
                 <li><code>coordAddr</code> is the IP:port of the coord node that this
                   server node should connect to.</li>
-                
+
                 <li><code>serverAddr</code> is the local IP:port that this server
                   node should use to connect to the coord node.</li>
 
@@ -683,7 +734,7 @@ type ResultStruct struct {
                   that this server node should use to receive
                   connections from other (i.e., chain adjacent)
                   servers.</li>
-                
+
                 <li><code>clientListenAddr</code> is the local IP:port
                   that this server node should use to receive
                   connections from clients.</li>
@@ -693,18 +744,18 @@ type ResultStruct struct {
                   using Tracer.CreateTrace(), and (2) record local server
                   actions in the created trace that are not associated with
                   any particular client request (see below).</li>
-                
+
               </ul>
             </ul>
           </ul>
         </p>
-        
-        
-        
-        
+
+
+
+
         <h3>Tracing Semantics</h3>
         <div class="hbarshort"></div>
-        
+
         <p>
           As in A2, all actions that you record in this assignment
           will be part of distributed tracing.  Keep in mind that all
@@ -758,7 +809,7 @@ type ResultStruct struct {
           pattern is followed in the diagrams below, as well.
         </p>
 
-        <br/>        
+        <br/>
         <p align="center">
           <img src="tracing-get.svg" alt="Tracing get request" style="width:40%;">
         </p>
@@ -780,7 +831,7 @@ type ResultStruct struct {
         </p>
 
 
-        <br/>        
+        <br/>
         <p align="center">
           <img src="tracing-put.svg" alt="Tracing put request" style="width:80%;">
         </p>
@@ -817,7 +868,7 @@ type ResultStruct struct {
         </p>
 
 
-        <br/>        
+        <br/>
         <p align="center">
           <img src="tracing-server-fail.svg" alt="Tracing during server failure" style="width:100%;">
         </p>
@@ -855,7 +906,7 @@ type ResultStruct struct {
 
         <p>
           <strong>Actions to be recorded by kvslib (as part of ktrace, put trace, get trace):</strong></strong>
-          <ul>
+          <ul class="ktrace">
             <li><code>KvslibStart{<i>clientId</i>}</code>: Recorded in
               ktrace. Signifies the start of a client's kvslib. For
               each unique <i>ClientId</i> corresponding to a running
@@ -875,9 +926,30 @@ type ResultStruct struct {
               other actions reported by a given <i>clientId</i>.
             </li>
 
+            <li><code>HeadReq{<i>clientId</i>}</code>: Recorded
+              in ktrace. Indicates that the kvslib from client with
+              id <i>clientId</i> about to send a request to the coordinator
+              for the head server.</li>
+
+            <li><code>HeadResRecvd{<i>clientId, serverId</i>}</code>:
+              Recorded in ktrace. Indicates that the kvslib at client with
+              id <i>clientId</i> has received a response to its head server request,
+              and the head server id is <i>serverId</i>.</li>
+
+            <li><code>TailReq{<i>clientId</i>}</code>: Recorded
+              in ktrace. Indicates that the kvslib from client with
+              id <i>clientId</i> about to send a request to the coordinator
+              for the tail server.</li>
+
+            <li><code>TailResRecvd{<i>clientId, serverId</i>}</code>:
+              Recorded in ktrace. Indicates that the kvslib at client with
+              id <i>clientId</i> has received a response to its tail server request,
+              and the tail server id is <i>serverId</i>.</li>
+            </ul>
+
             <!-- ... -->
-            <br/>
-            
+
+            <ul class="ptrace">
             <li><code>Put{<i>clientId, opId, key, value</i>}</code>:
             Recorded in a put trace. For a
             given <i>ClientId</i>, <i>Key</i> and <i>Value</i>, kvslib
@@ -889,38 +961,39 @@ type ResultStruct struct {
                 <li>A trace must contain this action, or a Get action,
                   exactly once before either of the corresponding
                   KvslibPutResult and KvslibStop.</li>
-                
+
                 <li>This action must happen-before all corresponding
                   PutRecvd/PutOrdered/PutFwd/PutFwdRecvd/PutResult instances
                   recorded by the servers.</li>
-                
+
             </ul></li>
 
             <li><code>PutResultRecvd{<i>opId, gId, key</i>}</code>: Recorded in
             a put trace. kvslib should record this action just after
             receiving the Put results from tail of the chain.
               <ul>
-                
+
                 <li>If a Put action is recorded, a trace must contain
                   this action exactly once after KvslibStart and after
                   the Put action.</li>
-                
+
                 <li>A trace must contain this action after
                   PutRecvd/PutOrdered/PutFwd/PutFwdRecvd/PutResult instances
                   recorded at servers that are available when this
                   action is recorded.
                 </li>
-                
+
             </ul></li>
+          </ul>
 
             <!-- ... -->
-            <br/>
-            
+
+            <ul class="gtrace">
             <li><code>Get{<i>clientId, opId, key</i>}</code>: Recorded
             in a get trace. For a given <i>ClientId</i>
             and <i>Key</i>, kvslib should record this action just
             before sending a Get operation to the server at the tail
-            of the chain. 
+            of the chain.
 
               <ul>
 
@@ -933,8 +1006,8 @@ type ResultStruct struct {
                   servers that process this get.</li>
 
             </ul></li>
-            
-            
+
+
             <li><code>GetResultRecvd{<i>opId, gId, key, value</i>}</code>:
               Recorded in a get trace. kvslib should record this
               action just after receiving the Get results from tail of
@@ -945,18 +1018,19 @@ type ResultStruct struct {
                 <li>If Get action is present, a trace must contain
                   this action exactly once after KvslibStart and the
                   Get action.</li>
-                
+
                 <li>This action must happen-after corresponding
                   GetRecvd/GetOrdered/GetResult instances recorded by
                   servers that processed this get.
                 </li>
-                
+
               </ul>
             </li>
 
-            
+
           </ul>
-          
+        </ul>
+
           <b>For each client, OpIds are unique:</b> Any two traces
           from the same client that contain opIds, must have distinct
           opId values.
@@ -965,126 +1039,128 @@ type ResultStruct struct {
 
         <p>
           <strong>Actions to be recorded by coord (as part of ctrace, ktrace, and strace):</strong>
-          <ul>
+          <ul class="ctrace">
 
             <li><code>CoordStart{}</code>: Recorded in ctrace. Signifies
               the start of the coordinator node. For a single
               execution of your system, this action should appear just
               once as there is a single non-failing coordinator node.
             </li>
-            
+
             <li><code>ServerFail{<i>serverId</i>}</code>: Recorded in
               ctrace. Indicates that the coord detected failure of
               server with id <i>serverId</i>.
             </li>
-            
+
             <li><code>ServerFailHandledRecvd{<i>failedServerId</i>, <i>adjacentServerId</i>}</code>:
               Recorded in ctrace. Indicates that a server with
               id <i>adjacentServerId</i> adjacent to a failed
               server <i>failedServerId</i> has completed the failure
               protocol.</li>
-            
+
             <li><code>NewChain{<i>chain</i>}</code>: Recorded in
               ctrace. Indicates that the system has finished
               reconfiguring into a new chain of servers <i>chain</i>,
               where <i>chain</i> is a totally ordered list of server
               ids.
             </li>
-            
+
             <li><code>AllServersJoined{}</code>: Recorded in
               ctrace. Indicates that (1) the expected number of
               servers have joined the system, and (2) the KVS is ready
               to process client operations.</li>
+            </ul>
 
-            <!-- ... -->            
-            <br/>
+            <!-- ... -->
+          <ul class="ktrace">
             <li><code>HeadReqRecvd{<i>clientId</i>}</code>: Recorded
               in ktrace. Indicates that the coordinator received a
               request for the head server from client with
               id <i>clientId</i>.</li>
-            
+
             <li><code>HeadRes{<i>clientId, serverId</i>}</code>:
               Recorded in ktrace. Indicates that the coord will respond
               to head request from <i>clientId</i> with <i>serverId</i>.</li>
-            
+
             <li><code>TailReqRecvd{<i>clientId</i>}</code>: Recorded
               in ktrace. Indicates that the coordinator received a
               request for the tail server from client with
               id <i>clientId</i>.</li>
-            
+
             <li><code>TailRes{<i>clientId, serverId</i>}</code>:
               Recorded in ktrace. Indicates that the coord will
               respond to head request from <i>clientId</i>
               with <i>serverId</i>.</li>
+          </ul>
 
             <!-- ... -->
-            <br/>
+          <ul class="strace">
             <li><code>ServerJoiningRecvd<i>{serverId</i>}</code>:
               Recorded in strace. Indicates that the coord has received
               a join request from a server with id <i>serverId</i>.</li>
-            
+
             <li><code>ServerJoinedRecvd<i>{serverId</i>}</code>:
               Recorded in strace. Indicates the coord's knowledge
               about the fact that the server with id <i>serverId</i>
               has successfully joined the system.</li>
-            
           </ul>
         </p>
 
         <p>
           <strong>Actions to be recorded by server (as part of ctrace, strace, put trace, get trace):</strong>
-          <ul>
 
+            <ul class="strace">
             <li><code>ServerStart<i>{serverId</i>}</code>: Recorded in strace.
               Signifies the start of a server node. Each server will
               record this action just once for a single execution of
               your system since servers start once and when they fail
               they do not rejoin an existing system.</li>
-            
+
             <li><code>ServerJoining{<i>serverId</i>}</code>: Recorded
               in strace of the joining server. Indicates that the
               server with id <i>serverId</i> is about to join the
               system.
 
             </li>
-            
+
             <li><code>NextServerJoining<i>{nextServerId</i>}</code>:
               Recorded in strace. Indicates that the server with
               id <i>serverId</i> is joining the system and that this
               server will be in the chain after the server that
               records this action.</li>
-            
+
             <li><code>NewJoinedSuccessor<i>{nextServerId</i>}</code>:
               Recorded in strace. Indicates that the server with
               id <i>serverId</i> has completed joining the system and
               that this joined server will be in the chain after the
               server that records this action.</li>
-            
+
             <li><code>ServerJoined<i>{serverId</i>}</code>: Recorded
             in strace of the joining server. Indicates that the server
             with id <i>serverId</i> has joined the system.</li>
+            </ul>
 
             <!-- ... -->
-            <br/>
-            
+
+            <ul class="ctrace">
             <li><code>ServerFailRecvd<i>{failedServerId}</i></code>:
               Recorded in ctrace. Indicates that the server recording
               this action has just learned that the server with id
               <i>failedServerId</i> has failed.</li>
-            
+
             <li><code>NewFailoverSuccessor<i>{newNextServerId}</i></code>:
               Recorded in ctrace. Indicates that the server recording
               this action has completed the failure protocol and will
               now use <i>newNextServerId</i> as its successor in the
               chain.
             </li>
-            
+
             <li><code>NewFailoverPredecessor<i>{newPrevServerId}</i></code>:
               Recorded in ctrace. Indicates that the server recording
               this action has completed the failure protocol and will
               now use <i>newPrevServerId</i> as its predecessor in the
               chain.</li>
-            
+
             <li><code>ServerFailHandled<i>{failedServerId}</i></code>:
               Recorded in ctrace. Recorded by a server just before it
               communicates to the coord to notify the coord that this
@@ -1092,24 +1168,25 @@ type ResultStruct struct {
               to reconfigure the chain to omit the server with
               id <i>failedServerId</i>.
             </li>
+            </ul>
 
             <!-- ... -->
-            <br/>
-            
+
+            <ul class="ptrace">
             <li><code>PutRecvd{<i>clientId, opId, key, value}</i></code>:
               Recorded in put trace. Recorded by a
               server that is the head of the chain (at the time of
               recording this action) and indicates that it has received
               a put operation from the client.
             </li>
-            
+
             <li><code>PutOrdered{<i>clientId, opId, gId, key,
                   value}</i></code>: Recorded in put trace. Recorded by a
               server that is the head of the chain (at the time of
               recording this action) and indicates that it has ordered
               the received put operation from the client with global
               id <i>gId</i>.</li>
-            
+
             <li><code>PutFwd{<i>clientId, opId, gId, key,
               value}</i></code>: Recorded in put trace. Recorded by a
               server just before it forwards the corresponding put
@@ -1120,44 +1197,45 @@ type ResultStruct struct {
                   by a server when it has received the corresponding
               put operation from a predecessor server in the
               chain.</li>
-            
+
             <li><code>PutResult{<i>clientId, opId, gId, key,
             value}</i></code>: Recorded in put trace. Recorded by the
             (tail) server that replies with a confirmation to kvslib
             about the corresponding put operation.</li>
+            </ul>
 
             <!-- ... -->
-            <br/>
-            
+
+
+            <ul class="gtrace">
             <li><code>GetRecvd{<i>clientId, opId, key}</i></code>:
             Recorded in get trace. Indicates that the (tail) server has
             received the corresponding get operation from kvslib.</li>
-            
+
             <li><code>GetOrdered{<i>clientId, opId, gId,
             key}</i></code>: Recorded in get trace. Indicates that the
             (tail) server has ordered the corresponding get operation
             with global id <i>gId</i>.</li>
-            
+
             <li><code>GetResult{<i>clientId, opId, gId, key,
             value}</i></code>: Recorded in get trace. Recorded by the
             (head) server that replies to the kvslib with result of
             executing the corresponding get operation</li>
-            
-          </ul>
+            </ul>
         </p>
-        
-        
+
+
         <h4>Assumptions you can make</h4>
         <div class="hbarshort"></div>
         <p>
           <ul>
-            
+
             <li>KV server failure can be detected reliably from the
               coord node using the fcheck strategy described in
               A2.</li>
-            
+
             <li>The coord node does not fail</li>
-            
+
             <li>Client nodes do not fail</li>
 
             <li>A single client will not issue more than 2^32
@@ -1177,26 +1255,26 @@ type ResultStruct struct {
               partition.</li>
 
             <li>ChCapacity will be no larger than 1024</li>
-            
+
           </ul>
-          
+
         </p>
-        
+
         <h4>Assumptions you cannot make</h4>
         <div class="hbarshort"></div>
         <p>
           <ul>
-            
+
             <li>The network is reliable.</li>
-            
+
             <li>Round-trip time between nodes is predictable or bounded.</li>
-            
+
             <li>Servers do not fail</li>
-            
+
           </ul>
-          
+
         </p>
-        
+
 
         <h4>Design questions to resolve</h4>
         <div class="hbarshort"></div>
@@ -1204,7 +1282,7 @@ type ResultStruct struct {
           This assignment allows for substantial design
           flexibility. Here are a few design questions you will have
           to answer as part of working on A3:
-          
+
           <ul>
 
             <li>
@@ -1223,7 +1301,7 @@ type ResultStruct struct {
             will need to exchange the selected random ports over
             another connection (e.g., over RPC).
             </li>
-            
+
             <li>Should client detect server failures or be notified
               about server failures by the coord. You can use fcheck
               at the clients, but be careful with using two distinct
@@ -1263,46 +1341,46 @@ type ResultStruct struct {
               failures. A good protocol would not re-order put
               requests that has been ordered (and whose ordering is
               known to non-failed servers).
-            </li>  
-            
-            
+            </li>
+
+
           </ul>
-          
+
         </p>
-        
-        
-        
+
+
+
         <h4>Implementation requirements</h4>
         <div class="hbarshort"></div>
         <p>
           <ul>
-            
+
             <li>Your code should connect to and use an external
               tracing server using the information in the APIs
               (kvslib, server, coord).</li>
-            
+
             <li>Your code must be runnable on CS ugrad machines and be
               compatible with Go version <b>1.16.7</b> (which is
               installed on ugrad machines)</li>
-            
+
             <li>You must use the A2 UDP message types for fcheck to
               detect server failures from the coord.</li>
 
             <li>You cannot change the APIs above and you must use the
               tracing actions defined in the code.</li>
-            
+
             <li>Your solution can only
               use <a href="https://golang.org/pkg/#stdlib">standard library</a> Go
               packages.</li>
-            
+
             <li>Your solution code must be Gofmt-ed
               using <a href="https://blog.golang.org/go-fmt-your-code">gofmt</a>.
             </li>
-            
+
           </ul>
         </p>
-        
-        
+
+
         <h4>Starter code</h4>
         <div class="hbarshort"></div>
         <p>
@@ -1312,7 +1390,7 @@ type ResultStruct struct {
           program to start the server and another program to start the
           coord.
         </p>
-        
+
         <p>
           <b>Starter code can be found
             <a href="https://github.com/bestchai/cs416_2021w2/tree/main/assign3/starter/">here</a>.</b>
@@ -1345,7 +1423,7 @@ type ResultStruct struct {
           Your system must satisfy the above data consistency and
           tracing semantics. We will evaluate your system under
           different scenarios. Each scenario will include several
-          concurrent clients and concurrent put/get operations. Below, 
+          concurrent clients and concurrent put/get operations. Below,
           <i>work correctly</i> means that the output traces of your
           system (ktraces, ctrace, straces, put traces, get traces)
           satisfy the data consistency and tracing semantics above.
@@ -1360,7 +1438,7 @@ type ResultStruct struct {
           <li>20% : Gets continue to work correctly when tail server(s) fail</li>
 
           <li>20% : Puts continue to work correctly when head server(s) fail</li>
-          
+
           <li>40% : System works correctly when up to N-1 servers fail</li>
 
         </ul>
@@ -1382,14 +1460,14 @@ type ResultStruct struct {
           than what most readings assume: the assignment design
           offloads failure detection and chain reconfiguration to a
           centralized coord node.
-          
+
         <ul>
 
           <li>Start with the
             original <a href="https://www.cs.cornell.edu/home/rvr/papers/OSDI04.pdf">OSDI
               paper</a> by Renesse and Schneider. This is not an easy
             read, but you should at least skim it.</li>
-          
+
           <li>Murat's <a href="http://muratbuffalo.blogspot.com/2011/02/chain-replication-for-supporting-high.html">blog
               post</a> explains the paper at the high level and refers
               to some follow on work. It's an easy ready with most
@@ -1405,7 +1483,7 @@ type ResultStruct struct {
         </ul>
         </p>
 
-        
+
         <h4>Advice</h4>
         <div class="hbarshort"></div>
         <p>
@@ -1419,7 +1497,7 @@ type ResultStruct struct {
               server. Splitting these up between each of the three
               people on your team is one way to slice up the work.
             </li>
-            
+
 
           <li>Compile and run your code on the ugrad servers.</li>
 
