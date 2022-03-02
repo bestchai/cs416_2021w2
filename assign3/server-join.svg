@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="1112.875 458.5 687.625 179.25" width="687.625" height="179.25">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="1112.875 458.5 687.625 179.25" width="687.625" height="179.25">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 18 14" markerWidth="18" markerHeight="14" color="black">
       <g>
@@ -43,8 +43,8 @@
       </g>
     </marker>
   </defs>
-  <metadata> Produced by OmniGraffle 7.19.2\n2022-02-17 17:26:59 +0000</metadata>
-  <g id="server-join" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
+  <metadata> Produced by OmniGraffle 7.19.2\n2022-03-01 23:58:20 +0000</metadata>
+  <g id="server-join" fill="none" fill-opacity="1" stroke-opacity="1" stroke-dasharray="none" stroke="none">
     <title>server-join</title>
     <rect fill="white" x="1112.875" y="458.5" width="687.625" height="179.25"/>
     <g id="server-join_Layer_1">
@@ -202,21 +202,13 @@
         <line x1="1383.9253" y1="594.5463" x2="1396.9173" y2="594.3873" marker-end="url(#Ball_Marker)" stroke="#666" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".5"/>
       </g>
       <g id="Graphic_292">
-        <rect x="1299" y="588.6746" width="86.51261" height="12" fill="white"/>
-        <rect x="1299" y="588.6746" width="86.51261" height="12" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <rect x="1329.695" y="588.6746" width="55.81762" height="12" fill="white"/>
+        <rect x="1329.695" y="588.6746" width="55.81762" height="12" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_291">
         <text transform="translate(1329.695 589.6164)" fill="#004a89">
           <tspan font-family="Helvetica" font-size="9" font-weight="400" fill="#004a89" x="0" y="9"> S2</tspan>
         </text>
-      </g>
-      <g id="Graphic_290">
-        <text transform="translate(1302.4497 589.6164)" fill="#004a89">
-          <tspan font-family="Helvetica" font-size="9" font-weight="400" fill="#004a89" x="0" y="9">S1</tspan>
-        </text>
-      </g>
-      <g id="Line_289">
-        <line x1="1313.458" y1="595.1164" x2="1323.795" y2="595.1164" marker-end="url(#Arrow_Marker_2)" stroke="#004989" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_288">
         <text transform="translate(1358.9116 589.6164)" fill="#004a89">
