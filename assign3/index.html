@@ -1360,6 +1360,27 @@ type ResultStruct struct {
               known to non-failed servers).
             </li>
 
+            <li>
+              In response to both head and tail server failures a kvslib
+              may have to time out a previous operation attempt and
+              retry. When should a kvslib time out? This depends on
+              how the client learns about head/tail server
+              failure. Though, remember, that the new head/tail server
+              information must come from the coord and it must be
+              properly traced before the client connects to these new
+              head/tail servers.
+            </li>
+            
+            <li>
+              Unlike a get request, a put request may flow through
+              multiple servers. How should the put success be
+              delivered to the client? There are two basic options:
+              either the put operation contains enough information for
+              the tail server to contact the client that generated the
+              put operation. Or, the client should reach out the tail
+              to check about the put operation (i.e., poll the tail).
+            </li>
+
 
           </ul>
 
