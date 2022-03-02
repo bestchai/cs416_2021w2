@@ -14,6 +14,6 @@ func main() {
 		TracerIdentity: config.TracingIdentity,
 		Secret:         config.Secret,
 	})
-	coord := chainedkv.Coord{}
+	coord := chainedkv.NewCoord()
 	coord.Start(config.ClientAPIListenAddr, config.ServerAPIListenAddr, config.LostMsgsThresh, config.NumServers, ctracer)
 }

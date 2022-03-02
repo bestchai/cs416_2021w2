@@ -102,10 +102,6 @@ type GetResult struct {
 	Value    string
 }
 
-type Server struct {
-	// state may go here
-}
-
 type ServerConfig struct {
 	ServerId          uint8
 	CoordAddr         string
@@ -115,6 +111,14 @@ type ServerConfig struct {
 	TracingServerAddr string
 	Secret            []byte
 	TracingIdentity   string
+}
+
+type Server struct {
+	// Server state may go here
+}
+
+func NewServer() *Server {
+	return &Server{}
 }
 
 func (s *Server) Start(serverId uint8, coordAddr string, serverAddr string, serverListenAddr string, clientListenAddr string, strace *tracing.Tracer) error {
