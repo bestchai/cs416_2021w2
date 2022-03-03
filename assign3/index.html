@@ -1370,7 +1370,7 @@ type ResultStruct struct {
               properly traced before the client connects to these new
               head/tail servers.
             </li>
-            
+
             <li>
               Unlike a get request, a put request may flow through
               multiple servers. How should the put success be
@@ -1418,7 +1418,259 @@ type ResultStruct struct {
           </ul>
         </p>
 
-
+        <h4>Trace-based correctness properties</h4>
+        <div class="hbarshort"></div>
+        <b>Initialization</b>
+        <ul>
+          <li>
+            <code>KvslibStart</code> must exist and must happen before any:
+          </li>
+          <ul>
+            <li>
+              <code>KvslibStop</code>
+            </li>
+            <li>
+              <code>HeadReq</code>
+            </li>
+            <li>
+              <code>TailReq</code>
+            </li>
+            <li>
+              <code>Put</code>
+            </li>
+            <li>
+              <code>Get</code>
+            </li>
+          </ul>
+          </li>
+          <li>
+            <code>CoordStart</code> must be recorded exactly once and must happen before any:
+          </li>
+          <ul>
+            <li>
+              <code>ServerJoiningRecvd</code>
+            </li>
+            <li>
+              <code>AllServersJoined</code>
+            </li>
+          </ul>
+          <li>Exactly N <code>ServerStart</code> instances must exist </li>
+          <li>
+            <code>ServerStart(S)</code> must happen before <code>ServerJoining(S)</code>
+          </li>
+        </ul>
+        <b>Termination</b>
+        <ul>
+          <li>
+            <code>KvslibStop(C)</code> cannot be followed by any actions recorded by C
+          </li>
+        </ul>
+        <b>Join handling</b>
+        <ul>
+          <li>The number of <code>ServerJoining(S)</code> instances in the trace must be equal to 1 </li>
+          <li>
+            <code>ServerJoining(S)</code> must be eventually followed by:
+          </li>
+          <ul>
+            <li>Exactly one <code>ServerJoiningRecvd(S)</code>
+            </li>
+            <li>At most one <code>NextServerJoining(S)</code> recorded at S', where S' <span>&#8800;</span> S </li>
+            <li>At most one <code>NewJoinedSuccessor(S)</code> recorded at S', where S' <span>&#8800;</span> S </li>
+            <li>Exactly one <code>ServerJoined(S)</code>
+            </li>
+            <li>Exactly one <code>ServerJoinedRecvd(S)</code>
+            </li>
+            <li>
+              <code>NewChain(C)</code> such that the list C contains the server id S.
+            </li>
+          </ul>
+          </li>
+          <li>
+            <code>ServerJoining</code> must be eventually followed by <code>AllServersJoined</code>
+          </li>
+          <li>
+            <code>AllServersJoined</code> must exist and must happen before any
+          </li>
+          <ul>
+            <li>
+              <code>PutRecvd</code>
+            </li>
+            <li>
+              <code>GetRecvd</code>
+            </li>
+          </ul>
+        </ul>
+        <b>Failure handling</b>
+        <ul>
+          <li>
+            <code>ServerFail(S)</code> must be followed by either one or two <code>ServerFailRecvd(S)</code>
+          </li>
+          <li>
+            <code>ServerFailRecvd(S)</code> must be followed by either
+          </li>
+          <ul>
+            <li>At most one <code>NewFailoverSuccessor(S)</code>, or </li>
+            <li>At most one <code>NewFailoverPredecessor(S)</code>
+            </li>
+          </ul>
+          <li>
+            <code>ServerFailRecvd(S)</code> must be followed by
+          </li>
+          <ul>
+            <li>At most one <code>ServerFailHandled(S)</code>
+            </li>
+          </ul>
+          <li>
+            <code>ServerFailHandledRecvd(S)</code> must be preceded by <code>ServerFailHandled(S)</code>
+          </li>
+          <li>
+            <code>ServerFail(S)</code> must be eventually followed by <code>NewChain(C)</code> such that the list C does not contain the server id S.
+          </li>
+        </ul>
+        <b>Join/Failure handling:</b>
+        <ul>
+          <li>
+            <code>NewChain</code> must be preceded by either <code>ServerFail</code> or <code>ServerJoined</code>
+          </li>
+        </ul>
+        <b>Head server requests</b>
+        <ul>
+          <li>The number of <code>HeadReq(C)</code> and <code>HeadReqRecvd(C)</code> instances in the trace must be identical </li>
+          <li>
+            <code>HeadReq(C)</code> must happen before <code>HeadReqRecvd(C)</code>
+          </li>
+          <li>The number of <code>HeadRes(C,S)</code> and <code>HeadResRecvd(C,S)</code> instances in the trace must be identical </li>
+          <li>
+            <code>HeadRes(C,S)</code> must happen before <code>HeadResRecvd(C,S)</code>
+          </li>
+        </ul>
+        <b>Tail server requests</b>
+        <ul>
+          <li>The number of <code>TailReq(C)</code> and <code>TailReqRecvd(C)</code> instances in the trace must be identical </li>
+          <li>
+            <code>TailReq(C)</code> must happen before <code>TailReqRecvd(C)</code>
+          </li>
+          <li>The number of <code>TailRes(C,S)</code> and <code>TailResRecvd(C,S)</code> instances in the trace must be identical </li>
+          <li>
+            <code>TailRes(C,S)</code> must happen before <code>TailResRecvd(C,S)</code>
+          </li>
+        </ul>
+        <b>Put handling</b>
+        <ul>
+          <li>Put recorded by client C must be preceded by <code>HeadResRecvd(C,S)</code> and the corresponding put operation from C must have been issued to server S. </li>
+          <li>Put recorded by client C in trace P must be eventually followed by the following actions, all recorded in trace P</li>
+          <ul>
+            <li>At least one <code>PutRecvd</code> recorded at some server S </li>
+            <li>At least one <code>PutOrdered(gid)</code> at S </li>
+            <li>Zero or more <code>PutFwd(gid)</code> at S </li>
+            <li>Zero or more <code>PutFwdRecvd(gid)</code> at S', where S' <span>&#8800;</span> S </li>
+            <li>At least one <code>PutResult(gid)</code> at S', where S' may or may not be equal to S </li>
+            <li>Exactly one <code>PutResultRecvd(gid)</code> at C </li>
+          </ul>
+        </ul>
+        <b>Get handling</b>
+        <ul>
+          <li>Get recorded by client C must be preceded by <code>TailResRecvd(C,S)</code> and the corresponding get operation from C must have been issued to server S. </li>
+          <li>Get recorded by client C in trace G must be eventually followed by the following actions, all recorded in trace G</li>
+          <ul>
+            <li>At least one <code>GetRecvd</code> recorded at some server S </li>
+            <li>At least one <code>GetOrdered(gid)</code> at S </li>
+            <li>At least one <code>GetResult(gid)</code> at S </li>
+            <li>Exactly one <code>GetResultRecvd(gid)</code> at C </li>
+          </ul>
+        </ul>
+        <b>Put-Get Data Consistency</b>
+        <ul>
+          <li>Given any:</li>
+          <ul>
+            <li>
+              <code>Put(_, _, key, value1)</code> and a corresponding <code>PutResultRecvd(_, gId1, key)</code>, and
+            </li>
+            <li>
+              <code>GetResultRecvd(_, gId3, key, value3)</code>
+            </li>
+          </ul>
+          <li>Such that, if:</li>
+          <ul>
+            <li>
+              <code>gId1</code>
+              < <code>gId3</code>
+            </li>
+            <li>And, <span>&#8708;</span>
+              <code>PutResultRecvd(_, gId2, key)</code> such that <code>gId1</code>
+              < <code>gId2</code>
+                < <code>gId3</code>
+            </li>
+          </ul>
+          <li>Then</li>
+          <ul>
+            <li>
+              <code>value3 == value1</code>
+            </li>
+          </ul>
+        </ul>
+        <b>Get before any Put Data Consistency</b>
+        <ul>
+          <li>Given any</li>
+          <ul>
+            <li>
+              <code>GetResultRecvd(_, gId2, key, value1)</code>
+            </li>
+          </ul>
+          <li>If</li>
+          <ul>
+            <li>
+              <span>&#8708;</span>
+              <code>PutResultRecvd(_, gId1, key)</code> such that <code>gId1</code>
+              < <code>gId2</code>
+            </li>
+          </ul>
+          <li>Then</li>
+          <ul>
+            <li>
+              <code>value1 == ""</code>
+            </li>
+          </ul>
+        </ul>
+        <b>OpID consistent with gID</b>
+        <ul>
+          <li>Let <code>cId</code> be a client id </li>
+          <li>Let Req = { <code>op</code> | [ <code>op</code> = <code>Put(clientId, _, _, _)</code>
+            <span>&#8744;</span>
+            <code>op</code> = <code>Get(clientId', _,_)</code>] <span>&#8896;</span> clientId = clientId' = <code>cId</code> }
+          </li>
+          <li>Let Res = { <code>op</code> | [ <code>op</code> = <code>PutResultRecvd(clientId, _,_)</code>
+            <span>&#8744;</span>
+            <code>op</code> = <code>GetResultRecvd(clientId', _, _ ,_)</code>] <span>&#8896;</span> clientId = clientId' = <code>cId</code> }
+          </li>
+          <li>Let <code>op1Req</code>
+            <span>&#8712;</span> Req have opID <code>opId1</code>
+          </li>
+          <li>Let <code>op2Req</code>
+            <span>&#8712;</span> Req, <code>op2Req</code>
+            <span>&#8800;</span>
+            <code>op1Req</code>, have opID <code>opId2</code>,
+          </li>
+          <li>Let <code>op1Res</code>
+            <span>&#8712;</span> Res be in the same trace as <code>op1Req</code> and have gID <code>gId1</code>
+          </li>
+          <li>Let <code>op2Res</code>
+            <span>&#8712;</span> Res be in the same trace as <code>op2Req</code> and have gID <code>gId2</code>
+          </li>
+          <li>Then,</li>
+          <ul>
+            <li>
+              <code>gId1</code> < <code>gId2</code>
+                <span>&hArr;</span>
+                <code>opId1</code> < <code>opId2</code>, and
+            </li>
+            <li>
+              <code>gId1</code> > <code>gId2</code>
+              <span>&hArr;</span>
+              <code>opId1</code> > <code>opId2</code>
+            </li>
+          </ul>
+        </ul>
         <h4>Starter code</h4>
         <div class="hbarshort"></div>
         <p>
