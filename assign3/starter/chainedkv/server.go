@@ -122,6 +122,6 @@ func NewServer() *Server {
 	return &Server{}
 }
 
-func (s *Server) Start(serverId uint8, coordAddr string, serverAddr string, ServerServerAddr string, serverListenAddr string, clientListenAddr string, strace *tracing.Tracer) error {
+func (s *Server) Start(serverId uint8, coordAddr string, serverAddr string, serverServerAddr string, serverListenAddr string, clientListenAddr string, strace *tracing.Tracer) error {
 	return errors.New("not implemented")
 }
