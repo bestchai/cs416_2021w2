@@ -725,6 +725,7 @@ type ResultStruct struct {
                   serverId uint8,
                   coordAddr string,
                   serverAddr string,
+                  serverServerAddr string,
                   serverListenAddr string,
                   clientListenAddr string,
                   strace *tracing.Tracer
@@ -746,6 +747,9 @@ type ResultStruct struct {
 
                 <li><code>serverAddr</code> is the local IP:port that this server
                   node should use to connect to the coord node.</li>
+
+                <li><code>serverServerAddr</code> is the local IP:port that this server
+                  node should use to connect to previous server node in the chain.</li>
 
                 <li><code>serverListenAddr</code> is the local IP:port
                   that this server node should use to receive

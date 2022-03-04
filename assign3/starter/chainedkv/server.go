@@ -106,6 +106,7 @@ type ServerConfig struct {
 	ServerId          uint8
 	CoordAddr         string
 	ServerAddr        string
+	ServerServerAddr  string
 	ServerListenAddr  string
 	ClientListenAddr  string
 	TracingServerAddr string
@@ -121,6 +122,6 @@ func NewServer() *Server {
 	return &Server{}
 }
 
-func (s *Server) Start(serverId uint8, coordAddr string, serverAddr string, serverListenAddr string, clientListenAddr string, strace *tracing.Tracer) error {
+func (s *Server) Start(serverId uint8, coordAddr string, serverAddr string, ServerServerAddr string, serverListenAddr string, clientListenAddr string, strace *tracing.Tracer) error {
 	return errors.New("not implemented")
 }
