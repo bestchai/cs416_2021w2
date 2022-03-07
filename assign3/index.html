@@ -1513,8 +1513,8 @@ type ResultStruct struct {
             <code>ServerFailRecvd(S)</code> must be followed by either
           </li>
           <ul>
-            <li>At most one <code>NewFailoverSuccessor(S)</code>, or </li>
-            <li>At most one <code>NewFailoverPredecessor(S)</code>
+            <li>At most one <code>NewFailoverSuccessor(X)</code>, where X <span>&#8800;</span> S, or </li>
+            <li>At most one <code>NewFailoverPredecessor(X)</code>, where X <span>&#8800;</span> S
             </li>
           </ul>
           <li>
