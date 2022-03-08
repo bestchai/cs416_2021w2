@@ -47,7 +47,7 @@ final case class NewFailoverSuccessor(newNextServerId: Int) extends Record with 
 final case class NewFailoverPredecessor(newPrevServerId: Int) extends Record with FailoverOp {
   override val serverId = newPrevServerId
 }
-final case class ServerFailHandled(failServerId: Int) extends Record
+final case class ServerFailHandled(failedServerId: Int) extends Record
 final case class PutRecvd(clientId: String, opId: Long, key: String, value: String) extends Record with ClientIdOp
 final case class PutOrdered(clientId: String, opId: Long, gId: Long, key: String, value: String) extends Record with ClientIdOp
 final case class PutFwd(clientId: String, opId: Long, gId: Long, key: String, value: String) extends Record with ClientIdOp
@@ -406,7 +406,7 @@ class Spec(N: Int) extends Specification[Record] {
       },
       rule("ServerFailRecvd(S) must be followed by at most one ServerFailHandled(S)", pointValue = 1) {
         call(serverFailRecvd).quantifying("all ServerFailRecvd").forall { sfr =>
-          call(serverFailHandled).map(_.collect{ case a if sfr.failedServerId == a.failServerId => a })
+          call(serverFailHandled).map(_.collect{ case a if sfr.failedServerId == a.failedServerId => a })
             .label("succeeding ServerFailHanlded")
             .requireAtMostOne
         }
