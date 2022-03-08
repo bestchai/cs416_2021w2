@@ -652,14 +652,14 @@ class Spec(N: Int) extends Specification[Record] {
           _ = preq.foreach { req =>
             val r = pres.find(x => req.traceId == x.traceId)
             if (r.nonEmpty) {
-              if (!res.contains(req.clientId))
-                res += req.clientId -> mutable.ListBuffer(r.get)
+              if (!res.contains(req.clientId)) res += req.clientId -> mutable.ListBuffer(r.get)
               res(req.clientId) += r.get
             }
           }
           _ = greq.foreach { req =>
             val r = gres.find(x => req.traceId == x.traceId)
             if (r.nonEmpty) {
+              if (!res.contains(req.clientId)) res += req.clientId -> mutable.ListBuffer(r.get)
               res(req.clientId) += r.get
             }
           }
