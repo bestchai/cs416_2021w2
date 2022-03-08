@@ -278,18 +278,19 @@ class Spec(N: Int) extends Specification[Record] {
       },
 
       rule("Exactly N SeverStart", pointValue = 1) {
-        call(serverStart).label("ServerStarts")
+        call(serverStart).label("ServerStart")
           .require(ss => s"There must be exactly N ServerStart actions, $ss") { _.size == N }
       },
 
       rule("ServerStart happens before ServerJoining", pointValue = 1) {
-        call(serverStart).quantifying("ServerStarts").forall { ss =>
-          call(serverJoining).quantifying("ServerJoinings").forall { sj =>
-            if (ss <-< sj) {
-              accept
-            } else {
-              reject("ServerJoining does not happen after ServerStart")
-            }
+        call(serverStart).quantifying("ServerStart").forall { ss =>
+          call(serverJoining).quantifying("ServerJoining").forall {
+            case sj if ss.serverId == sj.serverId =>
+              if (ss <-< sj) {
+                accept
+              } else {
+                reject("ServerJoining does not happen after ServerStart")
+              }
           }
         }
       }
@@ -297,10 +298,10 @@ class Spec(N: Int) extends Specification[Record] {
 
     multiRule("Termination", pointValue = 4)(
       rule("KvslibStop cannot followed by any actions by the same client", pointValue = 1) {
-        call(kvslibStops).quantifying("KvslibStops").forall { kstop =>
+        call(kvslibStops).quantifying("KvslibStop").forall { kstop =>
           call(opsWithClientId).quantifying("Actions recorded with the same ClientId as KvslibStop")
             .forall {
-              case op if op.clientId == kstop.clientId =>
+              case op if op.clientId == kstop.clientId && op != kstop =>
                 if (op <-< kstop) {
                   accept
                 } else {
@@ -452,7 +453,7 @@ class Spec(N: Int) extends Specification[Record] {
       rule("HeadReq(C) must happen before HeadReqRecvd(C)", pointValue = 1) {
         call(headReq).quantifying("all HeadReq").forall { hreq =>
           for {
-            recvd <- call(headReqRecvd).map(_.find(_.clientId == hreq.clientId))
+            recvd <- call(headReqRecvd).map(_.find(x => x.clientId == hreq.clientId && hreq <-< x)).label("HeadReqRecvd")
             _ <- recvd match {
               case Some(r) => if (hreq <-< r) accept else reject("HeadReq does not happen before HeadReqRecvd")
               case None => reject("Cannot find the corresponding HeadReqRecvd")
@@ -470,7 +471,7 @@ class Spec(N: Int) extends Specification[Record] {
       rule("HeadRes(C,S) must happen before HeadResRecvd(C,S)", pointValue = 1) {
         call(headRes).quantifying("all HeadRes").forall { hres =>
           for {
-            recvd <- call(headReqRecvd).map(_.find(_.clientId == hres.clientId))
+            recvd <- call(headResRecvd).map(_.find(x => x.clientId == hres.clientId && hres <-< x)).label("HeadResRecvd")
             _ <- recvd match {
               case Some(r) => if (hres <-< r) accept else reject("HeadRes does not happen before HeadResRecvd")
               case None => reject("Cannot find the corresponding HeadResRecvd")
