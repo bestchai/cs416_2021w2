@@ -651,6 +651,8 @@ class Spec(N: Int) extends Specification[Record] {
           _ = preq.foreach { req =>
             val r = pres.find(x => req.traceId == x.traceId)
             if (r.nonEmpty) {
+              if (!res.contains(req.clientId))
+                res += req.clientId -> mutable.ListBuffer(r.get)
               res(req.clientId) += r.get
             }
           }
@@ -701,4 +703,11 @@ def a3spec(@arg(doc = "the number of servers on the chain") n: Int,
     println("details:")
     results.counterExamples().foreach(print)
   }
+//  println("Score: " + results.grade)
+//  results.dump().foreach(print)
+//  val p = new PrintWriter("grade_out.log")
+//  try {
+//    p.println(results.grade)
+//    results.dump().foreach(p.print)
+//  } finally {p.close()}
 }
