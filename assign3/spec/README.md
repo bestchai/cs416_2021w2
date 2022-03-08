@@ -26,6 +26,12 @@ Assuming a working Ammonite setup accessible via `./amm`, get the script's help 
 
 - `-n [N]` is the length of your server chain
 
+If you hit an out-of-memory or stack-overflow exception, you can pass JVM arguments by:
+```
+JAVA_OPTS="-Xmx1024m -Xss100m" ./amm a3spec.sc -n 5 trace_output1.log trace_output2.log trace_output3.log
+```
+where `-Xmx` is for memory limit and `-Xss` is for stack size.
+
 ## I think the checker is wrong, or the instructions didn't work for me
 
 Pull Requests with additional information, insight on how to install on an OS type we don't have, or other corrections, are welcome.
