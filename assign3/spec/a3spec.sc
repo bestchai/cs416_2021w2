@@ -470,8 +470,8 @@ class Spec(N: Int) extends Specification[Record] {
           for {
             recvd <- call(headReqRecvd).map(_.find(x => x.clientId == hreq.clientId && hreq <-< x)).label("HeadReqRecvd")
             _ <- recvd match {
-              case Some(r) => if (hreq <-< r) accept else reject("HeadReq does not happen before HeadReqRecvd")
-              case None => reject("Cannot find the corresponding HeadReqRecvd")
+              case Some(r) => accept
+              case None => reject("HeadReq does not happen before HeadReqRecvd")
             }
           } yield ()
         }
@@ -488,8 +488,8 @@ class Spec(N: Int) extends Specification[Record] {
           for {
             recvd <- call(headResRecvd).map(_.find(x => x.clientId == hres.clientId && hres <-< x)).label("HeadResRecvd")
             _ <- recvd match {
-              case Some(r) => if (hres <-< r) accept else reject("HeadRes does not happen before HeadResRecvd")
-              case None => reject("Cannot find the corresponding HeadResRecvd")
+              case Some(r) => accept
+              case None => reject("HeadRes does not happen before HeadResRecvd")
             }
           } yield ()
         }
@@ -507,10 +507,10 @@ class Spec(N: Int) extends Specification[Record] {
       rule("TailReq(C) must happen before TailReqRecvd(C)", pointValue = 1) {
         call(tailReq).quantifying("TailReq").forall { treq =>
           for {
-            recvd <- call(tailReqRecvd).map(_.find(_.clientId == treq.clientId))
+            recvd <- call(tailReqRecvd).map(_.find(x => x.clientId == treq.clientId && treq <-< x)).label("TailReqRecvd")
             _ <- recvd match {
-              case Some(r) => if (treq <-< r) accept else reject("TailReq does not happen before TailReqRecvd")
-              case None => reject("Cannot find the corresponding TailReqRecvd")
+              case Some(r) => accept
+              case None => reject("TailReq does not happen before TailReqRecvd")
             }
           } yield ()
         }
@@ -523,12 +523,12 @@ class Spec(N: Int) extends Specification[Record] {
         } yield ()
       },
       rule("TailRes(C) must happen before TailResRecvd(C)", pointValue = 1) {
-        call(tailRes).quantifying("TailRes").forall { treq =>
+        call(tailRes).quantifying("TailRes").forall { tres =>
           for {
-            recvd <- call(tailResRecvd).map(_.find(_.clientId == treq.clientId))
+            recvd <- call(tailResRecvd).map(_.find(x => x.clientId == tres.clientId && tres <-< x)).label("TailResRecvd")
             _ <- recvd match {
-              case Some(r) => if (treq <-< r) accept else reject("TailRes does not happen before TailResRecvd")
-              case None => reject("Cannot find the corresponding TailResRecvd")
+              case Some(r) => accept
+              case None => reject("TailRes does not happen before TailResRecvd")
             }
           } yield ()
         }
