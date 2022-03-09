@@ -297,15 +297,15 @@ class Spec(N: Int) extends Specification[Record] {
     ),
 
     multiRule("Termination", pointValue = 4)(
-      rule("KvslibStop cannot followed by any actions by the same client", pointValue = 1) {
-        call(kvslibStops).quantifying("KvslibStop").forall { kstop =>
-          call(opsWithClientId).quantifying("Actions recorded with the same ClientId as KvslibStop")
+      rule("KvslibStop(C) cannot be followed by any actions recorded by C", pointValue = 1) {
+        call(kvslibStops).quantifying("KvslibStop(C)").forall { kstop =>
+          call(elements).quantifying("Action recorded by C ")
             .forall {
-              case op if op.clientId == kstop.clientId && op != kstop =>
-                if (op <-< kstop) {
+              case elem if elem.tracerIdentity == kstop.tracerIdentity && elem != kstop =>
+                if (elem <-< kstop) {
                   accept
                 } else {
-                  reject("Action with the same clientId happens after KvslibStop")
+                  reject("The action recorded by C does not happens before KvslibStop")
                 }
             }
         }
