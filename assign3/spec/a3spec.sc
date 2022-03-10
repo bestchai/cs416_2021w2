@@ -297,15 +297,15 @@ class Spec(N: Int) extends Specification[Record] {
     ),
 
     multiRule("Termination", pointValue = 4)(
-      rule("KvslibStop cannot followed by any actions by the same client", pointValue = 1) {
-        call(kvslibStops).quantifying("KvslibStop").forall { kstop =>
-          call(opsWithClientId).quantifying("Actions recorded with the same ClientId as KvslibStop")
+      rule("KvslibStop(C) cannot be followed by any actions recorded by C", pointValue = 1) {
+        call(kvslibStops).quantifying("KvslibStop(C)").forall { kstop =>
+          call(elements).quantifying("Action recorded by C ")
             .forall {
-              case op if op.clientId == kstop.clientId && op != kstop =>
-                if (op <-< kstop) {
+              case elem if elem.tracerIdentity == kstop.tracerIdentity && elem != kstop =>
+                if (elem <-< kstop) {
                   accept
                 } else {
-                  reject("Action with the same clientId happens after KvslibStop")
+                  reject("The action recorded by C does not happens before KvslibStop")
                 }
             }
         }
@@ -375,7 +375,7 @@ class Spec(N: Int) extends Specification[Record] {
         }
       },
       rule("AllServersJoined must exist and happen before PutRecvd/GetRecvd", pointValue = 1) {
-        call(allServersJoined).requireSome.quantifying("AllServersJoined").exists{ allJoined =>
+        call(allServersJoined).requireSome.quantifying("AllServersJoined").forall{ allJoined =>
           for {
             _ <- call(putRecvd).quantifying("PutRecvd").forall{ pr =>
               if (allJoined <-< pr) accept else reject("AllServersJoined doesn't happen before PutRecvd")
@@ -389,11 +389,11 @@ class Spec(N: Int) extends Specification[Record] {
     ),
 
     multiRule("Failure Handling", pointValue = 5)(
-      rule("ServerFail(S) followed by one or two ServerFailRecvd(S)", pointValue = 1) {
+      rule("ServerFail(S) followed by at most two ServerFailRecvd(S)", pointValue = 1) {
         call(serverFail).quantifying("ServerFail").forall { sf =>
           call(serverFailRecvd).map(_.collect{ case a if sf.serverId == a.failedServerId && sf <-< a => a })
             .require(l => s"ServerFail should only be followed by one or two ServerFailedRecvd, found: $l") { sfr =>
-              sfr.size == 1 || sfr.size == 2
+              sfr.size <= 2
             }
         }
       },
@@ -419,11 +419,13 @@ class Spec(N: Int) extends Specification[Record] {
           } yield ()
         }
       },
-      rule("ServerFailRecvd(S) must be followed by at most one ServerFailHandled(S)", pointValue = 1) {
+      rule("ServerFailRecvd(S) must be followed by at most two ServerFailHandled(S)", pointValue = 1) {
         call(serverFailRecvd).quantifying("ServerFailRecvd").forall { sfr =>
           call(serverFailHandled).map(_.collect{ case a if sfr.failedServerId == a.failedServerId && sfr <-< a => a })
             .label("succeeding ServerFailHanlded")
-            .requireAtMostOne
+            .require(_ => "At most two ServerFailHandled(S) happens after ServerFailRecvd(S)") { failHandled =>
+              failHandled.size <= 2
+            }
         }
       },
       rule("ServerFailHandledRecvd(S) must be preceded by ServerFailHandled(S)", pointValue = 1) {
@@ -470,8 +472,8 @@ class Spec(N: Int) extends Specification[Record] {
           for {
             recvd <- call(headReqRecvd).map(_.find(x => x.clientId == hreq.clientId && hreq <-< x)).label("HeadReqRecvd")
             _ <- recvd match {
-              case Some(r) => if (hreq <-< r) accept else reject("HeadReq does not happen before HeadReqRecvd")
-              case None => reject("Cannot find the corresponding HeadReqRecvd")
+              case Some(r) => accept
+              case None => reject("HeadReq does not happen before HeadReqRecvd")
             }
           } yield ()
         }
@@ -488,8 +490,8 @@ class Spec(N: Int) extends Specification[Record] {
           for {
             recvd <- call(headResRecvd).map(_.find(x => x.clientId == hres.clientId && hres <-< x)).label("HeadResRecvd")
             _ <- recvd match {
-              case Some(r) => if (hres <-< r) accept else reject("HeadRes does not happen before HeadResRecvd")
-              case None => reject("Cannot find the corresponding HeadResRecvd")
+              case Some(r) => accept
+              case None => reject("HeadRes does not happen before HeadResRecvd")
             }
           } yield ()
         }
@@ -507,10 +509,10 @@ class Spec(N: Int) extends Specification[Record] {
       rule("TailReq(C) must happen before TailReqRecvd(C)", pointValue = 1) {
         call(tailReq).quantifying("TailReq").forall { treq =>
           for {
-            recvd <- call(tailReqRecvd).map(_.find(_.clientId == treq.clientId))
+            recvd <- call(tailReqRecvd).map(_.find(x => x.clientId == treq.clientId && treq <-< x)).label("TailReqRecvd")
             _ <- recvd match {
-              case Some(r) => if (treq <-< r) accept else reject("TailReq does not happen before TailReqRecvd")
-              case None => reject("Cannot find the corresponding TailReqRecvd")
+              case Some(r) => accept
+              case None => reject("TailReq does not happen before TailReqRecvd")
             }
           } yield ()
         }
@@ -523,12 +525,12 @@ class Spec(N: Int) extends Specification[Record] {
         } yield ()
       },
       rule("TailRes(C) must happen before TailResRecvd(C)", pointValue = 1) {
-        call(tailRes).quantifying("TailRes").forall { treq =>
+        call(tailRes).quantifying("TailRes").forall { tres =>
           for {
-            recvd <- call(tailResRecvd).map(_.find(_.clientId == treq.clientId))
+            recvd <- call(tailResRecvd).map(_.find(x => x.clientId == tres.clientId && tres <-< x)).label("TailResRecvd")
             _ <- recvd match {
-              case Some(r) => if (treq <-< r) accept else reject("TailRes does not happen before TailResRecvd")
-              case None => reject("Cannot find the corresponding TailResRecvd")
+              case Some(r) => accept
+              case None => reject("TailRes does not happen before TailResRecvd")
             }
           } yield ()
         }
@@ -550,31 +552,29 @@ class Spec(N: Int) extends Specification[Record] {
         call(puts).quantifying("Put").forall { p =>
           val ptrace = orderedTraces.map(_.get(p.traceId).toList).requireOne
           for {
-            pRecvd <- ptrace.map(_.collect{ case a: PutRecvd => a }).requireSome.map(_.last).label("last PutRecvd")
-            pOrdered <- ptrace.map(_.collectFirst{ case a: PutOrdered if (pRecvd <-< a) && (a.tracerIdentity == pRecvd.tracerIdentity) => a }.toList)
+            presRecvd <- ptrace.map(_.collect{ case a: PutResultRecvd if a.tracerIdentity == p.tracerIdentity => a })
               .requireOne
-            _ <- ptrace.map(_.collect{ case a: PutFwd if pRecvd <-< a => a })
-              .require(_ => "if last PutRecvd is followed by some PutFwd, at least one is recorded at the same server") { pfwds =>
-                if (pfwds.nonEmpty) {
-                  pfwds.exists(pfwd => pfwd.tracerIdentity == pRecvd.tracerIdentity && pfwd.gId == pOrdered.gId)
-                } else {
-                  true
-                }
-              }
-            _ <- ptrace.map(_.collect{ case a: PutFwdRecvd if pRecvd <-< a => a })
-              .require(_ => "if last PutRecvd is followed by some PutFwdRecvds, then they must recorded by different servers") { pfwdRecvds =>
-                if (pfwdRecvds.nonEmpty) {
-                  pfwdRecvds.exists { pfwdRecvd =>
-                    pfwdRecvd.tracerIdentity != pRecvd.tracerIdentity && pfwdRecvd.gId == pOrdered.gId
-                  }
-                } else {
-                  true
-                }
-              }
-            _ <- ptrace.map(_.collectFirst{ case a: PutResult if a.gId == pOrdered.gId => a }.toList)
+              .label("The PutResultRecvd")
+            pOrdered <- ptrace.map(_.collect{ case a: PutOrdered if a <-< presRecvd && presRecvd.gId == a.gId => a }.toList)
               .requireOne
-            _ <- ptrace.map(_.collect{ case a: PutResultRecvd if a.gId == pOrdered.gId && a.tracerIdentity == p.tracerIdentity => a })
-              .requireOne
+              .label("PutOrdered at S")
+            _ <- ptrace.map(_.collect{ case a: PutRecvd if a <-< pOrdered && a.tracerIdentity == pOrdered.tracerIdentity => a })
+              .label("PutRecvd")
+              .requireSome
+            _ <- ptrace.map(_.collect{
+              case a: PutFwd if pOrdered <-< a &&
+                a <-< presRecvd &&
+                a.tracerIdentity == pOrdered.tracerIdentity &&
+                a.gId == presRecvd.gId
+              => a })
+              .quantifying("PutFwd").forall { fwd =>
+              ptrace.map(_.collect{ case a: PutFwdRecvd if fwd <-< a && fwd.gId == a.gId && fwd.tracerIdentity != a.tracerIdentity => a })
+                .label("PutFwdRecvd")
+                .requireSome
+            }
+            _ <- ptrace.map(_.collectFirst{ case a: PutResult if a.gId == presRecvd.gId && pOrdered <-< a && a <-< presRecvd => a }.toList)
+              .label("PutResult")
+              .requireSome
           } yield ()
         }
       }
@@ -595,12 +595,17 @@ class Spec(N: Int) extends Specification[Record] {
         call(gets).quantifying("Get").forall { g =>
           val gtrace = orderedTraces.map(_.get(g.traceId).toList).requireOne
           for {
-            gRecvd <- gtrace.map(_.collect{ case a: GetRecvd => a }).requireSome.map(_.last).label("last GetRecvd")
-            gOrdered <- gtrace.map(_.collectFirst{ case a: GetOrdered if (gRecvd <-< a) && (a.tracerIdentity == gRecvd.tracerIdentity) => a }.toList)
+            gresRecvd <- gtrace.map(_.collect{ case a: GetResultRecvd if a.tracerIdentity == g.tracerIdentity => a })
               .requireOne
-            _ <- gtrace.map(_.collectFirst{ case a: GetResult if a.gId == gOrdered.gId => a }.toList)
+              .label("The GetResultRecvd")
+            gOrdered <- gtrace.map(_.collectFirst{ case a: GetOrdered if a <-< gresRecvd && gresRecvd.gId == a.gId => a }.toList)
               .requireOne
-            _ <- gtrace.map(_.collect{ case a: GetResultRecvd if a.gId == gOrdered.gId && a.tracerIdentity == g.tracerIdentity => a })
+              .label("GetOrdered at S")
+            _ <- gtrace.map(_.collect{ case a: GetRecvd if a <-< gOrdered && a.tracerIdentity == gOrdered.tracerIdentity => a })
+              .label("GetRecvd")
+              .requireSome
+            _ <- gtrace.map(_.collectFirst{ case a: GetResult if a.gId == gresRecvd.gId && gOrdered <-< a && a <-< gresRecvd => a }.toList)
+              .label("GetResult")
               .requireOne
           } yield ()
         }
