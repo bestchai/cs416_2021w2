@@ -1561,26 +1561,38 @@ type ResultStruct struct {
         </ul>
         <b>Put handling</b>
         <ul>
-          <li>Put recorded by client C must be preceded by <code>HeadResRecvd(C,S)</code> and the corresponding put operation from C must have been issued to server S. </li>
-          <li>Put recorded by client C in trace P must be eventually followed by the following actions, all recorded in trace P</li>
+          <li><code>Put</code> recorded by client C must be preceded by <code>HeadResRecvd(C,S)</code> and the corresponding put operation from C must have been issued to server S. </li>
+          <li><code>Put</code> recorded by client C in trace P must be eventually followed by the following actions, all recorded in trace P</li>
           <ul>
-            <li>At least one <code>PutRecvd</code> recorded at some server S </li>
-            <li>At least one <code>PutOrdered(gid)</code> at S </li>
-            <li>Zero or more <code>PutFwd(gid)</code> at S </li>
-            <li>Zero or more <code>PutFwdRecvd(gid)</code> at S', where S' <span>&#8800;</span> S </li>
-            <li>At least one <code>PutResult(gid)</code> at S', where S' may or may not be equal to S </li>
-            <li>Exactly one <code>PutResultRecvd(gid)</code> at C </li>
+            <li>Exactly one <code>PutResultRecvd(gid)</code> at C, which determines the final <code>gid</code> of your Put operation</li>
+            <li>At least one <code>PutOrdered(gid<sub>1</sub>)</code> with <code>gid=gid<sub>1</sub></code> at some server S, which determinis the server S that eventually issues the Put </li>
+            <li>At least one <code>PutRecvd</code> recorded at S </li>
+            <li>Zero or more <code>PutFwd(gid<sub>2</sub>)</code> at S, where <code>gid=gid<sub>2</sub></code> </li>
+            <li>If there are <code>PutFwd(gid<sub>2</sub>)</code> at S and <code>gid=gid<sub>2</sub></code>, then there are at least one <code>PutFwdRecvd(gid<sub>3</sub>)</code> at S', where S' <span>&#8800;</span> S and <code>gid=gid<sub>3</sub></code> </li>
+            <li>At least one <code>PutResult(gid<sub>4</sub>)</code> at S', where S' may or may not be equal to S and  <code>gid=gid<sub>4</sub></code></li>
+          </ul>
+          <li style="color: red;">The order of the above rules describe how the correctness of Put-Traces are checked but do not indicate the
+            happens-before relation. The happens-before relation of your Get-Trace actions should be:</li>
+          <ul>
+            <li style="color: red;"><code>Put -> PutRecvd -> PutOrdered(gid) -> [PutFwd(gid) -> PutFwdRecvd(gid) ...]* -> PutResult(gid) -> PutResultRecvd(gid)</code></li>
+            <li>The <code>gid</code> above refers to the final gid of a Put operation</li>
           </ul>
         </ul>
         <b>Get handling</b>
         <ul>
-          <li>Get recorded by client C must be preceded by <code>TailResRecvd(C,S)</code> and the corresponding get operation from C must have been issued to server S. </li>
-          <li>Get recorded by client C in trace G must be eventually followed by the following actions, all recorded in trace G</li>
+          <li><code>Get</code> recorded by client C must be preceded by <code>TailResRecvd(C,S)</code> and the corresponding get operation from C must have been issued to server S. </li>
+          <li><code>Get</code> recorded by client C in trace G must be eventually followed by the following actions, all recorded in trace G</li>
           <ul>
-            <li>At least one <code>GetRecvd</code> recorded at some server S </li>
-            <li>At least one <code>GetOrdered(gid)</code> at S </li>
-            <li>At least one <code>GetResult(gid)</code> at S </li>
-            <li>Exactly one <code>GetResultRecvd(gid)</code> at C </li>
+            <li>Exactly one <code>GetResultRecvd(gid)</code> at C, which determines the final <code>gid</code> of your Get operation</li>
+            <li>At least one <code>GetOrdered(gid<sub>1</sub>)</code> with <code>gid=gid<sub>1</sub></code> at some server S, which determines the server S that eventually issues the Get</li>
+            <li>At least one <code>GetRecvd</code> recorded at server S </li>
+            <li>At least one <code>GetResult(gid<sub>2</sub>)</code> at S, where <code>gid=gid<sub>2</sub></code> </li>
+            </li>
+          </ul>
+          <li style="color: red;">The order of the above rules describe how the correctness of Get-Traces are checked but do not indicate the happens-before relation. The happens-before relation of your Get-Trace actions should be:</li>
+          <ul>
+            <li style="color: red;"><code>Get -> GetRecvd -> GetOrdered(gid) -> GetResult(gid) -> GetResultRecvd(gid)</code></li>
+            <li>The <code>gid</code> above refers to the final gid of a Get operation</li>
           </ul>
         </ul>
         <b>Put-Get Data Consistency</b>
