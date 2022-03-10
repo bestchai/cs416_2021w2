@@ -552,31 +552,29 @@ class Spec(N: Int) extends Specification[Record] {
         call(puts).quantifying("Put").forall { p =>
           val ptrace = orderedTraces.map(_.get(p.traceId).toList).requireOne
           for {
-            pRecvd <- ptrace.map(_.collect{ case a: PutRecvd => a }).requireSome.map(_.last).label("last PutRecvd")
-            pOrdered <- ptrace.map(_.collectFirst{ case a: PutOrdered if (pRecvd <-< a) && (a.tracerIdentity == pRecvd.tracerIdentity) => a }.toList)
+            presRecvd <- ptrace.map(_.collect{ case a: PutResultRecvd if a.tracerIdentity == p.tracerIdentity => a })
               .requireOne
-            _ <- ptrace.map(_.collect{ case a: PutFwd if pRecvd <-< a => a })
-              .require(_ => "if last PutRecvd is followed by some PutFwd, at least one is recorded at the same server") { pfwds =>
-                if (pfwds.nonEmpty) {
-                  pfwds.exists(pfwd => pfwd.tracerIdentity == pRecvd.tracerIdentity && pfwd.gId == pOrdered.gId)
-                } else {
-                  true
-                }
-              }
-            _ <- ptrace.map(_.collect{ case a: PutFwdRecvd if pRecvd <-< a => a })
-              .require(_ => "if last PutRecvd is followed by some PutFwdRecvds, then they must recorded by different servers") { pfwdRecvds =>
-                if (pfwdRecvds.nonEmpty) {
-                  pfwdRecvds.exists { pfwdRecvd =>
-                    pfwdRecvd.tracerIdentity != pRecvd.tracerIdentity && pfwdRecvd.gId == pOrdered.gId
-                  }
-                } else {
-                  true
-                }
-              }
-            _ <- ptrace.map(_.collectFirst{ case a: PutResult if a.gId == pOrdered.gId => a }.toList)
+              .label("The PutResultRecvd")
+            pOrdered <- ptrace.map(_.collect{ case a: PutOrdered if a <-< presRecvd && presRecvd.gId == a.gId => a }.toList)
               .requireOne
-            _ <- ptrace.map(_.collect{ case a: PutResultRecvd if a.gId == pOrdered.gId && a.tracerIdentity == p.tracerIdentity => a })
-              .requireOne
+              .label("PutOrdered at S")
+            _ <- ptrace.map(_.collect{ case a: PutRecvd if a <-< pOrdered && a.tracerIdentity == pOrdered.tracerIdentity => a })
+              .label("PutRecvd")
+              .requireSome
+            _ <- ptrace.map(_.collect{
+              case a: PutFwd if pOrdered <-< a &&
+                a <-< presRecvd &&
+                a.tracerIdentity == pOrdered.tracerIdentity &&
+                a.gId == presRecvd.gId
+              => a })
+              .quantifying("PutFwd").forall { fwd =>
+              ptrace.map(_.collect{ case a: PutFwdRecvd if fwd <-< a && fwd.gId == a.gId && fwd.tracerIdentity != a.tracerIdentity => a })
+                .label("PutFwdRecvd")
+                .requireSome
+            }
+            _ <- ptrace.map(_.collectFirst{ case a: PutResult if a.gId == presRecvd.gId && pOrdered <-< a && a <-< presRecvd => a }.toList)
+              .label("PutResult")
+              .requireSome
           } yield ()
         }
       }
@@ -597,12 +595,17 @@ class Spec(N: Int) extends Specification[Record] {
         call(gets).quantifying("Get").forall { g =>
           val gtrace = orderedTraces.map(_.get(g.traceId).toList).requireOne
           for {
-            gRecvd <- gtrace.map(_.collect{ case a: GetRecvd => a }).requireSome.map(_.last).label("last GetRecvd")
-            gOrdered <- gtrace.map(_.collectFirst{ case a: GetOrdered if (gRecvd <-< a) && (a.tracerIdentity == gRecvd.tracerIdentity) => a }.toList)
+            gresRecvd <- gtrace.map(_.collect{ case a: GetResultRecvd if a.tracerIdentity == g.tracerIdentity => a })
               .requireOne
-            _ <- gtrace.map(_.collectFirst{ case a: GetResult if a.gId == gOrdered.gId => a }.toList)
+              .label("The GetResultRecvd")
+            gOrdered <- gtrace.map(_.collectFirst{ case a: GetOrdered if a <-< gresRecvd && gresRecvd.gId == a.gId => a }.toList)
               .requireOne
-            _ <- gtrace.map(_.collect{ case a: GetResultRecvd if a.gId == gOrdered.gId && a.tracerIdentity == g.tracerIdentity => a })
+              .label("GetOrdered at S")
+            _ <- gtrace.map(_.collect{ case a: GetRecvd if a <-< gOrdered && a.tracerIdentity == gOrdered.tracerIdentity => a })
+              .label("GetRecvd")
+              .requireSome
+            _ <- gtrace.map(_.collectFirst{ case a: GetResult if a.gId == gresRecvd.gId && gOrdered <-< a && a <-< gresRecvd => a }.toList)
+              .label("GetResult")
               .requireOne
           } yield ()
         }
