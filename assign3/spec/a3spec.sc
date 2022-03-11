@@ -577,7 +577,9 @@ class Spec(N: Int) extends Specification[Record] {
             }
             _ <- ptrace.map(_.collectFirst{ case a: PutResult if a.gId == presRecvd.gId && pOrdered <-< a && a <-< presRecvd => a }.toList)
               .label("PutResult")
-              .requireSome
+              .require(_ => "There should be at least one PutResult with the same gid happens between PutOrdered and PutResultRecvd") { pres =>
+                pres.nonEmpty
+              }
           } yield ()
         }
       }
