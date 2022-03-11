@@ -1,0 +1,957 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="./style.css" /> 
+<script type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+  <title>Project [open ended]</title>
+
+  <table id="main">
+
+    <tr>
+      <td style="padding-bottom: 20px">
+        <h2><a href="../index.html">416</a> Distributed Systems [open ended]</h2>
+        <h3>Multiple deadlines (see below)</h3>
+        <p style="color:gray"><small>Winter 2022</small></p>
+        <p style="color:gray">
+          <small>
+            <script src="hash.js"></script>
+          </small>
+        </p>
+      </td>
+    </tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td>
+
+<p>
+This is an open-ended project that must be completed in a team of 5-6
+people and must be (at least partially) deployed on Azure. The extra
+number of people (over A3) will provide you with developer power to
+execute on an ambitious project.
+</p>
+
+<h4>Type of project</h4>
+<div class="hbarshort"></div>
+
+<p>
+Your project must address a non-trivial problem related
+to <b>distributed systems</b>. It must include a substantial software
+effort in Go. Note that 'substantial' includes complexity and not just
+code size. The most direct way to satisfy the project requirement is
+to prototype a distributed system design. Such a system can be built
+from scratch, but the project can also be formulated as a non-trivial
+extension to an existing system. The idea behind the system does not
+need to be original. The majority of the distributed logic in the
+implemented system must be implemented by the project team.
+</p>
+
+<p>As a benchmark, your project must have at least the
+complexity/difficulty of <a href="../assign3/index.html">assignment 3</a>.</p>
+
+<p>
+Project constraints (evolving):
+<ul>
+
+  <li>Go must be used for the core distributed logic in the
+    system. However, other languages may also be used in the
+    project. For example, you can build a distributed system in Go and
+    have Android clients, implemented in Java, that connect to it and
+    use it.
+  </li>
+
+  <li>The system must be able to support node churn: nodes that fail
+    and leave the system, as well as nodes that join the system.</li>
+
+  <li>The system cannot be embarrassingly parallel: there must be some
+    distributed state and coordination between nodes in your
+    system.</li>
+
+  <li>At least some part of the system must be deployed on Azure.</li>
+
+  <li>The system must be well tested.</li>
+
+</ul>
+</p>
+
+
+<h4>Project ideas</h4>
+<div class="hbar"></div>
+
+<p>
+Here are several project ideas. Treat these as inspiration; I strongly
+encourage you to come up with your own project idea. If you have an
+idea and you would like to discuss it, consider posting a description
+to Piazza.
+</p>
+
+<!-- --------------------------------------- -->
+
+<h4>Project idea: Consensus-Based Failure Detection</h4>
+<div class="hbarshort"></div>
+
+<p>
+After A2 you've become more interested in failure detectors. You start
+reading more and realize that the failure detector you developed in A1
+is not robust to network partitions, which may cause inconsistencies
+in the system about the state of a node. For example, Node A and Node
+B are monitoring Node C. If Node A is partitioned from Node B and Node
+C, then Node A will incorrectly report that Node C has failed while
+according to Node B, Node C is still alive. You find out about the
+Paxos algorithm and realize that this problem is in fact a consensus
+problem. You decide to implement a consensus protocol, like Paxos or
+Raft, on top of your failure detector library to decide if a majority
+of systems believe that a node has really failed.
+</p>
+
+<!-- <img style="float:right; padding-left:2%; width:50%; padding-right:2%" src=".png"/> -->
+
+<!-- --------------------------------------- -->
+
+<h4>Project idea: Regionally Restricted Streaming Service</h4>
+<div class="hbarshort"></div>
+
+<p>
+If you were to take a random survey of current UBC students to
+determine the answer to the question "How do you procrastinate?", the
+majority of the responses would have something to do with watching
+Netflix. But as a current 416 student, you have already been exposed
+to web-proxies and CDNs. So, now your favorite way of procrastinating
+is to build Netflix from scratch instead of watching it. To do this,
+you would need to make a video streaming service built on top of a
+custom CDN, which provides regional restrictions. To make your system
+more robust, you may also choose to use a distributed key-value store
+to house your user data.
+</p>
+
+<!-- <img style="float:right; padding-left:2%; width:50%; padding-right:2%" src=".png"/> -->
+
+
+
+<!-- --------------------------------------- -->
+
+<h4>Project idea: A version of DynamoDB</h4>
+<div class="hbarshort"></div>
+
+<p>
+"Amazon is expanding in downtown!" is something you have gotten used
+to hearing after living in Vancouver the last few years. As an
+upper-year CS major, you have started looking for well-paid full time
+jobs and identified Amazon as a viable destination. Being a smart
+group of 416 students, you decide to build
+Amazon's <a href="https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf">DynamoDB</a>
+from scratch as you think that would be a good way to impress an
+Amazon recruiter. You also like how they use CRDTs to provide
+eventually consistent reads but you are also interested in finding out
+how they can also provide strongly consistent reads across their whole
+distributed database. And, to widen your scope, you decide to use your
+newly built DynamoDB on Azure instead of AWS to increase your chances
+of impressing a Microsoft recruiter, as well!
+</p>
+
+<!-- <img style="float:right; padding-left:2%; width:50%; padding-right:2%" src=".png"/> -->
+
+
+<p>
+</p>
+
+
+<!-- --------------------------------------- -->
+
+
+<h4>Project idea: Build an anonymity network</h4>
+<div class="hbarshort"></div>
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Tor_(anonymity_network)">Tor</a>
+is an anonymity system built
+on <a href="https://en.wikipedia.org/wiki/Onion_routing">onion
+routing</a>. Tor allows clients to obfuscate their network
+identity/location (IP address). The idea is simple, but supporting
+multiple clients, defending against attacks, and providing good
+performance to clients (e.g., responsive browsing) are non-trivial
+requirements.
+</p>
+
+<!-- <img style="float:right; padding-left:2%; width:50%; padding-right:2%" src="tor.png"/> -->
+
+<p>
+One version of this project is to prototype a basic version of Tor,
+deploying it on Azure, and demonstrating that you can use it to
+browser the internet. A basic version might include:
+<ul>
+<li>Handling connecting/disconnecting guard/relay/exit nodes</li>
+<li>Secure onion routing (intermediate hops do not observe payload)</li>
+<li>Circuit setup/tear-down protocols</li>
+<li>Periodic circuit refresh to avoid using a circuit for too long</li>
+</ul>
+</p>
+
+<p>
+Tor is just one type of anonymity system. If you are interested in
+this space, there are a variety of other system designs that you can
+adopt
+(e.g., <a href="https://vuvuzela.io/vuvuzela.pdf">Vuvuzela</a>). Or,
+feel free to create a new one!
+</p>
+
+<!-- <img style="float:right; padding-left:2%; width:30%; padding-right:2%" src="p2p-ml.png"/> -->
+
+<h4>Project idea: Build a peer-to-peer machine learning system</h4>
+<div class="hbarshort"></div>
+
+<p>
+Machine learning is all the rage. There are many distributed
+frameworks, but all of them assume a centralized learning process with
+access to a central store of training data. Build a peer-to-peer
+solution for learning a global model (of a variety of your choice)
+that has as few centralized components as possible and where data is
+spread across peers. Assume an adversarial context in which peers do
+not want to reveal their data to others. For this project you may want
+to recruit to your team someone who has taken CPSC 340 (and has done
+well in it). You can also substantially expand the security/privacy
+requirements of this project. Take a look at
+the <a href="https://www.cs.ubc.ca/~bestchai/papers/tpds20-biscotti.pdf">Biscotti
+paper</a> for an example of a sophisticated system in this space.
+</p>
+
+
+<h4>Project idea: Build a distributed web crawler/search engine</h4>
+<div class="hbarshort"></div>
+
+<!-- <img style="float:right; padding-left:2%; width:40%; padding-right:2%" src="arch.png"/> -->
+
+<p>
+Web crawling is kind of a 90s topic. But, an efficient and scalable
+version is a complex distributed system with many interesting
+pieces. An <a href="http://www.cs.ubc.ca/~bestchai/teaching/cs416_2016w2/assign5/index.html">assignment
+</a> from 416-2016w2 describes an 'assignment' version of a web
+crawler that is a good starting point. This version described a set of
+worker crawlers that are spread over multiple data-centers, a
+web-graph that is maintained in a distributed fashion, a distributed
+page rank computation, and keyword search capability. You could extend
+this version or consider building a different variant.
+</p>
+
+
+<p><b>Other project ideas</b></p>
+
+<div class="hbarshort"></div>
+
+<ul>
+
+  <li>Build a fault-tolerant parallel computing platform based
+    on <a href="https://www.usenix.org/system/files/conference/nsdi12/nsdi12-final138.pdf">Spark's
+    RDD abstraction</a>.</li>
+
+  <li>Build a peer-to-peer version of DropBox based on the design
+    of <a href="https://www.cs.utexas.edu/users/less/publications/research/xFS.tocs96.pdf">XFS</a>.</li>
+
+  <li>Build a distributed object system,
+    like <a href="https://dl.acm.org/citation.cfm?id=42182">Emerald</a>,
+    but without a compiler.</li>
+
+  <li>Build a distributed shared memory system,
+    like <a href="http://cseweb.ucsd.edu/classes/sp11/cse223b/papers/keleher94.pdf">Treadmarks</a>.</li>
+
+  <li>Build a distributed assertions mechanism for Go systems that can
+     check a distributed system's properties at runtime,
+     using <a href="https://www.cs.ubc.ca/~bestchai/papers/dinv-icse18.pdf">Dinv</a>
+     as inspiration.</li>
+
+  <li>Implement a byzantine fault tolerance algorithm, a classic
+    example
+    is <a href="http://www.pmg.csail.mit.edu/papers/osdi99.pdf">PBFT</a>.</li>
+
+</ul>
+
+<br/>
+
+
+
+<h3>Project structure</h3>
+<div class="hbar"></div>
+
+<p>
+Each project group will be assigned to a TA. This TA will be the point
+person for project advice, deliverables checking, weekly meetings, and
+other project-related logistics. You will do all your work in a git
+repository hosted by UBC enterprise github (you can make it public
+later, if you wish).
+</p>
+
+<p>
+The required project deliverables are listed below. In cases where the
+deliverable is a written paper, I would prefer that you share the doc
+with the TAs and Ivan as an editable google doc. If you would rather
+use another submission approach, let me know. I would prefer final
+project reports in pdf format for an ACM SIG of your choice.
+<ul>
+
+  <li><b>Project proposal draft:</b> a paper (about 5 pages) describing
+    as much of the project proposal as possible. However, the draft
+    does not need to have well-defined milestones.
+  </li>
+
+  <li><b>Project proposal:</b> a paper (about 5 pages) detailing the
+    problem you plan to address with your distributed system, your
+    proposed approach, and a realistic timeline for your team's
+    efforts. See proposal details below for more information. The
+    proposal must detail three well-defined milestones. Each milestone
+    must include (1) deliverables that you will share with TAs+Ivan
+    for the milestone, (2) a written document that explains the
+    deliverables and their status. The best way to think of the
+    milestones is as a contract: if I accept your proposal and you
+    meet the milestone you describe, then you will receive the full
+    mark for the milestone.
+  </li>
+
+  <li><b>1st project milestone:</b> 1st milestone deliverables and a
+    document that explains the deliverables and their status. For
+    example, if the deliverable is code, then the document must
+    describe what the code does, under what conditions it works, how
+    to run and deploy the code, etc. If the deliverable is a dataset,
+    then the document must explain the format of the data, what it
+    means, how it was collected, how complete it is, etc.
+  </li>
+
+  <li><b>Project update meeting 1:</b> Your project group will meet
+    with a TA assigned to your group (and maybe Ivan) to discuss your
+    project status. You will discuss the first milestone, your
+    progress towards the second milestone, and any outstanding
+    questions/concerns that you might have.
+  </li>
+
+  <li><b>2nd project milestone:</b> 2nd milestone deliverables and
+    a document that explains the deliverables and their status.
+  </li>
+
+  <li><b>Project update meeting 2 (trouble groups only):</b> If you
+    have done poorly on your first milestone and we decide that your
+    team is struggling, we will meet with your team again after the
+    second milestone.
+  </li>
+
+  <li><b>3rd project milestone:</b> 3rd milestone deliverables and
+    a document that explains the deliverables and their status.
+  </li>
+
+  <li><b>Project demo:</b> a live demo of your project work to TAs and
+    Ivan during finals week. During the demo we will ask your team
+    questions about your system implementation and design.</li>
+
+  <li><b>Prototype implementation:</b> git repository with your
+    code.</li>
+
+  <li><b>Project report:</b> a paper detailing the problem you set out
+    to solve, design of your system, implemetation description, and
+    some evaluation restuls. The final report (due at the end of the
+    term) should be no longer than 8 pages (excluding references) and
+    should resemble a research paper. See final report instructions
+    below for more information.</li>
+  
+</ul>
+</p>
+
+
+
+
+<h3>Proposal</h3>
+<div class="hbar"></div>
+
+<p>
+A project proposal details the problem, your proposed
+approach/solution, and a realistic timeline for your team. The
+proposal must include at least the following sections:
+introduction/motivation, background, proposed approach/solution,
+evaluation methodology, timeline.
+</p>
+
+<p>
+You should aim for a proposal that is about 5 pages long. Shorter and
+you're probably missing some detail; longer and it becomes too
+detailed and too long to read. That said, there are <b>no</b> page
+limits (lower bounds nor upper bounds) on your proposal. Note that a
+proposal draft is a proposal without milestones. All the items in this
+section apply to proposal drafts.
+</p>
+
+<p>
+Here are two high-level ways in which I think about your proposal:
+<ul>
+
+<li><b>A proposal is a contract.</b> If you build the thing described
+  in the proposal then you get a perfect mark on the project. But,
+  writing good contracts is hard work. For example, a good contract
+  must be precise (it should be clear what you are and are not going
+  to do).
+</li>
+
+<li><b>A proposal is your opportunity to convince me that you know
+what you're getting yourself into.</b> I won't let you do a project if
+I know that you do not stand a reasonable chance of succeeding at it
+(this is a distributed system course, not an SE course :-) So, the
+proposal should convince me that you know what you're doing -- that
+you've thought about the key issues (you know what they are,
+approximately how you're going to solve them), you know what resources
+you will need/where you will get them
+(technology/libraries/algorithms/data sources/hardware/etc), that you
+thought about how to manage your time and how to manage the team roles
+and responsibilities (who does what/when), and that it all adds up to
+a realistic plan for a successful project.</li>
+
+</ul>
+</p>
+
+
+<p>Here are three example proposals from an earlier instance of this
+course (include SWOT analysis, which you do not need to include; do
+not include milestones):</p>
+
+<ul>
+  <li><a href="project_c9f7_i5l8_o0p4_p0j8_proposal.pdf">Heterogeneous Dynamic BSP programming in Go with a Pregel-inspired API</a></li>
+  <li><a href="project_m6r8_s8u8_v5v8_y6x8_proposal.pdf">Live Pod Migration in Kubernetes</a></li>
+  <li><a href="project_n6n8_u2c9_v0r5_x5m8_proposal.pdf">Distributed Key-Value Store Utilizing CRDT to Guarantee Eventual Consistency</a></li>
+</ul>
+
+<p>Here are three example proposals from a graduate course (these
+  include milestones):</p>
+
+<ul>
+  <li><a href="538B-2021w1-proposal-final-SyWoWa.pdf">SyWoWa: a System & Workload Aware Graph Partitioner</a></li>
+  <li><a href="538B-2021w1-proposal-CRDTree.pdf">CRDTree</a></li>
+  <li><a href="538B-2021w1-proposal-final-pgo-diststate.pdf">Distributed State in PGo</a></li>
+</ul>
+
+
+<p>
+<b>Detailed proposal instructions.</b>
+
+<ul>
+
+<li>The timeline must include dates and milestones/deliverables. It
+must be sufficiently refined to include milestones that are specific
+to your project. Do not simply list the deliverables without listing
+the internal project deadlines. The timeline is there to get you to
+think about your time and to loosely commit to a schedule.</li>
+ 
+<li>This is a distributed systems course, so make sure that your
+proposal is focused on issues/challenges/objectives relevant to this
+topic. If you can, try to focus on distributed abstractions: which
+ones will you be using, developing, and how will you evaluate their
+qualities.</li>
+ 
+<li>The bulk of your proposal must be dedicated to design: what will
+your system look like, what properties will it have, what features
+will it include/omit, how will clients interact with your system,
+etc. This is the most important section. Writing this section well is
+difficult; spend the time to do a good job on it. The best way to
+write this design section is to look at A1, A2, A3 specs and model
+your design description based on those pages.</li>
+
+<li>It is important to omit content that is irrelevant to your
+proposal. Before including text, consider whether or not it plays a
+purpose in explaining your proposed system and its objectives. If not,
+then it can probably be cut. </li>
+ 
+<li>Consider giving your project/system a name. This way you can
+easily refer to it in your proposal.</li>
+ 
+<li>Your project can re-use external code/algorithms/ideas that you
+find online (e.g., open-sourced Paxos Go implementations). Leverage
+prior work and build on it to avoid re-inventing the wheel and to get
+to interesting ideas quicker (e.g., implementing Paxos is itself a
+complete project).</li>
+ 
+<li>Your proposals may end up including highly specialized content
+(e.g., details of crypto algorithms). Make sure to define
+non-standard/specialized terms, include examples, and intuition --
+anything to help get your ideas across. This work will pay off in the
+long term: (1) it will get you thinking more deeply about your work,
+and (2) you can re-use it in the project write-up.</li>
+ 
+<li>Make sure there is logical flow to your proposal. Define terms
+before you use them, motivate particular perspectives before launching
+into details, discuss existing systems or previous academic work
+necessary to understand your proposal before you rely on it for your
+descriptions. You do not have to provide an academic treatment of
+related work, but it does not hurt to read a bit about your topic and
+  include references to inform your content.</li>
+
+<li>
+  You build your system so that you can eventually deploy it and run
+  it. Your proposal must include a section on <i>evaluation
+  methodology</i> in which you explain how you will evaluate that your
+  system works as expected. For example, you might deploy your
+  anonymity system on Azure VMs across different data centers and
+  measure the end-to-end throughput of your system. Evaluation
+  methodology should match your system goals; e.g., if your system
+  provides access to a resource to many clients, then you should
+  evaluate your system with many clients.
+</li>
+ 
+<li>Consider including info-graphics/figures to explain your
+design. Sometimes it is easier to explain a complex idea with a
+picture (consider diagrams in the A3 spec). Likewise, don't hesitate
+to include formalism/math to explain your ideas (though, be careful
+with including formalism for formalism sake -- make sure it helps to
+explain rather than confuse the topic).</li>
+ 
+<li>A well thought-out and detailed proposal will only benefit your
+group in the long run -- you will have a more clear idea of what you
+are really working on!</li>
+
+</ul>
+
+
+</p>
+
+<p>
+<b>Submitting you project proposal (draft):</b>
+
+  <ul>
+    <li>
+      <b>[Draft proposal submission]</b> To submit a project proposal
+      draft, create a private piazza post. For this post use the title:
+      "Project proposal draft: [[title]], list of CWLs for your team" with
+      with [[title]] replaced with your project title/name. The
+      easiest way for us to give you feedback is if your post includes
+      a link to an <b>editable</b> google doc containing your
+      proposal. Make sure to identify the group members in the pizza
+      post and the proposal body.
+    </li>
+    <li>
+      <b>[Final proposal submission]</b> If you submitted a google doc
+      that we can access (above), then continue working on that doc
+      and we will snapshot your google doc at deadline time. If you
+      did not submit a google doc, then you can update your piazza
+      post with the final proposal doc copy, preferably in pdf format.
+    </li>
+
+  </ul>
+</ul>
+</p>
+
+
+
+
+<h4>Your proposed project might evolve</h4>
+<div class="hbarshort"></div>
+
+<p>The proposal is your best effort at scoping out the challenges that
+you expect to come up against and some ideas/plan on how you will
+resolve these. But, of course, system design and software engineering
+is not that predictable.</p>
+
+<p>It is difficult to describe how much you can deviate from the
+proposal. So, UDP instead of TCP may not be a significant change for
+some proposals, but could be a major change for others (e.g., if you
+are investigating distributed congestion control adaptation in TCP and
+now change to UDP, the difference is major!).
+</p>
+ 
+<p>Please discuss potential major changes with the TA assigned to your
+group and/or with Ivan.</p>
+
+
+<br/>
+<h3>Prototype implementation</h3>
+<div class="hbar"></div>
+
+<p>
+There are no constraints on your distributed system design and
+implementation outside of the ones listed at the top.
+</p>
+
+<p>
+<ul>
+  <li>We will create a survey where you can specify your team
+    members. We will then create a repository with the
+    name <b>Project-[CWLs-list]</b> using the CWLs of the team-members
+    on your team.</li>
+
+    <li>We will read your code.</li>
+
+    <li>We will read the code that is in your repo by the deadline of
+      the respective deliverable.</li>
+
+    <li>Note that this version of the code <b>must correspond to what
+        you describe in your milestone/report</b>. For example, if you
+        describe a Tor-based system in your report and do not note any
+        work-in-progress items, and we do not see any onion encryption
+        code in your repo, your mark will be penalized.</li>
+    
+    <li>It is okay if your code does not work completely! Your report
+      should note what currently works and what doesn't work.</li>
+
+  <li>No, you are not required to include code comments, compilation
+    instructions, or anything else that would make our code-reading
+    lives easier. (Though we would certainly appreciate any such
+    effort).</li>
+
+  </ul>
+</p>
+
+
+<br/>
+<h3>Report</h3>
+<div class="hbar"></div>
+
+<p>
+Your final report is a description of the problem you attempted to
+solve, what you have built to solve the problem, why you built your
+system the way you did, and how the system works/doesn't work.
+</p>
+
+
+<p>
+  <b>Detailed report instructions.</b>
+
+<ul>
+
+    <li>Report must be 8 pages max. This includes all the things that
+      you want Ivan/TAs to read/see, including all diagrams.
+    </li>
+
+    <li>Use your group's github project repository to submit your
+      report as a <b>pdf document</b>. Place your report
+      into <tt>report/report.pdf</tt> at the top level of your
+      repository (if you use LaTex, make sure that it is compiled into
+      a pdf).
+    </li>
+
+    <li>Use whatever format you want, but please don't torture us with
+    font size 8 and awful margins. I recommend the
+    2-column <a href="https://www.acm.org/publications/proceedings-template">ACM
+    article format</a>.</li>
+
+    <li>You can copy/paste and reuse text from the proposal.</li>
+
+    <li>But, of course, don't plagiarize other's work! Attribute all
+    the images/text you borrow; standard writing practices apply.</li>
+
+    <li>Your report must stand on its own -- cannot refer to proposal
+      or to a youtube video where you explain your system in an
+      hour-long lecture.</li>
+
+    <li>Any evaluation results must have a proper methodology to introduce
+      the results. What was the goal of the evaluation? Why did you measure
+      what you measured? Typically, the more information you provide to
+      describe your experiments, the better. But, it requires careful
+      judgment to report just the important details.</li>
+
+    <li>The report must describe the system whose code you are
+      submitting by the code/report deadline. This means that if you
+      have some bits that are unfinished, but you plan to finish them
+      for the demo, then you must <b>explicitly note</b> in your
+      report that they are a <b>work in progress</b>. Note that the
+      ShiViz extra credit cannot be a work in progress item; we have
+      to see ShiViz diagrams for your system in the report.</li>
+
+    <li>The report should include an approximate description of your
+      demo script. The demo has specific requirements (see below), and
+      we want to see an outline of your demo plan that matches these
+      requirements in your report. This doesn't have to be long: a
+      short paragraph per demo stage is fine.</li>
+
+</ul>
+
+</p>
+
+
+<br/>
+<h3>Project demo</h3>
+<div class="hbar"></div>
+
+<p>
+The project demo is a 25-minute adventure. You will demo your project
+to Ivan and a group of TAs in private, including a technical Q/A
+regarding the project design and implementation.
+</p>
+
+<p>
+  <b>Detailed demo instructions.</b>
+  
+<ul>
+    <li>The github project repositories will <b>not</b> be frozen
+      after you submit your code and report. So, you can continue to use
+      your repository to develop and improve your system for the demo!
+      Yes, that means that you can add new code/change existing
+      code/etc.</li>
+
+    <li>No, we don't care how much new code you add between report and
+      the demo -- if only 10% of your proposed system is built by
+      report-time (and 90% is a work-in-progress), then expect
+      penalties on the code/report. The demo is a separate beast
+      marking-wise.</li>
+
+    <li>If you are working on the EC, you must generated GoVector logs
+      and use ShiViz live during your demo to receive full EC
+      marks. You can do so during the normal operation step, or
+      another step in the demo (below).</li>
+    
+    <li>Your demo is 25 minutes long. Here are the
+    components/time/demo-mark break down:</li>
+    <ul>
+      
+      <li>Demonstrate <i>normal operation</i> of your system (no
+        failures/joins) with at least 3 nodes. </li>
+      <ul>
+        <li>10min expected</li>
+        <li>40% of demo mark</li>
+      </ul>
+
+      <li>Demonstrate system can <bi>survive</bi> at least 3 node
+      failures</li>
+      <ul>
+        <li>5min expected</li>
+        <li>20% of demo mark</li>
+      </ul>
+
+      <li>Demonstrate system can <i>join and utilize</i> at least 3
+        new nodes</li>
+      <ul>
+        <li>5min expected</li>
+        <li>20% of demo mark</li>
+      </ul>
+
+      <li>Design Q/A</li>
+      <ul>
+        <li>5min required (we will stop you at 20min mark to do Q/A)</li>
+        <li>20% of demo mark</li>
+        <li>We will ask questions of the entire group and anyone on
+          your team can answer.</li>
+      </ul>
+    </ul>
+
+    <li>There are several critical notions in the rubric above that
+    will vary from system to system (group to group):</li>
+    <ul>
+      <li>Normal operation: show that your system achieves its stated
+        function (e.g., serves HTML to web-browser clients from a CDN,
+        sends email via ToR, etc)</li>
+      
+      <li>Survive: show that your system's normal operation is not
+        disrupted by the failures (e.g., game continues to be playable
+        after failures)</li>
+      
+      <li>Utilize: show that your system actively uses the newly
+        joined nodes (e.g., database integrates and uses new nodes to
+        store keys/values)</li>
+      
+    </ul>
+    
+    <li>To get full marks on the demo you must (1) define the above in
+    the report or in the demo, and (2) demonstrate to us that the
+    above conditions are satisfied by your system during the demo
+    (e.g., when you fail/join nodes). You can do this by some of the
+    following:</li>
+    <ul>
+      <li>Show us terminal output with copious verbal
+      explanations</li>
+      
+      <li>Show us a web browser GUI that shows us blinking lights that
+        semantically match the above goal</li>
+      
+      <li>Robots that behave as expected (where you defined for us
+        what is expected)</li>
+      
+      <li>Some other means (typically runtime system I/O)</li>
+      
+    </ul>
+    
+    <li>For failures, you can decide which nodes to fail and how
+    (though if you fail the Azure LB that has a standby that you did
+    not build.. you won't be getting much/any of that
+    20% <i>survival</i> mark).</li>
+
+    <li>Yes, we want to see you inject failures, preferably on a
+    terminal with a Ctl-C signal. Same for node joins.</li>
+
+    <li>Your project must use Azure in some way. You have to
+      explain/show that this is indeed the case.</li>
+
+    <li>Your system must use a real network between your nodes --
+      distributed systems that uses localhost for communication will be
+      severely penalized.</li>
+
+    <li>Note that your demo slot is tight -- we may have scheduled
+      other groups before/after your group. I strongly encourage you
+      to practice your demo multiple times and develop a robust demo
+      script. It helps to curate the demo env and set it up just the
+      way you want it.</li>
+
+    <li>Some projects may have special requirements (e.g., prohibit
+      failure of 3 nodes). If this is the case, post on piazza to
+      arrange a change to your demo components. You must discuss these
+      with us before your demo and we have to sign off on any
+      deviations from the above in writing via a piazza post.</li>
+    
+  </ul>
+</p>
+
+<!----------------------------------------------------------------------- -->
+
+</p>
+
+<h4>Deadlines</h4>
+<div class="hbarshort"></div>
+<p>
+
+All project 2 deliverables are due at 11:59PM on their respective
+dates. The project is structured as a series of regularly occurring
+deadlines Do not miss these!
+</p>
+
+<p>
+<ul>
+  <li>
+    March 18 : Project proposal drafts
+  </li>
+  <li>
+    March 25 : Final project proposals
+  </li>
+  <li>
+    April 1 : Milestone 1
+  </li>
+  <li>
+    April 4-8 : Project update meetings
+  </li>
+  <li>
+    April 8 : Milestone 2
+  </li>
+  <li>
+    April 15 : Milestone 3
+  </li>
+  <li>
+    April 19 : Project code and final reports
+  </li>
+  <li>
+    April 21,22 : Project demos
+  </li>
+</ul>
+
+</p>
+
+
+<!--
+<h4>Logistics</h4>
+<div class="hbarshort"></div>
+
+<p>
+Sign up for a project stash
+repository <a href="https://www.ugrad.cs.ubc.ca/~cs416/php/register-partners.php">here</a>.
+</p>
+-->
+
+
+<h4>Grading scheme</h4>
+<div class="hbarshort"></div>
+
+<p>
+<!-- Note that two key project deliverables are write-ups -->
+<!-- (proposal/report). The proposal write-up alone is 10% of your final -->
+<!-- mark! The proposal and the final report must clearly convey the -->
+<!-- high-level ideas, be technically thorough, and must be -->
+<!-- well-written. Quality technical writing takes time and care. Use -->
+<!-- well-established methods to improve your writing: draft increasingly -->
+<!-- detailed outlines, get feedback from your peers/TAs on early ideas and -->
+<!-- drafts, compose descriptive infographics/diagrams, use the -->
+<!-- spellchecker, etc. Proposal write-ups that are vague, incomplete, or -->
+<!-- incoherent will receive a poor mark (you will also probably have to -->
+<!-- redo your proposal, but with much less time).  <br/><br/> -->
+
+The project is 45% of your final mark. Here is the mark breakdown: TBD</p>
+
+<!-- <ul> -->
+<!--   <li><small>Proposal: 10%</small></li> -->
+<!--   <li><small>Report and code: 10%</small></li> -->
+<!--   <li><small>Demo: 10%</small></li> -->
+<!-- <\!--  <li><small>Peer review multiplier</small></li> -\-> -->
+<!-- </ul> -->
+
+
+<br/>
+<h3>Extra credit</h3>
+<div class="hbarshort"></div>
+
+<p>
+This project is extensible with an extra credit: TBD
+
+<!-- <ul> -->
+
+<!-- <li> -->
+<!-- EC1 [2% of final mark]: Add support -->
+<!-- for <a href="https://github.com/DistributedClocks/GoVector">GoVector</a> -->
+<!-- and <a href="https://bestchai.bitbucket.io/shiviz/">ShiViz</a> to your -->
+<!-- system. Generate comprehensible ShiViz diagrams that explain your -->
+<!-- distributed system data/control flow and protocol design. These -->
+<!-- diagrams/explanations must be in your final report and you must show a -->
+<!-- live demo (loading logs into ShiViz and generating and explaining the -->
+<!-- result). Store the logs for your diagrams in the report/demo in the -->
+<!-- report repository. -->
+<!-- </li> -->
+
+<!-- <\!-- -->
+<!-- <li>EC2 [2% of final mark]: Demonstrate the likely correctness of your -->
+<!-- system by using -->
+<!-- the <a href="https://bitbucket.org/bestchai/dinv/">Dinv</a> dynamic -->
+<!-- program analysis tool. You must generate at least 3 types of -->
+<!-- invariants that illustrate 3 different kinds of correctness conditions -->
+<!-- of your system. These must be listed and explained in the final -->
+<!-- report. The logs that lead to the properties you describe must be part -->
+<!-- of the report repository. You do <i>not</i> have to demo Dinv. -->
+<!-- </li> -->
+<!-- -\-> -->
+
+<!-- </ul> -->
+</p>
+
+
+<br/><br/>
+
+<p>
+Make sure to follow the
+course <a href="../index.html#honesty">collaboration policy</a>.
+</p>
+
+</td></tr>
+
+<!-- -------------------------------------------------------------->
+
+<tr><td style="padding:0px">
+<br/><br/><br/>
+<div id="footer">
+Last updated: March 10, 2022
+</div>
+<!--
+Local Variables:
+time-stamp-start: "^Last updated: "
+time-stamp-end: "\\.?$"
+time-stamp-format: "%:b %:d, %:y"
+time-stamp-line-limit: -50
+End:
+-->
+</td></tr>
+
+</table>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-793279-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+</body>
+</html>
