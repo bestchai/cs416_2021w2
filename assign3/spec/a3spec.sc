@@ -562,14 +562,17 @@ class Spec(N: Int) extends Specification[Record] {
               .label("PutRecvd")
               .requireSome
             _ <- ptrace.map(_.collect{
-              case a: PutFwd if pOrdered <-< a &&
+              case a: PutFwdRecvd if pOrdered <-< a &&
                 a <-< presRecvd &&
-                a.tracerIdentity == pOrdered.tracerIdentity &&
+                a.tracerIdentity != pOrdered.tracerIdentity &&
                 a.gId == presRecvd.gId
               => a })
-              .quantifying("PutFwd").forall { fwd =>
-              ptrace.map(_.collect{ case a: PutFwdRecvd if fwd <-< a && fwd.gId == a.gId && fwd.tracerIdentity != a.tracerIdentity => a })
-                .label("PutFwdRecvd")
+              .quantifying("PutFwdRecvd").forall { fwdRecvd =>
+              ptrace.map(_.collect{ case a: PutFwd if pOrdered <-< a &&
+                a <-< fwdRecvd &&
+                presRecvd.gId == a.gId &&
+                pOrdered.tracerIdentity == a.tracerIdentity => a })
+                .label("PutFwd")
                 .requireSome
             }
             _ <- ptrace.map(_.collectFirst{ case a: PutResult if a.gId == presRecvd.gId && pOrdered <-< a && a <-< presRecvd => a }.toList)
