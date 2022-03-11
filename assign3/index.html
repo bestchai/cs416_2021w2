@@ -1567,8 +1567,8 @@ type ResultStruct struct {
             <li>Exactly one <code>PutResultRecvd(gid)</code> at C, which determines the final <code>gid</code> of your Put operation</li>
             <li>Exactly one <code>PutOrdered(gid<sub>1</sub>)</code> with <code>gid=gid<sub>1</sub></code> at some server S, which determinis the server S that eventually issues the Put </li>
             <li>At least one <code>PutRecvd</code> recorded at S </li>
-            <li>Zero or more <code>PutFwd(gid<sub>2</sub>)</code> at S, where <code>gid=gid<sub>2</sub></code> </li>
-            <li>If there are <code>PutFwd(gid<sub>2</sub>)</code> at S and <code>gid=gid<sub>2</sub></code>, then there are at least one <code>PutFwdRecvd(gid<sub>3</sub>)</code> at S', where S' <span>&#8800;</span> S and <code>gid=gid<sub>3</sub></code> </li>
+            <li>Zero or more <code>PutFwdRecvd(gid<sub>2</sub>)</code> at S', where S' <span>&#8800;</span> S and <code>gid=gid<sub>2</sub></code> </li>
+            <li>If there are <code>PutFwdRecvd(gid<sub>2</sub>)</code> at S' where S' <span>&#8800;</span> S and <code>gid=gid<sub>2</sub></code>, then there are at least one <code>PutFwd(gid<sub>3</sub>)</code> at S, and <code>gid=gid<sub>3</sub></code> </li>
             <li>At least one <code>PutResult(gid<sub>4</sub>)</code> at S', where S' may or may not be equal to S and  <code>gid=gid<sub>4</sub></code></li>
           </ul>
           <li style="color: red;">The order of the above rules indicates how trace checker performs the check. In addition, the actions above need to satisfy the happens-before relation:</li>
