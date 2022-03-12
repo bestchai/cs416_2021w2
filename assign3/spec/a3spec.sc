@@ -3,7 +3,6 @@ import $ivy.`com.github.DistributedClocks:tracechecker:master-SNAPSHOT`
 
 import com.github.distributedclocks.tracechecker._
 
-import java.io.PrintWriter
 import java.util.Base64
 
 // traits with that caputre certain fields
@@ -688,14 +687,16 @@ class Spec(N: Int) extends Specification[Record] {
               res(req.clientId) += r.get
             }
           }
-        } yield res
-        res.require(_ => "The OpIds from the same client must respect the gId ordering") { m =>
-          m.forall { args =>
-            val (_, resRecvds) = args
-            resRecvds.combinations(2).forall{ comb =>
-              comb.head.opId.compareTo(comb(1).opId) == comb.head.gId.compareTo(comb(1).gId)
-            }
+          resL = res.toList.map(_._2)
+        } yield resL
+        res.quantifying("PutResultRecvd/GetResultRecvd recorded by the same client").forall { m =>
+          var errorPair: mutable.ListBuffer[Record with Res] = null
+          val allRes = m.combinations(2).forall { comb =>
+            val res = comb.head.opId.compareTo(comb(1).opId) == comb.head.gId.compareTo(comb(1).gId)
+            if (!res) errorPair = comb
+            res
           }
+          if (allRes) accept else reject("find a pair violating OpID-GID consistency", errorPair.toList)
         }
       }
     ),
