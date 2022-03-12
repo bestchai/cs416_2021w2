@@ -552,11 +552,11 @@ class Spec(N: Int) extends Specification[Record] {
           val ptrace = orderedTraces.map(_.get(p.traceId).toList).requireOne
           for {
             presRecvd <- ptrace.map(_.collect{ case a: PutResultRecvd if a.tracerIdentity == p.tracerIdentity => a })
-              .requireOne
               .label("The PutResultRecvd")
-            pOrdered <- ptrace.map(_.collect{ case a: PutOrdered if a <-< presRecvd && presRecvd.gId == a.gId => a }.toList)
               .requireOne
+            pOrdered <- ptrace.map(_.collect{ case a: PutOrdered if a <-< presRecvd && presRecvd.gId == a.gId => a }.toList)
               .label("PutOrdered at S")
+              .requireOne
             _ <- ptrace.map(_.collect{ case a: PutRecvd if a <-< pOrdered && a.tracerIdentity == pOrdered.tracerIdentity => a })
               .label("PutRecvd")
               .requireSome
@@ -600,11 +600,11 @@ class Spec(N: Int) extends Specification[Record] {
           val gtrace = orderedTraces.map(_.get(g.traceId).toList).requireOne
           for {
             gresRecvd <- gtrace.map(_.collect{ case a: GetResultRecvd if a.tracerIdentity == g.tracerIdentity => a })
-              .requireOne
               .label("The GetResultRecvd")
-            gOrdered <- gtrace.map(_.collectFirst{ case a: GetOrdered if a <-< gresRecvd && gresRecvd.gId == a.gId => a }.toList)
               .requireOne
+            gOrdered <- gtrace.map(_.collectFirst{ case a: GetOrdered if a <-< gresRecvd && gresRecvd.gId == a.gId => a }.toList)
               .label("GetOrdered at S")
+              .requireOne
             _ <- gtrace.map(_.collect{ case a: GetRecvd if a <-< gOrdered && a.tracerIdentity == gOrdered.tracerIdentity => a })
               .label("GetRecvd")
               .requireSome
