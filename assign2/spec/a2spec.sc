@@ -108,10 +108,10 @@ class Spec(seed: String, N: Int) extends Specification[Record] {
       .map(_.collect { case sgs: ServerGameStart => sgs })
       .requireOne
 
-  val ifTheServerGameStart: Query[Option[ServerGameStart]] =
+  val ifTheServerGameStart: Query[List[ServerGameStart]] =
     call(theTrace)
       .map(_.collect { case sgs: ServerGameStart => sgs })
-      .requireAtMostOne
+      .requireSome
 
   val ifGameComplete: Query[Option[GameComplete]] =
     call(theTrace)
