@@ -670,7 +670,7 @@ system the way you did, and how the system works/doesn't work.
 <div class="hbar"></div>
 
 <p>
-The project demo is a 25-minute adventure. You will demo your project
+The project demo is a 45-minute adventure. You will demo your project
 to Ivan and a group of TAs in private, including a technical Q/A
 regarding the project design and implementation.
 </p>
@@ -696,34 +696,34 @@ regarding the project design and implementation.
       marks. You can do so during the normal operation step, or
       another step in the demo (below).</li>
     
-    <li>Your demo is 25 minutes long. Here are the
+    <li>Your demo is <b>45</b> minutes long. Here are the
     components/time/demo-mark break down:</li>
     <ul>
       
       <li>Demonstrate <i>normal operation</i> of your system (no
         failures/joins) with at least 3 nodes. </li>
       <ul>
-        <li>10min expected</li>
+        <li>15min expected</li>
         <li>40% of demo mark</li>
       </ul>
 
       <li>Demonstrate system can <bi>survive</bi> at least 3 node
       failures</li>
       <ul>
-        <li>5min expected</li>
+        <li>10min expected</li>
         <li>20% of demo mark</li>
       </ul>
 
       <li>Demonstrate system can <i>join and utilize</i> at least 3
         new nodes</li>
       <ul>
-        <li>5min expected</li>
+        <li>10min expected</li>
         <li>20% of demo mark</li>
       </ul>
 
       <li>Design Q/A</li>
       <ul>
-        <li>5min required (we will stop you at 20min mark to do Q/A)</li>
+        <li>10min required (we will stop you at the 35min mark to do Q/A)</li>
         <li>20% of demo mark</li>
         <li>We will ask questions of the entire group and anyone on
           your team can answer.</li>
@@ -921,22 +921,26 @@ The project is 45% of your final mark. Here is the mark breakdown across the dif
 <div class="hbarshort"></div>
 
 <p>
-This project is extensible with an extra credit: TBD
+This project is extensible with one extra credit option.
 
-<!-- <ul> -->
+<ul>
+<li>
+  EC1 [1% of final mark]: Add sufficient tracing to your system to be
+  able to observe the normal operation execution of your system
+  across <b>all</b> the nodes taking part in the execution
+  using <a href="https://bestchai.bitbucket.io/shiviz/">ShiViz</a>.
+  The corresponding ShiViz diagrams must match your system design and
+  should help explain how your system is implemented. <br/><br/>
 
-<!-- <li> -->
-<!-- EC1 [2% of final mark]: Add support -->
-<!-- for <a href="https://github.com/DistributedClocks/GoVector">GoVector</a> -->
-<!-- and <a href="https://bestchai.bitbucket.io/shiviz/">ShiViz</a> to your -->
-<!-- system. Generate comprehensible ShiViz diagrams that explain your -->
-<!-- distributed system data/control flow and protocol design. These -->
-<!-- diagrams/explanations must be in your final report and you must show a -->
-<!-- live demo (loading logs into ShiViz and generating and explaining the -->
-<!-- result). Store the logs for your diagrams in the report/demo in the -->
-<!-- report repository. -->
-<!-- </li> -->
+  The diagrams and explanations of the diagrams must be in your final
+  report (aim for 1-2 diagrams in total). Please store the logs for
+  your diagrams in the report in your repository.  You must also show
+  us a live demo: generate trace output during the normal operation
+  part of the demo, visualize the resulting logs with ShiViz, and
+  explain the resulting diagram to us.
+</li>
 
+</ul>
 <!-- <\!-- -->
 <!-- <li>EC2 [2% of final mark]: Demonstrate the likely correctness of your -->
 <!-- system by using -->
@@ -967,7 +971,7 @@ course <a href="../index.html#honesty">collaboration policy</a>.
 <tr><td style="padding:0px">
 <br/><br/><br/>
 <div id="footer">
-Last updated: March 12, 2022
+Last updated: April 12, 2022
 </div>
 <!--
 Local Variables:
