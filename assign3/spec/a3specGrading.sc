@@ -586,7 +586,7 @@ class Spec(N: Int) extends Specification[Record] {
           }
         }
       },
-      rule("[20] The semantics of Put all recorded in a single Put-Trace", pointValue = 20) {
+      rule("[20] The semantics of each Put request is recorded in a single Put-Trace", pointValue = 20) {
         call(puts).quantifying("Put").forall { p =>
           val ptrace = orderedTraces.map(_.get(p.traceId).toList).requireOne
           for {
@@ -634,7 +634,7 @@ class Spec(N: Int) extends Specification[Record] {
           }
         }
       },
-      rule("[20] The semantics of Get all recorded in a single Get-Trace", pointValue = 20) {
+      rule("[20] The semantics of each Get request is recorded in a single Get-Trace", pointValue = 20) {
         call(gets).quantifying("Get").forall { g =>
           val gtrace = orderedTraces.map(_.get(g.traceId).toList).requireOne
           for {
